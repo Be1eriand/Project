@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Net.Sockets;
 using System.Net;
-using System.Text;
 using System.Runtime.InteropServices;
+using System.IO;
 
 namespace SensorServer
 {
@@ -25,12 +26,12 @@ namespace SensorServer
     readonly public struct RealTimeData
     {
 
-        public RealTimeData(in float Current, in float Voltage, in float Temperature, in float Length, in float WireFeedRate, in float GasUsed)
+        public RealTimeData(in float Current, in float Voltage, in float Temperature, in float WeldLength, in float WireFeedRate, in float GasUsed)
         {
             this.Current = Current;
             this.Voltage = Voltage;
             this.Temperature = Temperature;
-            this.Length = Length;
+            this.WeldLength = WeldLength;
             this.WireFeedRate = WireFeedRate;
             this.GasUsed = GasUsed;
         }
@@ -38,7 +39,7 @@ namespace SensorServer
         public float Current { get; }
         public float Voltage { get; }
         public float Temperature { get; }
-        public float Length { get; }
+        public float WeldLength { get; }
         public float WireFeedRate { get; }
         public float GasUsed { get; }
     }
@@ -48,39 +49,112 @@ namespace SensorServer
     {
         public SensorDataStruct(in WeldData WD, in DateTime dateTime, in RealTimeData realTimeData)
         {
-            this.Machineid = WD.Machineid;
-            this.Welderid = WD.Welderid;
-            this.Jobid = WD.Jobid;
-            this.Second = (byte)dateTime.Second;
-            this.Minute = (byte)dateTime.Minute;
-            this.Hour = (byte)dateTime.Hour;
-            this.Day = (byte)dateTime.Day;
-            this.Month = (byte)dateTime.Month;
-            this.Year = (ushort)dateTime.Year;
-            this.Current = realTimeData.Current;
-            this.Voltage = realTimeData.Voltage;
-            this.Temperature = realTimeData.Temperature;
-            this.Length = realTimeData.Length;
-            this.WireFeedRate = realTimeData.WireFeedRate;
-            this.GasUsed = realTimeData.GasUsed;
+            this.Machineid = BitConverter.GetBytes(WD.Machineid);
+            this.Welderid = BitConverter.GetBytes(WD.Welderid);
+            this.Jobid = BitConverter.GetBytes(WD.Jobid);
+            this.Second = Convert.ToByte(dateTime.Second);
+            this.Minute = Convert.ToByte(dateTime.Minute);
+            this.Hour = Convert.ToByte(dateTime.Hour);
+            this.Day = Convert.ToByte(dateTime.Day);
+            this.Month = Convert.ToByte(dateTime.Month);
+            this.Year = BitConverter.GetBytes(dateTime.Year);
+            this.Current = BitConverter.GetBytes(realTimeData.Current);
+            this.Voltage = BitConverter.GetBytes(realTimeData.Voltage);
+            this.Temperature = BitConverter.GetBytes(realTimeData.Temperature);
+            this.WeldLength = BitConverter.GetBytes(realTimeData.WeldLength);
+            this.WireFeedRate = BitConverter.GetBytes(realTimeData.WireFeedRate);
+            this.GasUsed = BitConverter.GetBytes(realTimeData.GasUsed);
 
-        }
+            this.ByteArray = new byte[43];
 
-        public ushort Machineid { get; }
-        public uint Welderid { get; }
-        public uint Jobid { get; }
+            int i = 0;
+            for (int j = 0; j < 2; j++)
+            {
+                this.ByteArray[i] = this.Machineid[j];
+                i++;
+            }
+
+            for(int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.Welderid[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4; j++)
+            {
+                this.ByteArray[i] = this.Jobid[j];
+                i++;
+            }
+
+            this.ByteArray[i] = this.Second;
+            i++;
+            this.ByteArray[i] = this.Minute;
+            i++;
+            this.ByteArray[i] = this.Hour;
+            i++;
+            this.ByteArray[i] = this.Day;
+            i++;
+            this.ByteArray[i] = this.Month;
+            i++;
+
+            for (int j = 0; j < 4; j++)
+            {
+                this.ByteArray[i] = this.Year[j]; 
+                i++;
+            }
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.Current[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.Voltage[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.Temperature[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.WeldLength[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.WireFeedRate[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                this.ByteArray[i] = this.GasUsed[j];
+                i++;
+            }
+}
+
+        public byte[] Machineid { get; }
+        public byte[] Welderid { get; }
+        public byte[] Jobid { get; }
         public byte Second { get; }
         public byte Minute { get; }
         public byte Hour { get; }
         public byte Day { get; }
         public byte Month { get; }
-        public ushort Year { get; }
-        public float Current { get; }
-        public float Voltage { get; }
-        public float Temperature { get; }
-        public float Length { get; }
-        public float WireFeedRate { get; }
-        public float GasUsed { get; }
+        public byte[] Year { get; }
+        public byte[] Current { get; }
+        public byte[] Voltage { get; }
+        public byte[] Temperature { get; }
+        public byte[] WeldLength { get; }
+        public byte[] WireFeedRate { get; }
+        public byte[] GasUsed { get; }
+        public byte[] ByteArray { get; }
     }
 
     class Program
@@ -124,15 +198,22 @@ namespace SensorServer
 
             Thread ctThread = new Thread(Stream);
             ctThread.Start();
+            //Stream();
         }
         
         private void Stream()
         {
-            string stream;
+            List<WeldData> WeldDataList = new List<WeldData>();
 
-            stream = "This is the stream of data!\r\n";
+            Random randomNumber = new Random();
 
-            WeldData weldData = new WeldData(1, 1, 1024);
+            for (ushort machineID = 1; machineID < 5; machineID++)
+            {
+                uint welderID = (uint)randomNumber.Next(2147483647);
+                uint jobID = (uint)randomNumber.Next(2147483647);
+
+                WeldDataList.Add(new WeldData(machineID, welderID, jobID));
+            }
 
             while (this.clientSocket.Connected)
             {
@@ -140,11 +221,19 @@ namespace SensorServer
                 {
                     NetworkStream networkStream = clientSocket.GetStream();
 
-                    SensorDataStruct sensorData = this.CreateSensorData(weldData);
+                    foreach (WeldData weldData in WeldDataList) 
+                    {
+                        SensorDataStruct sensorData = this.CreateSensorData(weldData);
 
-                    byte[] ByteStream = this.StructureToByteArray(sensorData);
+                        networkStream.Write(sensorData.ByteArray, 0, sensorData.ByteArray.Length);
 
-                    networkStream.Write(ByteStream, 0, stream.Length);
+                        var path = @"file.txt";
+
+                        using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        {
+                            fs.Write(sensorData.ByteArray, 0, sensorData.ByteArray.Length);
+                        }
+                    }
                 }
 
                 catch (Exception ex)
@@ -157,11 +246,11 @@ namespace SensorServer
 
         private SensorDataStruct CreateSensorData(in WeldData weldData)
         {
-            DateTime dateTime = new DateTime();
+            DateTime dateTime = DateTime.Now;
 
-            RealTimeData rtData = new RealTimeData(0.0f, 0.0f, 0.1f, 514.7f, 0.1f, 1.5f);
+            RealTimeData realTimeData = new RealTimeData(1.0f, 2.0f, 4.0f, 8.0f, 16.0f, 32.0f);
 
-            SensorDataStruct Data = new SensorDataStruct(weldData, dateTime, rtData);
+            SensorDataStruct Data = new SensorDataStruct(weldData, dateTime, realTimeData);
 
             return Data;
         }
