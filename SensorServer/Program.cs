@@ -49,111 +49,97 @@ namespace SensorServer
     {
         public SensorDataStruct(in WeldData WD, in DateTime dateTime, in RealTimeData realTimeData)
         {
-            this.Machineid = BitConverter.GetBytes(WD.Machineid);
-            this.Welderid = BitConverter.GetBytes(WD.Welderid);
-            this.Jobid = BitConverter.GetBytes(WD.Jobid);
-            this.Second = Convert.ToByte(dateTime.Second);
-            this.Minute = Convert.ToByte(dateTime.Minute);
-            this.Hour = Convert.ToByte(dateTime.Hour);
-            this.Day = Convert.ToByte(dateTime.Day);
-            this.Month = Convert.ToByte(dateTime.Month);
-            this.Year = BitConverter.GetBytes(dateTime.Year);
-            this.Current = BitConverter.GetBytes(realTimeData.Current);
-            this.Voltage = BitConverter.GetBytes(realTimeData.Voltage);
-            this.Temperature = BitConverter.GetBytes(realTimeData.Temperature);
-            this.WeldLength = BitConverter.GetBytes(realTimeData.WeldLength);
-            this.WireFeedRate = BitConverter.GetBytes(realTimeData.WireFeedRate);
-            this.GasUsed = BitConverter.GetBytes(realTimeData.GasUsed);
+            var Machineid = BitConverter.GetBytes(WD.Machineid);
+            var Welderid = BitConverter.GetBytes(WD.Welderid);
+            var Jobid = BitConverter.GetBytes(WD.Jobid);
+            var Year = BitConverter.GetBytes(dateTime.Year);
+            var Current = BitConverter.GetBytes(Convert.ToInt32(realTimeData.Current*1000));
+            var Voltage = BitConverter.GetBytes(Convert.ToInt32(realTimeData.Voltage * 1000));
+            var Temperature = BitConverter.GetBytes(Convert.ToInt32(realTimeData.Temperature * 1000));
+            var WeldLength = BitConverter.GetBytes(Convert.ToInt32(realTimeData.WeldLength * 1000));
+            var WireFeedRate = BitConverter.GetBytes(Convert.ToInt32(realTimeData.WireFeedRate * 1000));
+            var GasUsed = BitConverter.GetBytes(Convert.ToInt32(realTimeData.GasUsed * 1000));
 
-            this.ByteArray = new byte[43];
+            ByteArray = new byte[46]; //Must adjust this everytime
 
             int i = 0;
             for (int j = 0; j < 2; j++)
             {
-                this.ByteArray[i] = this.Machineid[j];
+                ByteArray[i] = Machineid[j];
                 i++;
             }
 
             for(int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.Welderid[j];
+                ByteArray[i] = Welderid[j];
                 i++;
             }
 
             for (int j = 0; j < 4; j++)
             {
-                this.ByteArray[i] = this.Jobid[j];
+                ByteArray[i] = Jobid[j];
                 i++;
             }
 
-            this.ByteArray[i] = this.Second;
+            var Seconds = BitConverter.GetBytes(Convert.ToInt32((dateTime.Second * 1000 + dateTime.Millisecond)));
+
+            for (int j = 0; j < 4; j++)
+            {
+                ByteArray[i] = Seconds[j];
+                i++;
+            }
+
+            ByteArray[i] = Convert.ToByte(dateTime.Minute);
             i++;
-            this.ByteArray[i] = this.Minute;
+            ByteArray[i] = Convert.ToByte(dateTime.Hour);
             i++;
-            this.ByteArray[i] = this.Hour;
+            ByteArray[i] = Convert.ToByte(dateTime.Day);
             i++;
-            this.ByteArray[i] = this.Day;
-            i++;
-            this.ByteArray[i] = this.Month;
+            ByteArray[i] = Convert.ToByte(dateTime.Month);
             i++;
 
             for (int j = 0; j < 4; j++)
             {
-                this.ByteArray[i] = this.Year[j]; 
+                ByteArray[i] = Year[j]; 
                 i++;
             }
             for (int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.Current[j];
-                i++;
-            }
-
-            for (int j = 0; j < 4 ; j++)
-            {
-                this.ByteArray[i] = this.Voltage[j];
+                ByteArray[i] = Current[j];
                 i++;
             }
 
             for (int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.Temperature[j];
+                ByteArray[i] = Voltage[j];
                 i++;
             }
 
             for (int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.WeldLength[j];
+                ByteArray[i] = Temperature[j];
                 i++;
             }
 
             for (int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.WireFeedRate[j];
+                ByteArray[i] = WeldLength[j];
                 i++;
             }
 
             for (int j = 0; j < 4 ; j++)
             {
-                this.ByteArray[i] = this.GasUsed[j];
+                ByteArray[i] = WireFeedRate[j];
+                i++;
+            }
+
+            for (int j = 0; j < 4 ; j++)
+            {
+                ByteArray[i] = GasUsed[j];
                 i++;
             }
 }
 
-        public byte[] Machineid { get; }
-        public byte[] Welderid { get; }
-        public byte[] Jobid { get; }
-        public byte Second { get; }
-        public byte Minute { get; }
-        public byte Hour { get; }
-        public byte Day { get; }
-        public byte Month { get; }
-        public byte[] Year { get; }
-        public byte[] Current { get; }
-        public byte[] Voltage { get; }
-        public byte[] Temperature { get; }
-        public byte[] WeldLength { get; }
-        public byte[] WireFeedRate { get; }
-        public byte[] GasUsed { get; }
         public byte[] ByteArray { get; }
     }
 
@@ -164,44 +150,46 @@ namespace SensorServer
             IPAddress ipAddress = IPAddress.Parse("127.0.0.1");
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 8888);
 
-            TcpListener serverSocket = new TcpListener(localEndPoint);
-            TcpClient clientSocket = default(TcpClient);
-            int counter = 0;
+            TcpListener ServerSocket = new TcpListener(localEndPoint);
+            TcpClient ClientSocket;
+            int counter;
 
-            serverSocket.Start();
+            ServerSocket.Start();
             Console.WriteLine(" >> " + "Server Started");
 
             counter = 0;
             while (true)
             {
                 counter += 1;
-                clientSocket = serverSocket.AcceptTcpClient();
+                ClientSocket = ServerSocket.AcceptTcpClient();
                 Console.WriteLine(" >> " + "Client No:" + Convert.ToString(counter) + " started!");
-                handleClient client = new handleClient();
-                client.startClient(clientSocket, Convert.ToString(counter));
+                HandleClient client = new HandleClient();
+                client.startClient(ClientSocket);
             }
 
-            clientSocket.Close();
-            serverSocket.Stop();
+            ClientSocket.Close();
+            ServerSocket.Stop();
             Console.WriteLine(" >> " + "exit");
             Console.ReadLine();
         }
     }
 
-    //Class to handle each client request separatly
-    public class handleClient
+    //Class to handle each client request separately
+    public class HandleClient
     {
         TcpClient clientSocket;
-        public void startClient(TcpClient inClientSocket, string clineNo)
+        static readonly Random NumGenerator = new Random();
+
+        public void startClient(TcpClient inClientSocket)
         {
-            this.clientSocket = inClientSocket;
+            clientSocket = inClientSocket;
 
             Thread ctThread = new Thread(Stream);
-            ctThread.Start();
+            ctThread.Start(); //I can add parameters here
             //Stream();
         }
         
-        private void Stream()
+        private void Stream() //I can change this to have paramaters
         {
             List<WeldData> WeldDataList = new List<WeldData>();
 
@@ -209,13 +197,13 @@ namespace SensorServer
 
             for (ushort machineID = 1; machineID < 5; machineID++)
             {
-                uint welderID = (uint)randomNumber.Next(2147483647);
-                uint jobID = (uint)randomNumber.Next(2147483647);
+                uint welderID = (uint)randomNumber.Next();
+                uint jobID = (uint)randomNumber.Next();
 
                 WeldDataList.Add(new WeldData(machineID, welderID, jobID));
             }
 
-            while (this.clientSocket.Connected)
+            while (clientSocket.Connected)
             {
                 try
                 {
@@ -223,7 +211,7 @@ namespace SensorServer
 
                     foreach (WeldData weldData in WeldDataList) 
                     {
-                        SensorDataStruct sensorData = this.CreateSensorData(weldData);
+                        SensorDataStruct sensorData = CreateSensorData(weldData);
 
                         networkStream.Write(sensorData.ByteArray, 0, sensorData.ByteArray.Length);
 
@@ -231,9 +219,15 @@ namespace SensorServer
 
                         using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                         {
-                            fs.Write(sensorData.ByteArray, 0, sensorData.ByteArray.Length);
+                           fs.Write(sensorData.ByteArray, 0, sensorData.ByteArray.Length);
                         }
                     }
+                }
+
+                catch (IOException)
+                {
+                    Console.WriteLine(" >> Client has closed the connection");
+                    clientSocket.Close();
                 }
 
                 catch (Exception ex)
@@ -248,27 +242,47 @@ namespace SensorServer
         {
             DateTime dateTime = DateTime.Now;
 
-            RealTimeData realTimeData = new RealTimeData(1.0f, 2.0f, 4.0f, 8.0f, 16.0f, 32.0f);
+            var voltage = (float)NormalisedRandomNumber(24.0, 0.05);
+            var current = (float)NormalisedRandomNumber(100.0, 0.2);
+            var wfr = (float)NormalisedRandomNumber(50.0, 0.5);
+            var gasused = (float)NormalisedRandomNumber(1.0, 0.01);
+            var temperature = (float)NormalisedRandomNumber(3000.0, 100.0);
+            var WeldLength = 1.0f;
+
+
+            RealTimeData realTimeData = new RealTimeData(current, voltage, temperature, WeldLength, wfr, gasused);
 
             SensorDataStruct Data = new SensorDataStruct(weldData, dateTime, realTimeData);
 
             return Data;
         }
-        private byte[] StructureToByteArray(object obj)
+
+        private static double NormalisedRandomNumber(in double mu, in double sigma) //Is this thread safe?
         {
-            int len = Marshal.SizeOf(obj);
+            var NormalisedNumberArray = BoxMuellerMethod();
 
-            byte[] arr = new byte[len];
+            var RandomNumber = NormalisedNumberArray.Item1 * sigma + mu; //Just selecting the first one, could have easily chosen the second
 
-            IntPtr ptr = Marshal.AllocHGlobal(len);
-
-            Marshal.StructureToPtr(obj, ptr, true);
-
-            Marshal.Copy(ptr, arr, 0, len);
-
-            Marshal.FreeHGlobal(ptr);
-
-            return arr;
+            return RandomNumber;
         }
+
+        private static (double,double) BoxMuellerMethod()
+        {
+            //Uses the Box-Mueller Method
+            //See https://rh8liuqy.github.io/Box_Muller_Algorithm.html
+            //Box-Mueller method is quick and efficient at generating normalised numbers
+
+            var rand1 = NumGenerator.NextDouble();
+            var rand2 = NumGenerator.NextDouble();
+
+            var R = Math.Sqrt(-2 * Math.Log(rand1));
+            var Theta = 2 * Math.PI * rand2;
+
+            var X = R * Math.Cos(Theta);
+            var Y = R * Math.Sin(Theta);
+
+            return (X, Y);
+        }
+
     }
 }

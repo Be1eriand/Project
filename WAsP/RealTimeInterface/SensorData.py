@@ -1,3 +1,5 @@
+# This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
 from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
@@ -29,9 +31,9 @@ class SensorData(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.second = self._io.read_u1()
-            if not self.second <= 59:
-                raise kaitaistruct.ValidationGreaterThanError(59, self.second, self._io, u"/types/time/seq/0")
+            self.second = self._io.read_u4le()
+            if not self.second <= 59999:
+                raise kaitaistruct.ValidationGreaterThanError(59999, self.second, self._io, u"/types/time/seq/0")
             self.minute = self._io.read_u1()
             if not self.minute <= 59:
                 raise kaitaistruct.ValidationGreaterThanError(59, self.minute, self._io, u"/types/time/seq/1")
@@ -44,7 +46,7 @@ class SensorData(KaitaiStruct):
             if hasattr(self, '_m_padded_second'):
                 return self._m_padded_second if hasattr(self, '_m_padded_second') else None
 
-            self._m_padded_second = (u"0" if self.second <= 9 else u"") + str(self.second)
+            self._m_padded_second = (u"0" if self.second // 1000 <= 9.999 else u"") + str(self.second // 1000)
             return self._m_padded_second if hasattr(self, '_m_padded_second') else None
 
         @property
@@ -78,8 +80,8 @@ class SensorData(KaitaiStruct):
             if not self.day <= 31:
                 raise kaitaistruct.ValidationGreaterThanError(31, self.day, self._io, u"/types/date/seq/0")
             self.month = self._io.read_u1()
-            if not self.month >= 1:
-                raise kaitaistruct.ValidationLessThanError(1, self.month, self._io, u"/types/date/seq/1")
+            if not self.month >= 0:
+                raise kaitaistruct.ValidationLessThanError(0, self.month, self._io, u"/types/date/seq/1")
             if not self.month <= 12:
                 raise kaitaistruct.ValidationGreaterThanError(12, self.month, self._io, u"/types/date/seq/1")
             self.year = self._io.read_u4le()
@@ -117,9 +119,9 @@ class SensorData(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.current = self._io.read_f4le()
-            self.voltage = self._io.read_f4le()
-            self.temperature = self._io.read_f4le()
-            self.length = self._io.read_f4le()
-            self.wirefeedrate = self._io.read_f4le()
-            self.gasused = self._io.read_f4le()
+            self.current = self._io.read_u4le()
+            self.voltage = self._io.read_u4le()
+            self.temperature = self._io.read_u4le()
+            self.length = self._io.read_u4le()
+            self.wirefeedrate = self._io.read_u4le()
+            self.gasused = self._io.read_u4le()

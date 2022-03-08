@@ -27,9 +27,9 @@ types:
     -webide-representation: "{padded_hour}:{padded_minute}:{padded_second}"
     seq:
       - id: second
-        type: u1
+        type: u4
         valid:
-          max: 59
+          max: 59999 #(seconds + millisecond) * 1000
       - id: minute
         type: u1
         valid:
@@ -41,11 +41,12 @@ types:
           
     instances:
       padded_second:
-        value: '(second <= 9 ? "0" : "") + second.to_s'
+        value: '((second/1000) <= 9.999 ? "0" : "") + (second/1000).to_s'
       padded_minute:
         value: '(minute <= 9 ? "0" : "") + minute.to_s'
       padded_hour:
         value: '(hour <= 9 ? "0" : "") + hour.to_s'
+        
   date:
     -webide-representation: "{padded_year}-{padded_month}-{padded_day}"
     seq:
@@ -57,10 +58,10 @@ types:
       - id: month
         type: u1
         valid:
-          min: 1
+          min: 0
           max: 12
       - id: year
-        type: u2
+        type: u4
         
     instances:
       padded_day:
@@ -78,15 +79,15 @@ types:
   data:
     seq:
       - id: current
-        type: f8 #64-bit float
+        type: u4 #32-bit integer xxxx.yyy *1000 = xxxxyyy
       - id: voltage
-        type: f8
+        type: u4
       - id: temperature
-        type: f8
+        type: u4
       - id: length
-        type: f8
+        type: u4
       - id: wirefeedrate
-        type: f8
+        type: u4
       - id: gasused
-        type: f8
+        type: u4
         

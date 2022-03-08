@@ -3,29 +3,27 @@
 	<schema name="Default" >
 		<table name="Assignment" prior="Tbl" >
 			<column name="id" prior="assignmentIdx" type="integer" jt="4" mandatory="y" />
-			<column name="WT_id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
-			<column name="payrollNumber" type="integer" jt="4" mandatory="y" />
+			<column name="Welder_id" prior="payrollNumber" type="integer" jt="4" mandatory="y" />
 			<column name="Machine_id" type="integer" jt="4" mandatory="y" />
+			<column name="JobID" prior="Job_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_Assignment" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<fk name="fk_Assignment_WT" to_schema="Default" to_table="WeldTable" >
-				<fk_column name="WT_id" pk="id" />
-			</fk>
-			<fk name="fk_Assignment" to_schema="Default" to_table="MachineTbl" >
-				<fk_column name="Machine_id" pk="id" />
-			</fk>
-			<fk name="fk_Assignment_Welder" to_schema="Default" to_table="dashboard_user_list" >
-				<fk_column name="payrollNumber" pk="payroll_id" />
-			</fk>
-		</table>
-		<table name="MachineTbl" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
-			<column name="MachineName" prior="Machine Name" type="varchar" length="100" jt="12" mandatory="y" />
-			<column name="MachineNumber" prior="Machine Number" type="integer" jt="4" mandatory="y" />
-			<index name="pk_MachineTbl" unique="PRIMARY_KEY" >
-				<column name="id" />
+			<index name="idx_Assignment_Welder_id" unique="NORMAL" >
+				<column name="Welder_id" />
 			</index>
+			<index name="idx_Assignment_Machine_id" unique="NORMAL" >
+				<column name="Machine_id" />
+			</index>
+			<index name="idx_Assignment_JobID" unique="NORMAL" >
+				<column name="JobID" />
+			</index>
+			<fk name="fk_Assignment_Welder" to_schema="Default" to_table="dashboard_user_list" >
+				<fk_column name="Welder_id" pk="payroll_id" />
+			</fk>
+			<fk name="fk_Assignment_MachineID" to_schema="Default" to_table="dashboard_machine" >
+				<fk_column name="Machine_id" pk="machine_id" />
+			</fk>
 		</table>
 		<table name="RealTime_Data" prior="RT_weldingData" >
 			<comment><![CDATA[Holds the raw and calculated data for the realtime data]]></comment>
@@ -94,21 +92,6 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Team" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
-			<column name="isMember" type="boolean" jt="-7" mandatory="y" />
-			<column name="SupervisorId" type="integer" jt="4" mandatory="y" />
-			<column name="TeamMemberId" type="integer" jt="4" mandatory="y" />
-			<index name="pk_Team" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-			<fk name="fk_Team" to_schema="Default" to_table="Supervisor" >
-				<fk_column name="SupervisorId" pk="id" />
-			</fk>
-			<fk name="fk_Team_Welder" to_schema="Default" to_table="dashboard_user_list" >
-				<fk_column name="TeamMemberId" pk="payroll_id" />
-			</fk>
-		</table>
 		<table name="WPS" prior="WP" >
 			<comment><![CDATA[WPS data]]></comment>
 			<column name="id" prior="WPS_Idx" type="integer" jt="4" mandatory="y" />
@@ -136,27 +119,64 @@
 		</table>
 		<table name="WeldTable" prior="Tbl" >
 			<column name="id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
-			<column name="WPSNo" type="integer" jt="4" />
-			<column name="RunNo" type="integer" jt="4" />
+			<column name="RunNo" type="integer" jt="4" mandatory="y" />
+			<column name="Assignment_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_WeldTable" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_WeldTable" to_schema="Default" to_table="Assignment" >
+				<fk_column name="Assignment_id" pk="id" />
+			</fk>
+		</table>
+		<table name="WeldingGroups" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="GroupType" type="varchar" length="40" jt="12" mandatory="y" >
+				<comment><![CDATA[GroupType:
+- Structural Welding Group
+- Pipe Welding Group]]></comment>
+			</column>
+			<index name="pk_WeldingGroups" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
 		<table name="WeldingTable" prior="Tbl" >
 			<column name="RT_id" prior="RTdataIdx" type="integer" jt="4" mandatory="y" />
 			<column name="WT_id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
+			<column name="Welder_id" type="integer" jt="4" mandatory="y" />
+			<column name="Machine_id" prior="machine_id" type="integer" jt="4" mandatory="y" />
+			<index name="unq_WeldingTable_RT_id" unique="UNIQUE_INDEX" >
+				<column name="RT_id" />
+			</index>
+			<index name="idx_WeldingTable" unique="NORMAL" >
+				<column name="Welder_id" />
+			</index>
+			<index name="idx_WeldingTable_Machine_id" unique="NORMAL" >
+				<column name="Machine_id" />
+			</index>
 			<index name="unq_WeldingTable_RT" unique="UNIQUE_INDEX" >
 				<column name="RT_id" />
 				<column name="WT_id" />
-			</index>
-			<index name="unq_WeldingTable_RT_id" unique="UNIQUE_INDEX" >
-				<column name="RT_id" />
 			</index>
 			<fk name="fk_WeldingTable" to_schema="Default" to_table="RealTime_Data" >
 				<fk_column name="RT_id" pk="id" />
 			</fk>
 			<fk name="fk_WeldingTable_0" to_schema="Default" to_table="WeldTable" >
 				<fk_column name="WT_id" pk="id" />
+			</fk>
+		</table>
+		<table name="WeldingTeam" prior="Team" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="isMember" type="boolean" jt="-7" mandatory="y" />
+			<column name="SupervisorId" type="integer" jt="4" mandatory="y" />
+			<column name="TeamMemberId" type="integer" jt="4" mandatory="y" />
+			<index name="pk_Team" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_Team" to_schema="Default" to_table="Supervisor" >
+				<fk_column name="SupervisorId" pk="id" />
+			</fk>
+			<fk name="fk_Team_Welder" to_schema="Default" to_table="dashboard_user_list" >
+				<fk_column name="TeamMemberId" pk="payroll_id" />
 			</fk>
 		</table>
 		<table name="auth_group" spec="" >
@@ -336,7 +356,7 @@
 		</table>
 		<table name="dashboard_machine" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="location_id" type="integer" jt="4" />
+			<column name="location_id" type="integer" jt="4" mandatory="y" />
 			<column name="machine_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_dashboard_machine" unique="PRIMARY_KEY" >
 				<column name="machine_id" />
@@ -533,40 +553,40 @@
 	</schema>
 	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.36.0.3.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/e_mei/University of South Australia/Student_Fighting Mongooses - UO Capstone Project - Group 2 - General/Our Smart Fab Project/Project/project.sqlite3" />
 	<layout name="Default Layout" id="Layout-57b" show_relation="columns" >
-		<entity schema="Default" name="Assignment" color="C1D8EE" x="1328" y="624" />
-		<entity schema="Default" name="MachineTbl" color="C1D8EE" x="1376" y="832" />
-		<entity schema="Default" name="RealTime_Data" color="C1D8EE" x="1920" y="624" />
-		<entity schema="Default" name="Specification" color="BED3F4" x="1888" y="192" />
-		<entity schema="Default" name="Supervisor" color="C1D8EE" x="1312" y="80" />
-		<entity schema="Default" name="Team" color="C1D8EE" x="1312" y="272" />
-		<entity schema="Default" name="WPS" color="BED3F4" x="1632" y="400" />
-		<entity schema="Default" name="WPS_Run" color="BED3F4" x="1632" y="192" />
-		<entity schema="Default" name="WeldTable" color="3986C1" x="1552" y="624" />
-		<entity schema="Default" name="WeldingTable" color="C1D8EE" x="1728" y="624" />
-		<entity schema="Default" name="auth_group" color="3986C1" x="496" y="1072" />
-		<entity schema="Default" name="auth_group_permissions" color="3986C1" x="656" y="1072" />
-		<entity schema="Default" name="auth_permission" color="3986C1" x="48" y="1072" />
-		<entity schema="Default" name="auth_user" color="3986C1" x="272" y="1072" />
-		<entity schema="Default" name="auth_user_groups" color="3986C1" x="496" y="1392" />
-		<entity schema="Default" name="auth_user_user_permissions" color="3986C1" x="208" y="1392" />
-		<entity schema="Default" name="dashboard_category" color="3986C1" x="304" y="864" />
-		<entity schema="Default" name="dashboard_db_settings" color="3986C1" x="848" y="144" />
-		<entity schema="Default" name="dashboard_job" color="3986C1" x="304" y="624" />
-		<entity schema="Default" name="dashboard_location" color="3986C1" x="816" y="768" />
-		<entity schema="Default" name="dashboard_machine" color="3986C1" x="512" y="624" />
-		<entity schema="Default" name="dashboard_payroll_user" color="3986C1" x="64" y="224" />
-		<entity schema="Default" name="dashboard_task" color="3986C1" x="304" y="384" />
-		<entity schema="Default" name="dashboard_task_type" color="3986C1" x="64" y="624" />
-		<entity schema="Default" name="dashboard_timesheet" color="3986C1" x="512" y="160" />
-		<entity schema="Default" name="dashboard_timesheet_entry" color="3986C1" x="1008" y="336" />
-		<entity schema="Default" name="dashboard_user" color="3986C1" x="512" y="384" />
-		<entity schema="Default" name="dashboard_user_list" color="3986C1" x="752" y="384" />
-		<entity schema="Default" name="dashboard_user_role" color="3986C1" x="752" y="624" />
-		<entity schema="Default" name="dashboard_user_type" color="3986C1" x="992" y="624" />
-		<entity schema="Default" name="django_admin_log" color="3986C1" x="992" y="1072" />
-		<entity schema="Default" name="django_content_type" color="3986C1" x="1232" y="1072" />
-		<entity schema="Default" name="django_migrations" color="3986C1" x="1232" y="1360" />
-		<entity schema="Default" name="django_session" color="3986C1" x="992" y="1360" />
+		<entity schema="Default" name="Assignment" color="C1D8EE" x="1328" y="704" />
+		<entity schema="Default" name="RealTime_Data" color="C1D8EE" x="1920" y="704" />
+		<entity schema="Default" name="Specification" color="BED3F4" x="1888" y="272" />
+		<entity schema="Default" name="Supervisor" color="C1D8EE" x="1264" y="112" />
+		<entity schema="Default" name="WPS" color="BED3F4" x="1632" y="480" />
+		<entity schema="Default" name="WPS_Run" color="BED3F4" x="1632" y="272" />
+		<entity schema="Default" name="WeldTable" color="3986C1" x="1536" y="704" />
+		<entity schema="Default" name="WeldingGroups" color="C1D8EE" x="1472" y="80" />
+		<entity schema="Default" name="WeldingTable" color="C1D8EE" x="1728" y="704" />
+		<entity schema="Default" name="WeldingTeam" color="C1D8EE" x="1312" y="352" />
+		<entity schema="Default" name="auth_group" color="3986C1" x="496" y="1152" />
+		<entity schema="Default" name="auth_group_permissions" color="3986C1" x="656" y="1152" />
+		<entity schema="Default" name="auth_permission" color="3986C1" x="48" y="1152" />
+		<entity schema="Default" name="auth_user" color="3986C1" x="272" y="1152" />
+		<entity schema="Default" name="auth_user_groups" color="3986C1" x="496" y="1472" />
+		<entity schema="Default" name="auth_user_user_permissions" color="3986C1" x="208" y="1472" />
+		<entity schema="Default" name="dashboard_category" color="3986C1" x="304" y="944" />
+		<entity schema="Default" name="dashboard_db_settings" color="3986C1" x="848" y="224" />
+		<entity schema="Default" name="dashboard_job" color="3986C1" x="304" y="704" />
+		<entity schema="Default" name="dashboard_location" color="3986C1" x="496" y="960" />
+		<entity schema="Default" name="dashboard_machine" color="3986C1" x="512" y="720" />
+		<entity schema="Default" name="dashboard_payroll_user" color="3986C1" x="64" y="304" />
+		<entity schema="Default" name="dashboard_task" color="3986C1" x="304" y="464" />
+		<entity schema="Default" name="dashboard_task_type" color="3986C1" x="64" y="704" />
+		<entity schema="Default" name="dashboard_timesheet" color="3986C1" x="512" y="240" />
+		<entity schema="Default" name="dashboard_timesheet_entry" color="3986C1" x="1008" y="416" />
+		<entity schema="Default" name="dashboard_user" color="3986C1" x="512" y="464" />
+		<entity schema="Default" name="dashboard_user_list" color="3986C1" x="752" y="464" />
+		<entity schema="Default" name="dashboard_user_role" color="3986C1" x="752" y="704" />
+		<entity schema="Default" name="dashboard_user_type" color="3986C1" x="992" y="704" />
+		<entity schema="Default" name="django_admin_log" color="3986C1" x="992" y="1152" />
+		<entity schema="Default" name="django_content_type" color="3986C1" x="1232" y="1152" />
+		<entity schema="Default" name="django_migrations" color="3986C1" x="1232" y="1440" />
+		<entity schema="Default" name="django_session" color="3986C1" x="992" y="1440" />
 		<group name="Django" color="C4E0F9" >
 			<entity schema="Default" name="django_admin_log" />
 			<entity schema="Default" name="django_content_type" />
@@ -579,11 +599,10 @@
 			<entity schema="Default" name="WPS" />
 		</group>
 		<group name="Realtime" color="C4E0F9" >
-			<entity schema="Default" name="MachineTbl" />
 			<entity schema="Default" name="RealTime_Data" />
-			<entity schema="Default" name="Assignment" />
 			<entity schema="Default" name="WeldTable" />
 			<entity schema="Default" name="WeldingTable" />
+			<entity schema="Default" name="Assignment" />
 		</group>
 		<group name="Authorisation" color="C4E0F9" >
 			<entity schema="Default" name="auth_group" />
@@ -597,7 +616,6 @@
 			<entity schema="Default" name="dashboard_category" />
 			<entity schema="Default" name="dashboard_job" />
 			<entity schema="Default" name="dashboard_user_list" />
-			<entity schema="Default" name="dashboard_timesheet_entry" />
 			<entity schema="Default" name="dashboard_task_type" />
 			<entity schema="Default" name="dashboard_payroll_user" />
 			<entity schema="Default" name="dashboard_user_role" />
@@ -606,6 +624,7 @@
 			<entity schema="Default" name="dashboard_task" />
 			<entity schema="Default" name="dashboard_user" />
 			<entity schema="Default" name="dashboard_machine" />
+			<entity schema="Default" name="dashboard_timesheet_entry" />
 			<entity schema="Default" name="dashboard_location" />
 		</group>
 		<script name="SQL_Editor" id="Editor-3eb" language="SQL" >

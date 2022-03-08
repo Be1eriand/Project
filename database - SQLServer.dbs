@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="project" id="Project-e4e" database="Sqlite" >
+<project name="project" id="Project-2f" database="SqlServer" >
 	<schema name="Default" >
-		<table name="Assignment" prior="Tbl" >
-			<column name="id" prior="assignmentIdx" type="integer" jt="4" mandatory="y" />
-			<column name="Welder_id" prior="payrollNumber" type="integer" jt="4" mandatory="y" />
-			<column name="Machine_id" type="integer" jt="4" mandatory="y" />
-			<column name="JobID" prior="Job_id" type="integer" jt="4" mandatory="y" />
+		<table name="Assignment" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="Welder_id" type="int" jt="4" mandatory="y" />
+			<column name="Machine_id" type="int" jt="4" mandatory="y" />
+			<column name="JobID" type="int" jt="4" mandatory="y" />
 			<index name="pk_Assignment" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -25,88 +25,88 @@
 				<fk_column name="Machine_id" pk="machine_id" />
 			</fk>
 		</table>
-		<table name="RealTime_Data" prior="RT_weldingData" >
+		<table name="RealTime_Data" >
 			<comment><![CDATA[Holds the raw and calculated data for the realtime data]]></comment>
-			<column name="id" prior="RTdataIdx" type="integer" jt="4" mandatory="y" />
-			<column name="Time" type="time" jt="92" mandatory="y" />
-			<column name="Temperature" type="float" jt="7" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="Time" type="time" length="0" jt="92" mandatory="y" />
+			<column name="Temperature" type="float" jt="8" >
 				<comment><![CDATA[Celsius]]></comment>
 			</column>
-			<column name="Current" type="float" jt="7" >
+			<column name="Current" type="float" jt="8" >
 				<comment><![CDATA[Amps]]></comment>
 			</column>
-			<column name="Voltage" type="float" jt="7" >
+			<column name="Voltage" type="float" jt="8" >
 				<comment><![CDATA[Volts]]></comment>
 			</column>
-			<column name="Length" type="float" jt="7" >
+			<column name="Length" type="float" jt="8" >
 				<defo><![CDATA[0.00]]></defo>
 				<comment><![CDATA[Weld Length in mm]]></comment>
 			</column>
-			<column name="WireFeedRate" type="float" jt="7" >
+			<column name="WireFeedRate" type="float" jt="8" >
 				<comment><![CDATA[mm/min]]></comment>
 			</column>
-			<column name="GasUsed" prior="Gas Used" type="float" jt="7" />
-			<column name="HeatInput" type="float" jt="7" >
+			<column name="GasUsed" type="float" jt="8" />
+			<column name="HeatInput" type="float" jt="8" >
 				<comment><![CDATA[KJ/mm]]></comment>
 			</column>
-			<column name="TravelSpeed" type="float" jt="7" >
+			<column name="TravelSpeed" type="float" jt="8" >
 				<comment><![CDATA[mm/min]]></comment>
 			</column>
-			<column name="TimeDelta" type="float" jt="7" >
+			<column name="TimeDelta" type="float" jt="8" >
 				<comment><![CDATA[seconds]]></comment>
 			</column>
-			<column name="Power" type="float" jt="7" >
+			<column name="Power" type="float" jt="8" >
 				<comment><![CDATA[KJ]]></comment>
 			</column>
 			<index name="pk_RealTime_Data" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Specification" prior="Specifications" >
-			<column name="id" prior="Specificationidx" type="integer" jt="4" mandatory="y" />
+		<table name="Specification" >
+			<column name="id" type="int" jt="4" mandatory="y" />
 			<column name="Side" type="varchar" length="10" jt="12" />
 			<column name="Position" type="varchar" length="20" jt="12" />
 			<column name="Class" type="varchar" length="20" jt="12" />
-			<column name="Size" type="float" jt="7" />
-			<column name="Gas_Flux_Type" prior="Gas/Flux Type" type="varchar" length="20" jt="12" />
-			<column name="Current_Max" prior="Current Max" type="float" jt="7" />
-			<column name="Current_min" prior="Current min" type="float" jt="7" />
-			<column name="Voltage_Min" prior="Voltage Min" type="float" jt="7" />
-			<column name="Voltage_Max" prior="Voltage Max" type="float" jt="7" />
-			<column name="Polarity" type="float" jt="7" />
-			<column name="Travel_Speed_Min" prior="Travel speed Min" type="float" jt="7" />
-			<column name="Travel_Speed_Max" prior="Travel speed Max" type="float" jt="7" />
-			<column name="Interpass_Temp_Min" prior="Interpass Temp Min" type="float" jt="7" />
-			<column name="Interpass_Temp_Max" prior="Interpass Temp Max" type="float" jt="7" />
-			<column name="Heat_Input_Min" prior="Heat Input Min" type="float" jt="7" />
-			<column name="Heat_Input_Max" prior="Heat Input Max" type="float" jt="7" />
+			<column name="Size" type="float" jt="8" />
+			<column name="Gas_Flux_Type" type="varchar" length="20" jt="12" />
+			<column name="Current_Max" type="float" jt="8" />
+			<column name="Current_min" type="float" jt="8" />
+			<column name="Voltage_Min" type="float" jt="8" />
+			<column name="Voltage_Max" type="float" jt="8" />
+			<column name="Polarity" type="float" jt="8" />
+			<column name="Travel_Speed_Min" type="float" jt="8" />
+			<column name="Travel_Speed_Max" type="float" jt="8" />
+			<column name="Interpass_Temp_Min" type="float" jt="8" />
+			<column name="Interpass_Temp_Max" type="float" jt="8" />
+			<column name="Heat_Input_Min" type="float" jt="8" />
+			<column name="Heat_Input_Max" type="float" jt="8" />
 			<index name="pk_Specification" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
 		<table name="Supervisor" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="id" type="int" jt="4" mandatory="y" />
 			<column name="FirstName" type="varchar" length="50" jt="12" />
 			<column name="LastName" type="varchar" length="50" jt="12" />
 			<index name="pk_Supervisor" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WPS" prior="WP" >
+		<table name="WPS" >
 			<comment><![CDATA[WPS data]]></comment>
-			<column name="id" prior="WPS_Idx" type="integer" jt="4" mandatory="y" />
-			<column name="WPS_No" prior="WPS No" type="varchar" length="20" jt="12" mandatory="y" />
-			<column name="Welding_Code" prior="Welding Code" type="varchar" length="20" jt="12" />
-			<column name="Joint_type" prior="Joint type" type="varchar" length="20" jt="12" />
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="WPS_No" type="varchar" length="20" jt="12" mandatory="y" />
+			<column name="Welding_Code" type="varchar" length="20" jt="12" />
+			<column name="Joint_type" type="varchar" length="20" jt="12" />
 			<index name="pk_WPS" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WPS_Run" prior="WPS_" >
-			<column name="id" prior="idx" type="integer" jt="4" mandatory="y" />
-			<column name="Run_No" prior="Run no" type="integer" jt="4" />
-			<column name="WPS_id" prior="WPS_Idx" type="integer" jt="4" mandatory="y" />
-			<column name="Specification_id" prior="Specation_id" type="integer" jt="4" mandatory="y" />
+		<table name="WPS_Run" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="Run_No" type="int" jt="4" />
+			<column name="WPS_id" type="int" jt="4" mandatory="y" />
+			<column name="Specification_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_WPS_Run" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -117,10 +117,10 @@
 				<fk_column name="Specification_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldTable" prior="Tbl" >
-			<column name="id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
-			<column name="RunNo" type="integer" jt="4" mandatory="y" />
-			<column name="Assignment_id" type="integer" jt="4" mandatory="y" />
+		<table name="WeldTable" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="RunNo" type="int" jt="4" mandatory="y" />
+			<column name="Assignment_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_WeldTable" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -129,7 +129,7 @@
 			</fk>
 		</table>
 		<table name="WeldingGroups" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="id" type="int" jt="4" mandatory="y" />
 			<column name="GroupType" type="varchar" length="40" jt="12" mandatory="y" >
 				<comment><![CDATA[GroupType:
 - Structural Welding Group
@@ -139,11 +139,11 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WeldingTable" prior="Tbl" >
-			<column name="RT_id" prior="RTdataIdx" type="integer" jt="4" mandatory="y" />
-			<column name="WT_id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
-			<column name="Welder_id" type="integer" jt="4" mandatory="y" />
-			<column name="Machine_id" prior="machine_id" type="integer" jt="4" mandatory="y" />
+		<table name="WeldingTable" >
+			<column name="RT_id" type="int" jt="4" mandatory="y" />
+			<column name="WT_id" type="int" jt="4" mandatory="y" />
+			<column name="Welder_id" type="int" jt="4" mandatory="y" />
+			<column name="Machine_id" type="int" jt="4" mandatory="y" />
 			<index name="unq_WeldingTable_RT_id" unique="UNIQUE_INDEX" >
 				<column name="RT_id" />
 			</index>
@@ -164,11 +164,11 @@
 				<fk_column name="WT_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldingTeam" prior="Team" >
-			<column name="id" type="integer" jt="4" mandatory="y" />
-			<column name="isMember" type="boolean" jt="-7" mandatory="y" />
-			<column name="SupervisorId" type="integer" jt="4" mandatory="y" />
-			<column name="TeamMemberId" type="integer" jt="4" mandatory="y" />
+		<table name="WeldingTeam" >
+			<column name="id" type="int" jt="4" mandatory="y" />
+			<column name="isMember" type="bit" jt="-7" mandatory="y" />
+			<column name="SupervisorId" type="int" jt="4" mandatory="y" />
+			<column name="TeamMemberId" type="int" jt="4" mandatory="y" />
 			<index name="pk_Team" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -180,7 +180,7 @@
 			</fk>
 		</table>
 		<table name="auth_group" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
 			<column name="name" type="varchar" length="150" jt="12" mandatory="y" />
@@ -192,11 +192,11 @@
 			</index>
 		</table>
 		<table name="auth_group_permissions" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="group_id" type="integer" jt="4" mandatory="y" />
-			<column name="permission_id" type="integer" jt="4" mandatory="y" />
+			<column name="group_id" type="int" jt="4" mandatory="y" />
+			<column name="permission_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_auth_group_permissions" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -218,10 +218,10 @@
 			</fk>
 		</table>
 		<table name="auth_permission" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="content_type_id" type="integer" jt="4" mandatory="y" />
+			<column name="content_type_id" type="int" jt="4" mandatory="y" />
 			<column name="codename" type="varchar" length="100" jt="12" mandatory="y" />
 			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
 			<index name="pk_auth_permission" unique="PRIMARY_KEY" >
@@ -239,18 +239,18 @@
 			</fk>
 		</table>
 		<table name="auth_user" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
 			<column name="password" type="varchar" length="128" jt="12" mandatory="y" />
-			<column name="last_login" type="datetime" jt="93" />
-			<column name="is_superuser" type="boolean" jt="-7" mandatory="y" />
+			<column name="last_login" type="datetime" jt="92" />
+			<column name="is_superuser" type="bit" jt="-7" mandatory="y" />
 			<column name="username" type="varchar" length="150" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="150" jt="12" mandatory="y" />
 			<column name="email" type="varchar" length="254" jt="12" mandatory="y" />
-			<column name="is_staff" type="boolean" jt="-7" mandatory="y" />
-			<column name="is_active" type="boolean" jt="-7" mandatory="y" />
-			<column name="date_joined" type="datetime" jt="93" mandatory="y" />
+			<column name="is_staff" type="bit" jt="-7" mandatory="y" />
+			<column name="is_active" type="bit" jt="-7" mandatory="y" />
+			<column name="date_joined" type="datetime" jt="92" mandatory="y" />
 			<column name="first_name" type="varchar" length="150" jt="12" mandatory="y" />
 			<index name="pk_auth_user" unique="PRIMARY_KEY" >
 				<column name="id" />
@@ -260,11 +260,11 @@
 			</index>
 		</table>
 		<table name="auth_user_groups" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="user_id" type="integer" jt="4" mandatory="y" />
-			<column name="group_id" type="integer" jt="4" mandatory="y" />
+			<column name="user_id" type="int" jt="4" mandatory="y" />
+			<column name="group_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_auth_user_groups" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -286,11 +286,11 @@
 			</fk>
 		</table>
 		<table name="auth_user_user_permissions" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="user_id" type="integer" jt="4" mandatory="y" />
-			<column name="permission_id" type="integer" jt="4" mandatory="y" />
+			<column name="user_id" type="int" jt="4" mandatory="y" />
+			<column name="permission_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_auth_user_user_permissions" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -312,8 +312,8 @@
 			</fk>
 		</table>
 		<table name="dashboard_category" spec="" >
-			<column name="arctime" type="integer" jt="4" mandatory="y" />
-			<column name="category_id" type="integer" jt="4" mandatory="y" />
+			<column name="arctime" type="int" jt="4" mandatory="y" />
+			<column name="category_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_category" unique="PRIMARY_KEY" >
 				<column name="category_id" />
 			</index>
@@ -322,7 +322,7 @@
 			</fk>
 		</table>
 		<table name="dashboard_db_settings" spec="" >
-			<column name="setting_id" type="integer" jt="4" mandatory="y" />
+			<column name="setting_id" type="int" jt="4" mandatory="y" />
 			<column name="name" type="varchar" length="128" jt="12" mandatory="y" />
 			<column name="desc" type="varchar" length="128" jt="12" mandatory="y" />
 			<column name="value" type="varchar" length="128" jt="12" mandatory="y" />
@@ -331,12 +331,12 @@
 			</index>
 		</table>
 		<table name="dashboard_job" spec="" >
-			<column name="job_id" type="integer" jt="4" mandatory="y" />
-			<column name="category" type="integer" jt="4" mandatory="y" />
+			<column name="job_id" type="int" jt="4" mandatory="y" />
+			<column name="category" type="int" jt="4" mandatory="y" />
 			<column name="start_date" type="date" jt="91" mandatory="y" />
 			<column name="end_date" type="date" jt="91" />
-			<column name="accum_hrs" type="real" jt="8" mandatory="y" />
-			<column name="total_hrs" type="real" jt="8" mandatory="y" />
+			<column name="accum_hrs" type="real" jt="7" mandatory="y" />
+			<column name="total_hrs" type="real" jt="7" mandatory="y" />
 			<index name="pk_dashboard_job" unique="PRIMARY_KEY" >
 				<column name="job_id" />
 			</index>
@@ -346,7 +346,7 @@
 		</table>
 		<table name="dashboard_location" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="location_id" type="integer" jt="4" mandatory="y" />
+			<column name="location_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
 				<column name="location_id" />
 			</index>
@@ -356,8 +356,8 @@
 		</table>
 		<table name="dashboard_machine" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="location_id" type="integer" jt="4" mandatory="y" />
-			<column name="machine_id" type="integer" jt="4" mandatory="y" />
+			<column name="location_id" type="int" jt="4" mandatory="y" />
+			<column name="machine_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_machine" unique="PRIMARY_KEY" >
 				<column name="machine_id" />
 			</index>
@@ -368,18 +368,18 @@
 		<table name="dashboard_payroll_user" spec="" >
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="employment_status" type="boolean" jt="-7" mandatory="y" />
-			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
+			<column name="employment_status" type="bit" jt="-7" mandatory="y" />
+			<column name="payroll_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_payroll_user" unique="PRIMARY_KEY" >
 				<column name="payroll_id" />
 			</index>
 		</table>
 		<table name="dashboard_task" spec="" >
-			<column name="uid" type="integer" jt="4" mandatory="y" />
-			<column name="type_id" prior="type" type="integer" jt="4" mandatory="y" />
-			<column name="job_id" type="integer" jt="4" mandatory="y" />
-			<column name="machine_id" type="integer" jt="4" mandatory="y" />
-			<column name="datetime" type="datetime" jt="93" mandatory="y" />
+			<column name="uid" type="int" jt="4" mandatory="y" />
+			<column name="type_id" type="int" jt="4" mandatory="y" />
+			<column name="job_id" type="int" jt="4" mandatory="y" />
+			<column name="machine_id" type="int" jt="4" mandatory="y" />
+			<column name="datetime" type="datetime" jt="92" mandatory="y" />
 			<column name="task_id" type="varchar" length="128" jt="12" mandatory="y" />
 			<index name="pk_dashboard_task" unique="PRIMARY_KEY" >
 				<column name="task_id" />
@@ -387,7 +387,7 @@
 		</table>
 		<table name="dashboard_task_type" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="task_type_id" type="integer" jt="4" mandatory="y" />
+			<column name="task_type_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
 				<column name="task_type_id" />
 			</index>
@@ -396,34 +396,34 @@
 			</fk>
 		</table>
 		<table name="dashboard_timesheet" spec="" >
-			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
+			<column name="payroll_id" type="int" jt="4" mandatory="y" />
 			<column name="date" type="date" jt="91" mandatory="y" />
-			<column name="shift_start" type="time" jt="92" mandatory="y" />
-			<column name="shift_end" type="time" jt="92" mandatory="y" />
+			<column name="shift_start" type="time" length="0" jt="92" mandatory="y" />
+			<column name="shift_end" type="time" length="0" jt="92" mandatory="y" />
 			<column name="timesheet_id" type="varchar" length="128" jt="12" mandatory="y" />
 			<index name="pk_dashboard_timesheet" unique="PRIMARY_KEY" >
 				<column name="timesheet_id" />
 			</index>
 		</table>
 		<table name="dashboard_timesheet_entry" spec="" >
-			<column name="tid" type="integer" jt="4" mandatory="y" />
+			<column name="tid" type="int" jt="4" mandatory="y" />
 			<column name="org_timesheet_id" type="varchar" length="128" jt="12" mandatory="y" />
-			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
-			<column name="date" type="datetime" jt="93" mandatory="y" />
-			<column name="shift_end" type="time" jt="92" mandatory="y" />
-			<column name="shift_start" type="time" jt="92" mandatory="y" />
-			<column name="shift_length" type="real" jt="8" mandatory="y" />
+			<column name="payroll_id" type="int" jt="4" mandatory="y" />
+			<column name="date" type="datetime" jt="92" mandatory="y" />
+			<column name="shift_end" type="time" length="0" jt="92" mandatory="y" />
+			<column name="shift_start" type="time" length="0" jt="92" mandatory="y" />
+			<column name="shift_length" type="real" jt="7" mandatory="y" />
 			<index name="pk_dashboard_timesheet_entry" unique="PRIMARY_KEY" >
 				<column name="tid" />
 			</index>
 		</table>
 		<table name="dashboard_user" spec="" >
-			<column name="uid" type="integer" jt="4" mandatory="y" />
-			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
+			<column name="uid" type="int" jt="4" mandatory="y" />
+			<column name="payroll_id" type="int" jt="4" mandatory="y" />
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="timesheet_status" type="boolean" jt="-7" mandatory="y" />
-			<column name="status" type="boolean" jt="-7" mandatory="y" />
+			<column name="timesheet_status" type="bit" jt="-7" mandatory="y" />
+			<column name="status" type="bit" jt="-7" mandatory="y" />
 			<index name="pk_dashboard_user" unique="PRIMARY_KEY" >
 				<column name="uid" />
 			</index>
@@ -437,8 +437,8 @@
 		<table name="dashboard_user_list" spec="" >
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="employment_status" type="boolean" jt="-7" mandatory="y" />
-			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
+			<column name="employment_status" type="bit" jt="-7" mandatory="y" />
+			<column name="payroll_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_user_list" unique="PRIMARY_KEY" >
 				<column name="payroll_id" />
 			</index>
@@ -453,11 +453,11 @@
 			</fk>
 		</table>
 		<table name="dashboard_user_role" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="uid" type="integer" jt="4" mandatory="y" />
-			<column name="type_id" type="integer" jt="4" mandatory="y" />
+			<column name="uid" type="int" jt="4" mandatory="y" />
+			<column name="type_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_user_role" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -476,23 +476,23 @@
 		</table>
 		<table name="dashboard_user_type" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
-			<column name="level" type="integer" jt="4" mandatory="y" />
-			<column name="status" type="boolean" jt="-7" mandatory="y" />
-			<column name="type_id" type="integer" jt="4" mandatory="y" />
+			<column name="level" type="int" jt="4" mandatory="y" />
+			<column name="status" type="bit" jt="-7" mandatory="y" />
+			<column name="type_id" type="int" jt="4" mandatory="y" />
 			<index name="pk_dashboard_user_type" unique="PRIMARY_KEY" >
 				<column name="type_id" />
 			</index>
 		</table>
 		<table name="django_admin_log" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
-			<column name="action_time" type="datetime" jt="93" mandatory="y" />
+			<column name="action_time" type="datetime" jt="92" mandatory="y" />
 			<column name="object_id" type="text" jt="-1" />
 			<column name="object_repr" type="varchar" length="200" jt="12" mandatory="y" />
 			<column name="change_message" type="text" jt="-1" mandatory="y" />
-			<column name="content_type_id" type="integer" jt="4" />
-			<column name="user_id" type="integer" jt="4" mandatory="y" />
+			<column name="content_type_id" type="int" jt="4" />
+			<column name="user_id" type="int" jt="4" mandatory="y" />
 			<column name="action_flag" type="smallint" jt="5" mandatory="y" />
 			<column name="CHECK" type="varchar" jt="12" />
 			<index name="pk_django_admin_log" unique="PRIMARY_KEY" >
@@ -515,7 +515,7 @@
 			</fk>
 		</table>
 		<table name="django_content_type" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
 			<column name="app_label" type="varchar" length="100" jt="12" mandatory="y" />
@@ -529,12 +529,12 @@
 			</index>
 		</table>
 		<table name="django_migrations" spec="" >
-			<column name="id" type="integer" jt="4" mandatory="y" >
+			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
 			<column name="app" type="varchar" length="255" jt="12" mandatory="y" />
 			<column name="name" type="varchar" length="255" jt="12" mandatory="y" />
-			<column name="applied" type="datetime" jt="93" mandatory="y" />
+			<column name="applied" type="datetime" jt="92" mandatory="y" />
 			<index name="pk_django_migrations" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -542,7 +542,7 @@
 		<table name="django_session" spec="" >
 			<column name="session_key" type="varchar" length="40" jt="12" mandatory="y" />
 			<column name="session_data" type="text" jt="-1" mandatory="y" />
-			<column name="expire_date" type="datetime" jt="93" mandatory="y" />
+			<column name="expire_date" type="datetime" jt="92" mandatory="y" />
 			<index name="pk_django_session" unique="PRIMARY_KEY" >
 				<column name="session_key" />
 			</index>
@@ -551,8 +551,7 @@
 			</index>
 		</table>
 	</schema>
-	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.36.0.3.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/e_mei/University of South Australia/Student_Fighting Mongooses - UO Capstone Project - Group 2 - General/Our Smart Fab Project/Project/project.sqlite3" />
-	<layout name="Default Layout" id="Layout-57b" show_relation="columns" >
+	<layout name="Default Layout" id="Layout-23b4" confirmed="y" show_relation="columns" >
 		<entity schema="Default" name="Assignment" color="C1D8EE" x="1328" y="704" />
 		<entity schema="Default" name="RealTime_Data" color="C1D8EE" x="1920" y="704" />
 		<entity schema="Default" name="Specification" color="BED3F4" x="1888" y="272" />
@@ -627,125 +626,5 @@
 			<entity schema="Default" name="dashboard_timesheet_entry" />
 			<entity schema="Default" name="dashboard_location" />
 		</group>
-		<script name="SQL_Editor" id="Editor-3eb" language="SQL" >
-			<string><![CDATA[CREATE TABLE auth_group ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	name                 varchar(150) NOT NULL    
- );
-
-CREATE TABLE auth_user ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	password             varchar(128) NOT NULL    ,
-	last_login           datetime     ,
-	is_superuser         boolean NOT NULL    ,
-	username             varchar(150) NOT NULL    ,
-	last_name            varchar(150) NOT NULL    ,
-	email                varchar(254) NOT NULL    ,
-	is_staff             boolean NOT NULL    ,
-	is_active            boolean NOT NULL    ,
-	date_joined          datetime NOT NULL    ,
-	first_name           varchar(150) NOT NULL    
- );
-
-CREATE TABLE auth_user_groups ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	user_id              integer NOT NULL    ,
-	group_id             integer NOT NULL    ,
-	FOREIGN KEY ( user_id ) REFERENCES auth_user( id )  ,
-	FOREIGN KEY ( group_id ) REFERENCES auth_group( id )  
- );
-
-CREATE TABLE django_content_type ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	app_label            varchar(100) NOT NULL    ,
-	model                varchar(100) NOT NULL    
- );
-
-CREATE TABLE django_migrations ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	app                  varchar(255) NOT NULL    ,
-	name                 varchar(255) NOT NULL    ,
-	applied              datetime NOT NULL    
- );
-
-CREATE TABLE django_session ( 
-	session_key          varchar(40) NOT NULL  PRIMARY KEY  ,
-	session_data         text NOT NULL    ,
-	expire_date          datetime NOT NULL    
- );
-
-CREATE TABLE auth_permission ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	content_type_id      integer NOT NULL    ,
-	codename             varchar(100) NOT NULL    ,
-	name                 varchar(255) NOT NULL    ,
-	FOREIGN KEY ( content_type_id ) REFERENCES django_content_type( id )  
- );
-
-CREATE TABLE auth_user_user_permissions ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	user_id              integer NOT NULL    ,
-	permission_id        integer NOT NULL    ,
-	FOREIGN KEY ( user_id ) REFERENCES auth_user( id )  ,
-	FOREIGN KEY ( permission_id ) REFERENCES auth_permission( id )  
- );
-
-CREATE TABLE django_admin_log ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	action_time          datetime NOT NULL    ,
-	object_id            text     ,
-	object_repr          varchar(200) NOT NULL    ,
-	change_message       text NOT NULL    ,
-	content_type_id      integer     ,
-	user_id              integer NOT NULL    ,
-	action_flag          smallint NOT NULL    ,
-	FOREIGN KEY ( content_type_id ) REFERENCES django_content_type( id )  ,
-	FOREIGN KEY ( user_id ) REFERENCES auth_user( id )  ,
-	CHECK ( "action_flag" >= 0 )
- );
-
-CREATE TABLE auth_group_permissions ( 
-	id                   integer NOT NULL  PRIMARY KEY AUTOINCREMENT ,
-	group_id             integer NOT NULL    ,
-	permission_id        integer NOT NULL    ,
-	FOREIGN KEY ( group_id ) REFERENCES auth_group( id )  ,
-	FOREIGN KEY ( permission_id ) REFERENCES auth_permission( id )  
- );
-
-CREATE UNIQUE INDEX unq_auth_group_name ON auth_group ( name );
-
-CREATE UNIQUE INDEX unq_auth_user_username ON auth_user ( username );
-
-CREATE UNIQUE INDEX auth_user_groups_user_id_group_id_94350c0c_uniq ON auth_user_groups ( user_id, group_id );
-
-CREATE INDEX auth_user_groups_user_id_6a12ed8b ON auth_user_groups ( user_id );
-
-CREATE INDEX auth_user_groups_group_id_97559544 ON auth_user_groups ( group_id );
-
-CREATE UNIQUE INDEX django_content_type_app_label_model_76bd3d3b_uniq ON django_content_type ( app_label, model );
-
-CREATE INDEX django_session_expire_date_a5c62663 ON django_session ( expire_date );
-
-CREATE UNIQUE INDEX auth_permission_content_type_id_codename_01ab375a_uniq ON auth_permission ( content_type_id, codename );
-
-CREATE INDEX auth_permission_content_type_id_2f476e4b ON auth_permission ( content_type_id );
-
-CREATE UNIQUE INDEX auth_user_user_permissions_user_id_permission_id_14a6b632_uniq ON auth_user_user_permissions ( user_id, permission_id );
-
-CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON auth_user_user_permissions ( user_id );
-
-CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON auth_user_user_permissions ( permission_id );
-
-CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON django_admin_log ( content_type_id );
-
-CREATE INDEX django_admin_log_user_id_c564eba6 ON django_admin_log ( user_id );
-
-CREATE UNIQUE INDEX auth_group_permissions_group_id_permission_id_0cd325b0_uniq ON auth_group_permissions ( group_id, permission_id );
-
-CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON auth_group_permissions ( group_id );
-
-CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON auth_group_permissions ( permission_id );
-]]></string>
-		</script>
 	</layout>
 </project>

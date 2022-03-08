@@ -6,7 +6,7 @@ import threading
 
 HOST = '127.0.0.1'
 PORT = 8888
-SENSORDATASIZE = 43
+SENSORDATASIZE = 46
 
 
 class Client:
@@ -41,13 +41,13 @@ class Client:
                     print(f"Welder ID: {data.welderid}")
                     print(f"Job ID: {data.jobid}")
                     print(f"Date : {data.date.padded_day}/{data.date.padded_month}/{data.date.padded_year}")
-                    print(f"Time: {data.time.padded_hour}:{data.time.padded_minute}:{data.time.padded_second}")
-                    print(f"Current: {data.rtdata.current}A")
-                    print(f"Voltage: {data.rtdata.voltage}V")
-                    print(f"Temperature: {data.rtdata.temperature}C")
-                    print(f"Weld Length: {data.rtdata.length}mm")
-                    print(f"Wire Feed Rate: {data.rtdata.wirefeedrate}mm/min")
-                    print(f"Gas Used: {data.rtdata.gasused}L")
+                    print(f"Time: {data.time.padded_hour}:{data.time.padded_minute}:{data.time.second/1000}")
+                    print(f"Current: {data.rtdata.current/1000}A")
+                    print(f"Voltage: {data.rtdata.voltage/1000}V")
+                    print(f"Temperature: {data.rtdata.temperature/1000}C")
+                    print(f"Weld Length: {data.rtdata.length/1000}mm")
+                    print(f"Wire Feed Rate: {data.rtdata.wirefeedrate/1000}mm/min")
+                    print(f"Gas Used: {data.rtdata.gasused/1000}L")
                     print("-----------------------------------------------")
                     print("")
                     print("")
