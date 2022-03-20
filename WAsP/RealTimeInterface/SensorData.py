@@ -19,6 +19,7 @@ class SensorData(KaitaiStruct):
         self.machineid = self._io.read_u2le()
         self.welderid = self._io.read_u4le()
         self.jobid = self._io.read_u4le()
+        self.runid = self._io.read_u1()
         self.time = SensorData.Time(self._io, self, self._root)
         self.date = SensorData.Date(self._io, self, self._root)
         self.rtdata = SensorData.Data(self._io, self, self._root)

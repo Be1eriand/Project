@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="project" id="Project-e4e" database="Sqlite" >
+<project name="SmartFab" id="Project-e4e" database="Sqlite" >
 	<schema name="Default" >
-		<table name="Assignment" prior="Tbl" >
+		<table name="AlertTable" prior="Alert Table" generator_rows="150" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="AlertType" type="varchar" length="40" jt="12" mandatory="y" />
+			<index name="pk_AlertTable" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_AlertTable" to_schema="Default" to_table="AlertsTable" >
+				<fk_column name="id" pk="AlertType" />
+			</fk>
+		</table>
+		<table name="AlertsTable" prior="Alerts Table" generator_rows="100" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="DateTime" type="datetime" jt="93" mandatory="y" />
+			<column name="JobId" type="integer" jt="4" mandatory="y" />
+			<column name="AlertType" type="integer" jt="4" mandatory="y" />
+			<column name="SpecType" type="integer" jt="4" mandatory="y" />
+			<index name="pk_AlertsTable" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="unq_Alerts Table_AlertType" unique="UNIQUE_INDEX" >
+				<column name="AlertType" />
+			</index>
+			<index name="unq_AlertsTable_SpecType" unique="UNIQUE_INDEX" >
+				<column name="SpecType" />
+			</index>
+		</table>
+		<table name="Assignment" prior="Tbl" generator_rows="337" >
 			<column name="id" prior="assignmentIdx" type="integer" jt="4" mandatory="y" />
 			<column name="Welder_id" prior="payrollNumber" type="integer" jt="4" mandatory="y" />
 			<column name="Machine_id" type="integer" jt="4" mandatory="y" />
@@ -25,7 +51,7 @@
 				<fk_column name="Machine_id" pk="machine_id" />
 			</fk>
 		</table>
-		<table name="RealTime_Data" prior="RT_weldingData" >
+		<table name="RealTime_Data" prior="RT_weldingData" generator_rows="100" >
 			<comment><![CDATA[Holds the raw and calculated data for the realtime data]]></comment>
 			<column name="id" prior="RTdataIdx" type="integer" jt="4" mandatory="y" />
 			<column name="Time" type="time" jt="92" mandatory="y" />
@@ -62,7 +88,17 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Specification" prior="Specifications" >
+		<table name="SpecType" generator_rows="150" >
+			<column name="id" type="integer" jt="4" mandatory="y" />
+			<column name="SpecType" type="varchar" length="40" jt="12" mandatory="y" />
+			<index name="pk_SpecType" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_SpecType" to_schema="Default" to_table="AlertsTable" >
+				<fk_column name="id" pk="SpecType" />
+			</fk>
+		</table>
+		<table name="Specification" prior="Specifications" generator_rows="100" >
 			<column name="id" prior="Specificationidx" type="integer" jt="4" mandatory="y" />
 			<column name="Side" type="varchar" length="10" jt="12" />
 			<column name="Position" type="varchar" length="20" jt="12" />
@@ -84,7 +120,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Supervisor" >
+		<table name="Supervisor" generator_rows="100" >
 			<column name="id" type="integer" jt="4" mandatory="y" />
 			<column name="FirstName" type="varchar" length="50" jt="12" />
 			<column name="LastName" type="varchar" length="50" jt="12" />
@@ -92,7 +128,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WPS" prior="WP" >
+		<table name="WPS" prior="WP" generator_rows="100" >
 			<comment><![CDATA[WPS data]]></comment>
 			<column name="id" prior="WPS_Idx" type="integer" jt="4" mandatory="y" />
 			<column name="WPS_No" prior="WPS No" type="varchar" length="20" jt="12" mandatory="y" />
@@ -102,7 +138,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WPS_Run" prior="WPS_" >
+		<table name="WPS_Run" prior="WPS_" generator_rows="150" >
 			<column name="id" prior="idx" type="integer" jt="4" mandatory="y" />
 			<column name="Run_No" prior="Run no" type="integer" jt="4" />
 			<column name="WPS_id" prior="WPS_Idx" type="integer" jt="4" mandatory="y" />
@@ -117,7 +153,7 @@
 				<fk_column name="Specification_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldTable" prior="Tbl" >
+		<table name="WeldTable" prior="Tbl" generator_rows="505" >
 			<column name="id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
 			<column name="RunNo" type="integer" jt="4" mandatory="y" />
 			<column name="Assignment_id" type="integer" jt="4" mandatory="y" />
@@ -128,7 +164,7 @@
 				<fk_column name="Assignment_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldingGroups" >
+		<table name="WeldingGroups" generator_rows="100" >
 			<column name="id" type="integer" jt="4" mandatory="y" />
 			<column name="GroupType" type="varchar" length="40" jt="12" mandatory="y" >
 				<comment><![CDATA[GroupType:
@@ -139,7 +175,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="WeldingTable" prior="Tbl" >
+		<table name="WeldingTable" prior="Tbl" generator_rows="757" >
 			<column name="RT_id" prior="RTdataIdx" type="integer" jt="4" mandatory="y" />
 			<column name="WT_id" prior="WT_idx" type="integer" jt="4" mandatory="y" />
 			<column name="Welder_id" type="integer" jt="4" mandatory="y" />
@@ -164,12 +200,12 @@
 				<fk_column name="WT_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldingTeam" prior="Team" >
+		<table name="WeldingTeam" prior="Team" generator_rows="337" >
 			<column name="id" type="integer" jt="4" mandatory="y" />
 			<column name="isMember" type="boolean" jt="-7" mandatory="y" />
 			<column name="SupervisorId" type="integer" jt="4" mandatory="y" />
 			<column name="TeamMemberId" type="integer" jt="4" mandatory="y" />
-			<index name="pk_Team" unique="PRIMARY_KEY" >
+			<index name="pk_WeldingTeam" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<fk name="fk_Team" to_schema="Default" to_table="Supervisor" >
@@ -179,7 +215,7 @@
 				<fk_column name="TeamMemberId" pk="payroll_id" />
 			</fk>
 		</table>
-		<table name="auth_group" spec="" >
+		<table name="auth_group" generator_rows="100" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -191,7 +227,7 @@
 				<column name="name" />
 			</index>
 		</table>
-		<table name="auth_group_permissions" spec="" >
+		<table name="auth_group_permissions" generator_rows="225" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -217,7 +253,7 @@
 				<fk_column name="permission_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_permission" spec="" >
+		<table name="auth_permission" generator_rows="150" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -238,7 +274,7 @@
 				<fk_column name="content_type_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user" spec="" >
+		<table name="auth_user" generator_rows="100" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -259,7 +295,7 @@
 				<column name="username" />
 			</index>
 		</table>
-		<table name="auth_user_groups" spec="" >
+		<table name="auth_user_groups" generator_rows="150" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -285,7 +321,7 @@
 				<fk_column name="group_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user_user_permissions" spec="" >
+		<table name="auth_user_user_permissions" generator_rows="225" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -311,7 +347,7 @@
 				<fk_column name="permission_id" pk="id" />
 			</fk>
 		</table>
-		<table name="dashboard_category" spec="" >
+		<table name="dashboard_category" generator_rows="225" spec="" >
 			<column name="arctime" type="integer" jt="4" mandatory="y" />
 			<column name="category_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_dashboard_category" unique="PRIMARY_KEY" >
@@ -321,7 +357,7 @@
 				<fk_column name="category_id" pk="category" />
 			</fk>
 		</table>
-		<table name="dashboard_db_settings" spec="" >
+		<table name="dashboard_db_settings" generator_rows="100" spec="" >
 			<column name="setting_id" type="integer" jt="4" mandatory="y" />
 			<column name="name" type="varchar" length="128" jt="12" mandatory="y" />
 			<column name="desc" type="varchar" length="128" jt="12" mandatory="y" />
@@ -330,7 +366,7 @@
 				<column name="setting_id" />
 			</index>
 		</table>
-		<table name="dashboard_job" spec="" >
+		<table name="dashboard_job" generator_rows="150" spec="" >
 			<column name="job_id" type="integer" jt="4" mandatory="y" />
 			<column name="category" type="integer" jt="4" mandatory="y" />
 			<column name="start_date" type="date" jt="91" mandatory="y" />
@@ -344,7 +380,7 @@
 				<fk_column name="job_id" pk="job_id" />
 			</fk>
 		</table>
-		<table name="dashboard_location" spec="" >
+		<table name="dashboard_location" generator_rows="225" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="location_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
@@ -354,7 +390,7 @@
 				<fk_column name="location_id" pk="location_id" />
 			</fk>
 		</table>
-		<table name="dashboard_machine" spec="" >
+		<table name="dashboard_machine" generator_rows="150" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="location_id" type="integer" jt="4" mandatory="y" />
 			<column name="machine_id" type="integer" jt="4" mandatory="y" />
@@ -365,7 +401,7 @@
 				<fk_column name="machine_id" pk="machine_id" />
 			</fk>
 		</table>
-		<table name="dashboard_payroll_user" spec="" >
+		<table name="dashboard_payroll_user" generator_rows="100" spec="" >
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="employment_status" type="boolean" jt="-7" mandatory="y" />
@@ -374,7 +410,7 @@
 				<column name="payroll_id" />
 			</index>
 		</table>
-		<table name="dashboard_task" spec="" >
+		<table name="dashboard_task" generator_rows="100" spec="" >
 			<column name="uid" type="integer" jt="4" mandatory="y" />
 			<column name="type_id" prior="type" type="integer" jt="4" mandatory="y" />
 			<column name="job_id" type="integer" jt="4" mandatory="y" />
@@ -385,7 +421,7 @@
 				<column name="task_id" />
 			</index>
 		</table>
-		<table name="dashboard_task_type" spec="" >
+		<table name="dashboard_task_type" generator_rows="150" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="task_type_id" type="integer" jt="4" mandatory="y" />
 			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
@@ -395,19 +431,22 @@
 				<fk_column name="task_type_id" pk="type_id" />
 			</fk>
 		</table>
-		<table name="dashboard_timesheet" spec="" >
+		<table name="dashboard_timesheet" generator_rows="100" spec="" >
 			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
 			<column name="date" type="date" jt="91" mandatory="y" />
 			<column name="shift_start" type="time" jt="92" mandatory="y" />
 			<column name="shift_end" type="time" jt="92" mandatory="y" />
-			<column name="timesheet_id" type="varchar" length="128" jt="12" mandatory="y" />
+			<column name="timesheet_id" type="integer" length="128" jt="4" mandatory="y" />
 			<index name="pk_dashboard_timesheet" unique="PRIMARY_KEY" >
 				<column name="timesheet_id" />
 			</index>
+			<fk name="fk_dashboard_timesheet" to_schema="Default" to_table="dashboard_timesheet_entry" >
+				<fk_column name="timesheet_id" pk="org_timesheet_id" />
+			</fk>
 		</table>
-		<table name="dashboard_timesheet_entry" spec="" >
+		<table name="dashboard_timesheet_entry" generator_rows="100" spec="" >
 			<column name="tid" type="integer" jt="4" mandatory="y" />
-			<column name="org_timesheet_id" type="varchar" length="128" jt="12" mandatory="y" />
+			<column name="org_timesheet_id" type="integer" length="128" jt="4" mandatory="y" />
 			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
 			<column name="date" type="datetime" jt="93" mandatory="y" />
 			<column name="shift_end" type="time" jt="92" mandatory="y" />
@@ -416,8 +455,11 @@
 			<index name="pk_dashboard_timesheet_entry" unique="PRIMARY_KEY" >
 				<column name="tid" />
 			</index>
+			<index name="unq_dashboard_timesheet_entry_org_timesheet_id" unique="UNIQUE_KEY" >
+				<column name="org_timesheet_id" />
+			</index>
 		</table>
-		<table name="dashboard_user" spec="" >
+		<table name="dashboard_user" generator_rows="150" spec="" >
 			<column name="uid" type="integer" jt="4" mandatory="y" />
 			<column name="payroll_id" type="integer" jt="4" mandatory="y" />
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
@@ -434,7 +476,7 @@
 				<fk_column name="uid" pk="uid" />
 			</fk>
 		</table>
-		<table name="dashboard_user_list" spec="" >
+		<table name="dashboard_user_list" generator_rows="225" spec="" >
 			<column name="first_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="employment_status" type="boolean" jt="-7" mandatory="y" />
@@ -452,7 +494,7 @@
 				<fk_column name="payroll_id" pk="payroll_id" />
 			</fk>
 		</table>
-		<table name="dashboard_user_role" spec="" >
+		<table name="dashboard_user_role" generator_rows="225" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -474,7 +516,7 @@
 				<fk_column name="uid" pk="uid" />
 			</fk>
 		</table>
-		<table name="dashboard_user_type" spec="" >
+		<table name="dashboard_user_type" generator_rows="100" spec="" >
 			<column name="desc" type="varchar" length="25" jt="12" mandatory="y" />
 			<column name="level" type="integer" jt="4" mandatory="y" />
 			<column name="status" type="boolean" jt="-7" mandatory="y" />
@@ -483,7 +525,7 @@
 				<column name="type_id" />
 			</index>
 		</table>
-		<table name="django_admin_log" spec="" >
+		<table name="django_admin_log" generator_rows="150" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -514,7 +556,7 @@
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="django_content_type" spec="" >
+		<table name="django_content_type" generator_rows="100" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -528,7 +570,7 @@
 				<column name="model" />
 			</index>
 		</table>
-		<table name="django_migrations" spec="" >
+		<table name="django_migrations" generator_rows="100" spec="" >
 			<column name="id" type="integer" jt="4" mandatory="y" >
 				<identity><![CDATA[AUTOINCREMENT]]></identity>
 			</column>
@@ -539,7 +581,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="django_session" spec="" >
+		<table name="django_session" generator_rows="100" spec="" >
 			<column name="session_key" type="varchar" length="40" jt="12" mandatory="y" />
 			<column name="session_data" type="text" jt="-1" mandatory="y" />
 			<column name="expire_date" type="datetime" jt="93" mandatory="y" />
@@ -553,16 +595,19 @@
 	</schema>
 	<connector name="Sqlite" database="Sqlite" driver_class="org.sqlite.JDBC" driver_jar="sqlite-jdbc-3.36.0.3.jar" driver_desc="Standard" host="localhost" port="7210" instance="C:/Users/e_mei/University of South Australia/Student_Fighting Mongooses - UO Capstone Project - Group 2 - General/Our Smart Fab Project/Project/project.sqlite3" />
 	<layout name="Default Layout" id="Layout-57b" show_relation="columns" >
+		<entity schema="Default" name="AlertTable" color="C1D8EE" x="1760" y="1024" />
+		<entity schema="Default" name="AlertsTable" color="C1D8EE" x="1552" y="1056" />
 		<entity schema="Default" name="Assignment" color="C1D8EE" x="1328" y="704" />
 		<entity schema="Default" name="RealTime_Data" color="C1D8EE" x="1920" y="704" />
+		<entity schema="Default" name="SpecType" color="C1D8EE" x="1744" y="1216" />
 		<entity schema="Default" name="Specification" color="BED3F4" x="1888" y="272" />
-		<entity schema="Default" name="Supervisor" color="C1D8EE" x="1264" y="112" />
+		<entity schema="Default" name="Supervisor" color="C1D8EE" x="1296" y="272" />
 		<entity schema="Default" name="WPS" color="BED3F4" x="1632" y="480" />
 		<entity schema="Default" name="WPS_Run" color="BED3F4" x="1632" y="272" />
 		<entity schema="Default" name="WeldTable" color="3986C1" x="1536" y="704" />
 		<entity schema="Default" name="WeldingGroups" color="C1D8EE" x="1472" y="80" />
 		<entity schema="Default" name="WeldingTable" color="C1D8EE" x="1728" y="704" />
-		<entity schema="Default" name="WeldingTeam" color="C1D8EE" x="1312" y="352" />
+		<entity schema="Default" name="WeldingTeam" color="C1D8EE" x="1344" y="480" />
 		<entity schema="Default" name="auth_group" color="3986C1" x="496" y="1152" />
 		<entity schema="Default" name="auth_group_permissions" color="3986C1" x="656" y="1152" />
 		<entity schema="Default" name="auth_permission" color="3986C1" x="48" y="1152" />
@@ -570,17 +615,17 @@
 		<entity schema="Default" name="auth_user_groups" color="3986C1" x="496" y="1472" />
 		<entity schema="Default" name="auth_user_user_permissions" color="3986C1" x="208" y="1472" />
 		<entity schema="Default" name="dashboard_category" color="3986C1" x="304" y="944" />
-		<entity schema="Default" name="dashboard_db_settings" color="3986C1" x="848" y="224" />
+		<entity schema="Default" name="dashboard_db_settings" color="3986C1" x="448" y="256" />
 		<entity schema="Default" name="dashboard_job" color="3986C1" x="304" y="704" />
 		<entity schema="Default" name="dashboard_location" color="3986C1" x="496" y="960" />
 		<entity schema="Default" name="dashboard_machine" color="3986C1" x="512" y="720" />
-		<entity schema="Default" name="dashboard_payroll_user" color="3986C1" x="64" y="304" />
+		<entity schema="Default" name="dashboard_payroll_user" color="3986C1" x="96" y="240" />
 		<entity schema="Default" name="dashboard_task" color="3986C1" x="304" y="464" />
 		<entity schema="Default" name="dashboard_task_type" color="3986C1" x="64" y="704" />
-		<entity schema="Default" name="dashboard_timesheet" color="3986C1" x="512" y="240" />
-		<entity schema="Default" name="dashboard_timesheet_entry" color="3986C1" x="1008" y="416" />
+		<entity schema="Default" name="dashboard_timesheet" color="3986C1" x="736" y="224" />
+		<entity schema="Default" name="dashboard_timesheet_entry" color="3986C1" x="1008" y="304" />
 		<entity schema="Default" name="dashboard_user" color="3986C1" x="512" y="464" />
-		<entity schema="Default" name="dashboard_user_list" color="3986C1" x="752" y="464" />
+		<entity schema="Default" name="dashboard_user_list" color="3986C1" x="736" y="480" />
 		<entity schema="Default" name="dashboard_user_role" color="3986C1" x="752" y="704" />
 		<entity schema="Default" name="dashboard_user_type" color="3986C1" x="992" y="704" />
 		<entity schema="Default" name="django_admin_log" color="3986C1" x="992" y="1152" />
@@ -589,9 +634,9 @@
 		<entity schema="Default" name="django_session" color="3986C1" x="992" y="1440" />
 		<group name="Django" color="C4E0F9" >
 			<entity schema="Default" name="django_admin_log" />
-			<entity schema="Default" name="django_content_type" />
 			<entity schema="Default" name="django_migrations" />
 			<entity schema="Default" name="django_session" />
+			<entity schema="Default" name="django_content_type" />
 		</group>
 		<group name="Specifications" color="ECF0F7" >
 			<entity schema="Default" name="Specification" />
@@ -599,10 +644,10 @@
 			<entity schema="Default" name="WPS" />
 		</group>
 		<group name="Realtime" color="C4E0F9" >
-			<entity schema="Default" name="RealTime_Data" />
 			<entity schema="Default" name="WeldTable" />
 			<entity schema="Default" name="WeldingTable" />
 			<entity schema="Default" name="Assignment" />
+			<entity schema="Default" name="RealTime_Data" />
 		</group>
 		<group name="Authorisation" color="C4E0F9" >
 			<entity schema="Default" name="auth_group" />
@@ -615,17 +660,17 @@
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="Default" name="dashboard_category" />
 			<entity schema="Default" name="dashboard_job" />
-			<entity schema="Default" name="dashboard_user_list" />
 			<entity schema="Default" name="dashboard_task_type" />
-			<entity schema="Default" name="dashboard_payroll_user" />
 			<entity schema="Default" name="dashboard_user_role" />
 			<entity schema="Default" name="dashboard_user_type" />
-			<entity schema="Default" name="dashboard_timesheet" />
 			<entity schema="Default" name="dashboard_task" />
 			<entity schema="Default" name="dashboard_user" />
 			<entity schema="Default" name="dashboard_machine" />
-			<entity schema="Default" name="dashboard_timesheet_entry" />
 			<entity schema="Default" name="dashboard_location" />
+			<entity schema="Default" name="dashboard_user_list" />
+			<entity schema="Default" name="dashboard_timesheet" />
+			<entity schema="Default" name="dashboard_timesheet_entry" />
+			<entity schema="Default" name="dashboard_payroll_user" />
 		</group>
 		<script name="SQL_Editor" id="Editor-3eb" language="SQL" >
 			<string><![CDATA[CREATE TABLE auth_group ( 
