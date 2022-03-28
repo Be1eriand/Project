@@ -1,0 +1,4 @@
+task_type_id,desc
+100,login
+101,logout
+404,unknown error

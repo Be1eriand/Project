@@ -1,0 +1,81 @@
+id,content_type_id,codename,name
+1,1,add_category,Can add category
+2,1,change_category,Can change category
+3,1,delete_category,Can delete category
+4,1,view_category,Can view category
+5,2,add_job,Can add job
+6,2,change_job,Can change job
+7,2,delete_job,Can delete job
+8,2,view_job,Can view job
+9,3,add_location,Can add location
+10,3,change_location,Can change location
+11,3,delete_location,Can delete location
+12,3,view_location,Can view location
+13,4,add_machine,Can add machine
+14,4,change_machine,Can change machine
+15,4,delete_machine,Can delete machine
+16,4,view_machine,Can view machine
+17,5,add_payroll_user,Can add payroll_ user
+18,5,change_payroll_user,Can change payroll_ user
+19,5,delete_payroll_user,Can delete payroll_ user
+20,5,view_payroll_user,Can view payroll_ user
+21,6,add_task,Can add task
+22,6,change_task,Can change task
+23,6,delete_task,Can delete task
+24,6,view_task,Can view task
+25,7,add_task_type,Can add task_ type
+26,7,change_task_type,Can change task_ type
+27,7,delete_task_type,Can delete task_ type
+28,7,view_task_type,Can view task_ type
+29,8,add_timesheet,Can add timesheet
+30,8,change_timesheet,Can change timesheet
+31,8,delete_timesheet,Can delete timesheet
+32,8,view_timesheet,Can view timesheet
+33,9,add_timesheet_entry,Can add timesheet_ entry
+34,9,change_timesheet_entry,Can change timesheet_ entry
+35,9,delete_timesheet_entry,Can delete timesheet_ entry
+36,9,view_timesheet_entry,Can view timesheet_ entry
+37,10,add_user,Can add user
+38,10,change_user,Can change user
+39,10,delete_user,Can delete user
+40,10,view_user,Can view user
+41,11,add_user_list,Can add user_ list
+42,11,change_user_list,Can change user_ list
+43,11,delete_user_list,Can delete user_ list
+44,11,view_user_list,Can view user_ list
+45,12,add_user_role,Can add user_ role
+46,12,change_user_role,Can change user_ role
+47,12,delete_user_role,Can delete user_ role
+48,12,view_user_role,Can view user_ role
+49,13,add_user_type,Can add user_ type
+50,13,change_user_type,Can change user_ type
+51,13,delete_user_type,Can delete user_ type
+52,13,view_user_type,Can view user_ type
+53,14,add_logentry,Can add log entry
+54,14,change_logentry,Can change log entry
+55,14,delete_logentry,Can delete log entry
+56,14,view_logentry,Can view log entry
+57,15,add_permission,Can add permission
+58,15,change_permission,Can change permission
+59,15,delete_permission,Can delete permission
+60,15,view_permission,Can view permission
+61,16,add_group,Can add group
+62,16,change_group,Can change group
+63,16,delete_group,Can delete group
+64,16,view_group,Can view group
+65,17,add_user,Can add user
+66,17,change_user,Can change user
+67,17,delete_user,Can delete user
+68,17,view_user,Can view user
+69,18,add_contenttype,Can add content type
+70,18,change_contenttype,Can change content type
+71,18,delete_contenttype,Can delete content type
+72,18,view_contenttype,Can view content type
+73,19,add_session,Can add session
+74,19,change_session,Can change session
+75,19,delete_session,Can delete session
+76,19,view_session,Can view session
+77,20,add_db_settings,Can add d b_ settings
+78,20,change_db_settings,Can change d b_ settings
+79,20,delete_db_settings,Can delete d b_ settings
+80,20,view_db_settings,Can view d b_ settings

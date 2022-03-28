@@ -1,0 +1,75 @@
+{% extends "base.html"%}
+{% load static %}
+{% block title %}Report{% endblock title %}
+
+{%block content%}
+
+<div class="jumbotron">
+
+    {% if user.is_authenticated %}
+
+    <div class="clearfix report-menu">
+        <button type="submit" class="btn btn-secondary back-button float-right " onclick="javascript:history.go(-1)">Back</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-download">Download PDF</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-view">View PDF</button>
+    </div>
+
+    <div class="report-1" id="report">
+        <h1 class="report-headers">Job {{jobNumber}} Report</h1>
+
+        
+
+        <p>Total productivity: {{totalProductivity|format_percent:"2"}}</p>
+        {%if numberOfWelders == 0 %}
+            <p>No one has worked on this job yet</p>
+        {%endif%}
+        {%if numberOfWelders == 1%}
+            <p>There is 1 welder that has worked on this job</p>
+        {%endif%}
+        {%if numberOfWelders >= 1%}
+            <p>There are {{numberOfWelders}} welders that have worked on this job</p>
+        {%endif%}
+
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <th scope="col">Worker</th>
+                <th scope="col">Hours Booked</th>
+                <th scope="col">Hours Expected</th>
+                <th scope="col">Hours Worked</th>
+                <th scope="col">Productivity</th>
+            </thead>
+            <tbody class="">
+                {% for key, value1 in bookedHoursPerWorker.items %}
+                <tr>
+                    <td>{{workerName|get_item:key}} ({{key}})</td>
+                    <td>{{ value1|floatformat:2}}</td>
+                    <td>{{ expectedHoursPerWorker|get_item:key|floatformat:2}}</td>
+                    <td>{{ actualHoursPerWorker|get_item:key|floatformat:2}}</td>
+                    <td>{{ productivityPerWorker|get_item:key|format_percent:"2"}}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                    <td style="font-weight: bold;">Total</td>
+                    <td style="font-weight: bold;">{{ totalBooked|floatformat:2}}</td>
+                    <td style="font-weight: bold;">{{ totalExpected|floatformat:2}}</td>
+                    <td style="font-weight: bold;">{{ totalActual|floatformat:2}}</td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+    {% else %}
+
+    <p>Sorry, you don't have access to view this page</p>
+
+    {% endif%}
+</div>
+{% endblock %}
+
+{%block js%}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" ></script>
+    <script src="{%static 'js/create-pdf.js' %}" ></script>
+{%endblock%}

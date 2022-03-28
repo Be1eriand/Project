@@ -1,0 +1,425 @@
+{% extends "base.html"%} 
+{% load static %}
+{% load mathfilters %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+{%block css%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-TQQ3J4WkE/rwojNFo6OJdyu6G8Xe9z8rMrlF9y7xpFbQfW5g8aSWcygCQ4vqRiJqFsDsE1T6MoAOMJkFXlrI9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{%endblock%} {%block content%}
+
+    <h1 class="display-4 box-header">Productivity Dashboard <button type="button" id="back_btn" class="btn btn-info mb-2" onclick="window.history.go(-1);"><i class="bi bi-backspace-fill"></i> Back</button></h1>
+    <div class="alert alert-primary">
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group">
+                    <!-- Welders -->
+                    <div class="dropdown show">
+                        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {% if w %}Welder: {{w.first_name}} {{w.last_name}}
+                            {% else %}All Welders
+                            {%endif%}
+                        </button>
+                        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                        <input class="form-control" id="welderSearch" type="text" placeholder="Search..">
+                        <span id="weldersList">
+                        {% if w %}
+                            <a class="dropdown-item text-center text-primary font-weight-bold" href="../../../../{{w.payroll_id}}/{{m_url}}/{{j_url}}/{{fd_url}}/{{td_url}}">
+                                {{w.first_name}} {{w.last_name}} ({{w.payroll_id}})
+                            </a>
+                            <a class="dropdown-item text-center font-italic" href="../../../../0/{{m_url}}/{{j_url}}/{{fd_url}}/{{td_url}}">All</a>
+                        {% endif %}
+                        {% for welder in welders %}
+                            {% if w.payroll_id != welder.0 %}
+                                {% if home == True %}
+                                <a class="dropdown-item text-center" href="{{welder.0}}/0/0/{{fd}}/{{td}}">
+                                    {{welder.1}} {{welder.2}} ({{welder.0}})
+                                </a>
+                                {% else %}
+                                <a class="dropdown-item text-center" href="../../../../{{welder.0}}/{{m_url}}/{{j_url}}/{{fd_url}}/{{td_url}}">
+                                    {{welder.1}} {{welder.2}} ({{welder.0}})
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Machines -->
+                    <div class="dropdown show">
+                        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {%if m %}{{m.desc}}
+                            {% else %}All Machines
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                        <input class="form-control" id="machineSearch" type="text" placeholder="Search..">
+                        <span id="machinesList">
+                        {% if m %}
+                            <a class="dropdown-item text-center text-primary font-weight-bold" href="../../../../{{w_url}}/{{m.machine_id}}/{{j_url}}/{{fd_url}}/{{td_url}}">
+                                {{m.desc}} ({{m.machine_id}})
+                            </a>
+                            <a class="dropdown-item text-center font-italic" href="../../../../{{w_url}}/0/{{j_url}}/{{fd_url}}/{{td_url}}">All</a>
+                        {% endif %}
+                        {% for machine in machines %}
+                            {% if m.machine_id != machine.0 %}
+                                {% if home == True %}
+                                <a class="dropdown-item text-center" href="0/{{machine.0}}/0/{{fd}}/{{td}}">{{machine.1}} ({{machine.0}})</a>
+                                {% else %}
+                                <a class="dropdown-item text-center" href="../../../../{{w_url}}/{{machine.0}}/{{j_url}}/{{fd_url}}/{{td_url}}">{{machine.1}} ({{machine.0}})</a>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </span>
+                        </div>
+                    </div>
+
+                    <!-- Jobs -->
+                    <div class="dropdown show">
+                        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {%if j %}Job {{j.job_id}}
+                        {% else %}All Jobs
+                        {% endif %}
+                            </button>
+                        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                        <input class="form-control" id="jobSearch" type="text" placeholder="Search..">
+                        <span id="jobsList">
+                            {% if j %}
+                            <a class="dropdown-item text-center text-primary font-weight-bold" href="../../../../{{w_url}}/{{m_url}}/{{j.job_id}}/{{fd_url}}/{{td_url}}">
+                                {{j.job_id}} <br /><small>(Start: {{j.start_date|date:"d/m/y"}})</small>
+                            </a>
+                            <a class="dropdown-item text-center font-italic" href="../../../../{{w_url}}/{{m_url}}/0/{{fd_url}}/{{td_url}}">All</a>
+                            {% endif %}
+                            {% for job in jobs %}
+                                {% if j.job_id != job.0 %}
+                                    {% if home == True %}
+                                    <a class="dropdown-item text-center" href="0/0/{{job.0}}/{{fd}}/{{td}}">{{job.0}}<br /><small>(Start: {{job.2|date:"d/m/y"}})</small></a>
+                                    {% else %}
+                                    <a class="dropdown-item text-center" href="../../../../{{w_url}}/{{m_url}}/{{job.0}}/{{fd_url}}/{{td_url}}">{{job.0}}<br /><small>(Start: {{job.2|date:"d/m/y"}})</small></a>                                    
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </span>
+                        </div>
+                    </div>
+                    <form class="filter-form">
+                        <div class="form-row p-1">
+                            <div class="col-3 filter-form">
+                                <div class="input-group date" data-provide="datepicker" id="from_date_picker">
+                                    <input type="text" class="form-control text-center date-picker" size="12" value="{%if home %}{{fd}}{% else %}{{fd_url}}{% endif %}">
+                                    <span class="input-group-append bg-white border-left-0">
+                                        <span class="input-group-text bg-transparent">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <h4>&nbsp;&mdash;&nbsp;</h4>
+                            </div><i class="fa-solid fa-calendar-days"></i>
+                            <div class="col-3 filter-form">
+                                <div class="input-group date" data-provide="datepicker" id="to_date_picker">
+                                    <input type="text" class="form-control text-center" value="{%if home %}{{td}}{% else %}{{td_url}}{% endif %}">
+                                    <span class="input-group-append bg-white border-left-0">
+                                        <span class="input-group-text bg-transparent">
+                                            <i class="bi bi-calendar3"></i>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" id="filter_dates_btn" class="btn btn-primary mb-2">Go</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-3 m-2 bg-light shadow rounded text-center">
+        <div class="col-4">
+            <button class="btn btn-primary btn-block text-center btn-view">
+                <i class="bi bi-file-earmark-arrow-down"></i>
+                <span>Report</span>
+            </button>
+        </div>
+        <div class="col-4">
+                <button class="btn btn-primary btn-block text-center" id="downloadExcel">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    <span>Excel</span>
+                </button>
+        </div>
+        <div class="col-4">           
+            <div class="dropdown show">
+                <button class="btn btn-primary btn-block dropdown-toggle text-center" style="width:100% !important;" type="button" id="dropdownChartButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-card-image"></i>
+                    <span >Image</span>
+                </button>
+                <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="javascript:downloadChart('productivity_value_{%if w%}{{w.payroll_id}}{%else%}all{%endif%}_{{fd}}_{{td}}', gaugeChart_img);">Gauge Chart</a>
+                        <a class="dropdown-item" href="javascript:downloadChart('productivity_progress_{%if w%}{{w.payroll_id}}{%else%}all{%endif%}_{{fd}}_{{td}}', lineChart_img);">Line Chart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center" id="report">
+    {% if productivity_value != None %}
+        <div class="col-3 m-2">
+            <div class="row p-1">
+                <div class="col p-3 bg-light border shadow rounded text-center db-info-card">
+                    <div class="box-header h3 align-text-bottom font-weight-bold">Average {%if w %} Welder{%endif%} Productivity</div>
+                    {% if productivity_value %}
+                        <span class="display-1 text-shadow
+                        {%if productivity_value >= expected%}text-success
+                        {%elif productivity_value < expected and productivity_value >= expected|mul:0.85%}text-info
+                        {%elif productivity_value < expected|mul:0.85 and productivity_value >= expected|mul:0.75%}text-warning
+                        {%else%}text-danger
+                        {%endif%}">{{productivity_value|mul:100|floatformat:"0"}}<span class="display-4">%</span></span>
+                        {% if w %}
+                            <br />
+                            {%if productivity_value >= productivity_all %}<i class="bi bi-arrow-up-circle-fill fa-1x text-success"></i> <span class="align-middle text-success">Trending Up on Overall Avg</span>
+                            {%elif productivity_value == productivity_all%}<i class="bi bi-dash-circle-fill fa-1x text-warning"></i> <span class="align-middle text-warning">Trending Equal on Overall Avg</span>
+                            {%else%}<i class="bi bi-arrow-down-circle-fill fa-1x text-danger"></i> <span class="align-middle text-danger">Trending Below Overall Avg</span>
+                            {%endif %}
+                            <span title="Average Productivity: {{productivity_all|mul:100|floatformat:"2"}}%" class="text-muted"><small>(vs. {{productivity_all|mul:100|floatformat:"2"}}%)</small></span>
+                        {%endif%}
+
+                    {% else %}
+                    <h3>No Data</h3>
+                    {% endif %}
+                    <div class="box-header h3 align-text-bottom font-weight-bold">{%if w %} Welder{%endif%} Target</div>
+                    <span class="display-4 text-shadow">{{expected|mul:100|floatformat:"2"}}%</span>
+                </div>
+            </div>
+            <div class="row p-1">
+                <div class="col bg-light shadow rounded p-2">
+                    <canvas id="gaugeChartMain" width="225" height="125" class="gaugechart" cur="{{productivity_value}}" exp="{{expected}}"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 p-1 m-2 bg-light shadow rounded">
+            <canvas id="lineChartMain" width="800" height="400" class="linechart" cur="{{productivity_value}}" exp="{{expected}}"></canvas>
+        </div>
+    {% else %}
+        <div class="col-12 p-2 bg-light border shadow rounded">
+    {% if valid_jobs.0 is None and valid_machines.0 is None and valid_welders.0 is None %}
+            <p class="h5">No match found, adjust date range.</p>
+    {% else %}
+        <p class="h5 text-left">Filter parameters returned no match, choose from the following valid options or adjust date range.</p>
+        <div class="btn-group">
+        {% if valid_welders %}
+            <!-- Welders -->
+            <div class="dropdown show">
+                <button class="btn btn-danger dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Valid Welders
+                </button>
+                <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                <input class="form-control" id="validWelderSearch" type="text" placeholder="Search..">
+                <span id="validWeldersList">
+                
+                {% for welder in valid_welders %}
+                    {% if home == True %}
+                    <a class="dropdown-item text-center" href="{{welder.0}}/0/0/{{fd}}/{{td}}">
+                        {{welder.0}} {{welder.1}} ({{welder.0}})
+                    </a>
+                    {% else %}
+                    <a class="dropdown-item text-center" href="../../../../{{welder.0}}/{{m_url}}/{{j_url}}/{{fd_url}}/{{td_url}}">
+                        {{welder.1}} {{welder.2}} ({{welder.0}})
+                    </a>
+                    {% endif %}
+                {% endfor %}
+                </span>
+                </div>
+            </div>
+        {% endif %}
+        {% if valid_machines %}
+            <!-- Machines -->
+            <div class="dropdown show">
+                <button class="btn btn-danger dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Valid Machines
+                </button>
+                <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                <input class="form-control" id="validMachineSearch" type="text" placeholder="Search..">
+                <span id="validMachinesList">
+                {% for machine in valid_machines %}
+                    {% if home == True %}
+                    <a class="dropdown-item text-center" href="0/{{machine.0}}/0/{{fd}}/{{td}}">{{machine.1}} ({{machine.0}})</a>
+                    {% else %}
+                    <a class="dropdown-item text-center" href="../../../../{{w_url}}/{{machine.0}}/{{j_url}}/{{fd_url}}/{{td_url}}">{{machine.1}} ({{machine.0}})</a>
+                    {% endif %}
+                {% endfor %}
+                </span>
+                </div>
+            </div>
+        {% endif %}
+        {% if valid_jobs %}
+            <!-- Jobs -->
+            <div class="dropdown show">
+                <button class="btn btn-danger dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Valid Jobs
+                </button>
+                <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                <input class="form-control" id="validJobSearch" type="text" placeholder="Search..">
+                <span id="validJobsList">
+                {% for job in valid_jobs %}
+                    {% if home == True %}
+                    <a class="dropdown-item text-center" href="0/0/{{job}}/{{fd}}/{{td}}">{{job.0}}</a>
+                    {% else %}
+                    <a class="dropdown-item text-center" href="../../../../{{w_url}}/{{m_url}}/{{job}}/{{fd_url}}/{{td_url}}">{{job}}</a>                                    
+                    {% endif %}
+                {% endfor %}
+                </span>
+                </div>
+            </div>
+        {%endif %}
+        </div>
+    {% endif %}
+    </div>             
+    {% endif %}     
+</div>
+{% if productivity_value %}
+<div class="row p-1">
+    <div class="col bg-light shadow rounded pt-1">
+        <table class="table table-bordered table-striped" id="sortTable">
+            <thead>
+                <tr class="table-active">
+                    <th scope="col">Payroll</th>
+                    <th scope="col">Job</th>
+                    <th scope="col">Productivity</th>
+                    <th scope="col">Target</th>
+                    <th scope="col">Machine</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            {%for p in productivity_list %}
+            <tr class="clickable-row table-{%if p.4 >= p.5%}success{%elif p.4 < p.5 and p.4 >= p.5|mul:0.85%}warning{%else%}danger{%endif%}" data-href="{%if home != True %}../../../../{%endif%}{{p.0}}/{{p.2}}/{{p.1}}/{{p.3}}/{{p.3}}">
+                <th scope="row">{{p.0}}</th>
+                <td>{{p.1}}</td>
+                <td>{{p.4|mul:100|floatformat:"0"}}%</td>
+                <td>{{p.5|mul:100|floatformat:"0"}}%</td>
+                <td>{{p.2}}</td>
+                <td>{{p.3}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+</div>
+{%endif%}
+{%endblock content%}
+
+{%block js%}
+
+
+<script>
+  $(document).ready(function(){
+    $("#welderSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#weldersList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("#validWelderSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#validWeldersList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+    $("#machineSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#machinesList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $("#validMachineSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#validMachinesList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+        $("#jobSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#jobsList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $('#from_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1
+    });
+
+    $('#to_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1,
+    });
+
+    $("#filter_dates_btn").on("click",function(e){
+        from_date = $('#from_date_picker').children('input').val();
+        to_date = $('#to_date_picker').children('input').val();
+        e.preventDefault();
+        {%if home %}
+        location.href='0/0/0/'+from_date+'/'+to_date;
+        {%else %}
+        location.href='../../../../{{w_url}}/{{m_url}}/{{j_url}}/'+from_date+'/'+to_date;
+        {% endif %}
+   });
+
+    $('#sortTable').DataTable({
+        "order": [[ 5, "desc"]]
+    });
+
+    $(".clickable-row").on("click", function (e) {
+        window.location = $(this).data('href');
+    });
+});
+
+
+
+
+
+var ws_data = {{productivity_json|safe}};
+var ws_uid = {% if w %}{{w.payroll_id}}{% else %}"all"{%endif%};
+
+var line_graph_data = {{new_productivity}};
+var line_graph_labels = {{new_productivity_labels|safe}};
+var graph_targets = {{new_productivity_targets}}
+var welder = {%if w %}"{{w.first_name}} {{w.last_name}}"{%else%}"All"{%endif%}
+var from_date = "{{fd}}"
+var to_date = "{{td}}"
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" ></script>
+
+<script src="{% static 'js/gauge-chart-creator.js' %}"></script>
+<script src="{% static 'js/linechart-creator.js' %}"></script>
+<script src="{% static 'js/chart-downloader.js' %}"></script>
+<script src="{%static 'js/create-pdf-dashboards.js' %}" ></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js" integrity="sha512-nF0eXhMjJQ0K/XxPsxj6sTF2ATa2q5BSl13y6RQfORuh2xUMkf3pdpqu050l9vFHnp/PlE0tyXD0sDzAEt5vQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/excel-generator.js' %}" ws_data="{{productivity_list}}"></script>
+<script>
+
+$("#downloadExcel").click(function () {
+    saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), ''.concat('productivity_', ws_uid, '_{{fd}}_{{td}}.xlsx'));
+});
+
+
+</script>
+{% endblock js %}

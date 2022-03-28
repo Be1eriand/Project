@@ -1,0 +1,81 @@
+{% extends "base.html"%}
+{% load static %}
+{% block title %}Report{% endblock title %}
+
+{%block content%}
+<div class="jumbotron">
+
+    {% if user.is_authenticated %}
+
+    <div class="clearfix report-menu">
+        <h1>Machine Report</h1>
+        <button type="submit" class="btn btn-secondary back-button float-right" onclick="javascript:history.go(-1)">Back</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-view">View PDF</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-download">Download PDF</button>
+    </div>
+
+    <div class="report-3" id="report">
+        <div class="report-3-employees">
+            {%if users|length == 0 %}
+                <h3 class="report-headers">No one has worked on Machine {{machine}} from {{fromDate}} to {{toDate}}</h3>
+            {% else %}
+                <h3 class="report-headers">Amount of time each user has worked on Machine {{machine}} from {{fromDate}} to {{toDate}}</h3>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <th class="sortable" scope="col" style="width: 50%">Employee</th>
+                        <th scope="col" style="width: 50%">Hours Used</th>
+                    </thead>
+                    <tbody class="">
+                            {% for k, v in users.items %}
+                            <tr>
+                                <td>{{v}} ({{k}})</td>
+                                <td>{{userTime|get_item:k|floatformat:2}}</td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+            
+        <div class="report-3-jobs">
+            {%if jobTime|length == 0 %}
+                <h3 class="report-headers">No jobs have been worked on using Machine {{machine}} from {{fromDate}} to {{toDate}}</h3>
+            {% else %}
+                <h3 class="report-headers">Jobs that have been worked on using Machine {{machine}} from {{fromDate}} to {{toDate}}</h3>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <th class="sortable" scope="col" style="width: 25%">Job</th>
+                        <th scope="col" style="width: 25%">Hours Used</th>
+                        <th scope="col" style="width: 25%">Productivity</th>
+                        <th scope="col" style="width: 25%">Category</th>
+                    </thead>
+                    <tbody class="">
+                            {% for k, v in jobTime.items %}
+                            <tr>
+                                <td>{{k}}</td>
+                                <td>{{v|floatformat:2}}</td>
+                                <td>{{productivity|get_item:k|format_percent:"2"}}</td>
+                                <td>{{category|get_item:k}}</td>
+                            </tr>
+                            {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+        <p class="generated-data">Generated at {{currentTime}}</p>
+    </div>
+
+    {% else %}
+
+    <p>Sorry, you don't have access to view this page</p>
+
+    {% endif%}
+
+</div>
+{%endblock content%}
+
+{%block js%}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" ></script>
+    <script src="{%static 'js/create-pdf.js' %}" ></script>
+{%endblock%}

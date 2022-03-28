@@ -1,0 +1,107 @@
+{% extends "base.html"%} {% block title %}Report{% endblock title %} 
+
+{%block content%}
+<h1>Report Home</h1>
+
+<div class="report-form jumbotron">
+  <div id="myGroup">
+    <div class="row report-buttons">
+        <button class="btn btn-primary col-4" type="button" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample2">
+        Job Report
+        </button>
+        <button class="btn btn-primary col-4" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample2">
+        Person Report
+        </button>
+        <button class="btn btn-primary col-4" type="button" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample3">
+        Machine Report
+        </button>
+    </div>
+
+    <!--Job Report-->
+    <div class="collapse" id="collapseExample1" data-parent="#myGroup">
+      <div class="card card-body">
+        <form action="1" method="post">
+          {% csrf_token %}
+          
+          <p style="color: black">Job:</p>
+          <select id="job" name="job" for="job" class="form-control" style="color: black">
+            {% for job in jobs %}
+            <option value="{{job.job_id}}" style="color: black">
+              {{job.job_id}}
+            </option>
+            {% endfor %}
+          </select>
+
+          <input type="submit" class="btn btn-primary" value="OK" />
+        </form>
+      </div>
+    </div>
+
+    <!--Person Report-->
+    <div class="collapse" id="collapseExample2" data-parent="#myGroup">
+      <div class="card card-body">
+        <form action="2" method="post">
+          {% csrf_token %}
+
+          <p style="color: black">Employee:</p>
+          <select id="employee" name="employee" for="employee" class="form-control" style="color: black">
+            {% for user in users %}
+            <option value="{{user.payroll_id}}" style="color: black">
+              {{user.first_name}} {{user.last_name}} ({{user.payroll_id}})
+            </option>
+            {% endfor %}
+          </select>
+
+          <p style="color: black">Date Range:</p>
+          <select id="date" name="date" for="date" class="form-control" style="color: black">
+            <option value="day" style="color: black">Last day</option>
+            <option value="week" style="color: black">Last week</option>
+            <option value="fortnight" style="color: black">Last fortnight</option>
+            <option value="month" style="color: black">Last month</option>
+            <option value="3month" style="color: black">Last 3 months</option>
+            <option value="6month" style="color: black">Last 6 months</option>
+            <option value="year" style="color: black">Last year</option>
+            <option value="alltime" style="color: black">All time</option>
+          </select>
+
+
+          <input type="submit" class="btn btn-primary" value="OK" />
+        </form>
+      </div>
+    </div>
+
+    <!--Machine Report-->
+    <div class="collapse" id="collapseExample3" data-parent="#myGroup">
+      <div class="card card-body">
+        <form action="3" method="post">
+          {% csrf_token %}
+
+          <p style="color: black">Machine:</p>
+          <select id="machine" name="machine" for="machine" class="form-control" style="color: black">
+            {% for machine in machines %}
+            <option value="{{machine.machine_id}}" style="color: black">
+              {{machine.machine_id}}
+            </option>
+            {% endfor %}
+          </select>
+
+          <p style="color: black">Date Range:</p>
+          <select id="date" name="date" for="date" class="form-control" style="color: black">
+            <option value="day" style="color: black">Last day</option>
+            <option value="week" style="color: black">Last week</option>
+            <option value="fortnight" style="color: black">Last fortnight</option>
+            <option value="month" style="color: black">Last month</option>
+            <option value="3month" style="color: black">Last 3 months</option>
+            <option value="6month" style="color: black">Last 6 months</option>
+            <option value="year" style="color: black">Last year</option>
+            <option value="alltime" style="color: black">All time</option>
+          </select>
+
+          <input type="submit" class="btn btn-primary" value="OK" />
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  {%endblock content%}
+</div>

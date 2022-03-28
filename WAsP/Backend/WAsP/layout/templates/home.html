@@ -1,0 +1,55 @@
+{% extends "base.html"%}
+
+{% block title %}Home{% endblock title %}
+{%block content%}
+
+{%load static%}
+        {% if user.is_authenticated %}
+        <div id="homeWrapper">
+            <div class="row navicons">
+                <div class="col">
+                    <a href="/dashboard">
+                        <img src="{%static 'images/prod_dashboardicon.png'%}" alt="Menu Item Productivity Dashboard" class="mx-auto d-block"/>
+                        <h1>Productivity Dashboard</h1>
+                    </a>
+                </div>
+                <div class="col">
+                    <a href="/dashboard/jobstracker">
+                        <img src="{%static 'images/track_dashboardicon.png'%}" alt="Menu Item Job Tracking Dashboard" class="mx-auto d-block"/>
+                        <h1>Job Tracking Dashboard</h1>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row navicons">
+                <div class="col">
+                    <a href="/report">
+                        <img src="{%static 'images/reporticon.png'%}" alt="Menu Item Reports" class="mx-auto d-block"/>
+                        <h1>Reports</h1>
+                    </a>
+                </div>
+                
+                <div class="col">
+                    <a href="/dashboard/live">
+                        <img src="{%static 'images/live_dashboardicon.png'%}" alt="Menu Item Live Dashboard" class="mx-auto d-block"/>
+                        <h1>Live Machines Dashboard</h1>
+                    </a>
+                </div>
+            </div>
+
+            <div class="row navicons">
+                <div class="col">
+                    <form action="/settings"><button class="btn btn-lg btn-block btn-warning border-dark" type="submit"><i class="bi bi-gear-fill"></i> Settings</button></form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row navicons m-1 p-2">
+            <div class="col text-center">
+                <form action="/login"><button class="btn btn-lg btn-warning" type="submit"><i class="bi bi-person-circle"></i> Log in required</button></form>
+            </div>
+        </div>
+        {% endif %}
+
+
+{%endblock content%}

@@ -1,0 +1,59 @@
+{% extends "base.html"%} 
+{% load static %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+{%block css%} {%endblock%} {%block content%}
+
+
+<h1><a href="/dashboard"><i class="bi bi-backspace-fill"></i> Back to Live Dashboard</a></h1>
+
+<div class="row">
+    <div class="col">
+        <span style="color: black">&nbsp;Target Productivity: {{expected}}</span>
+        <span style="color: black">&nbsp;Input Productivity: {{percent}}</span>
+        <span style="color: black">&nbsp;Chart ID: {{chartId}}</span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <h3>Actual Productivity</h3>
+        <canvas id="line-chart"></canvas>
+        
+        <h3>Percentage Change in Productivity</h3>
+        <canvas id="bar-chart"></canvas>
+    </div>
+    <div class="col">
+        <div class="alert alert-primary" role="alert">
+            <div class="col">
+                <div class="row text-center">
+                    <a href="javascript:downloadChart();">
+                        <h1 style="font-size: 150px;"><i class="bi bi-card-image"></i></h1>
+                        <h3>Download PNG</h3>
+                    </a>
+                </div>
+                <div class="row text-center">
+                    <h1 style="font-size: 150px;"><i class="bi bi-person-circle"></i></h1>
+                    <h3>Welder Profile</h3>
+                </div>
+                <div class="row text-center">
+                    <h1 style="font-size: 150px;"><i class="bi bi-grid-3x3"></i></h1>
+                    <h3>Tabulised Data</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.skypack.dev/pin/chartjs-to-image@v1.0.4-SKnXaMueJ9wFOC7nSw6Q/mode=imports,min/optimized/chartjs-to-image.js"></script>
+</script>
+<script perc="{{percent}}" exp="{{expected}}" chartid="{{chartId}}" src="{% static 'js/linechart-creator3.js' %}"></script>
+
+{%endblock%}
+{%block js%}
+<script src="{%static 'js/general-scripts.js' %}"></script>
+{%endblock%}

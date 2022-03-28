@@ -1,0 +1,112 @@
+{% extends "base.html"%}
+{% load static %}
+{% block title %}Report{% endblock title %}
+
+
+{%block content%}
+
+<div class="jumbotron">
+
+    {% if user.is_authenticated %}
+
+    <div class="clearfix report-menu">
+        <button type="submit" class="btn btn-secondary back-button float-right" onclick="javascript:history.go(-1)">Back</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-view">View PDF</button>
+        <button type="submit" class="btn btn-info back-button float-right btn-download">Download PDF</button>
+    </div>
+    <div class="report-2" id="report">
+        <div class="report-overview">
+            <h1 class="report-headers">Workshop report for <span style="font-weight: bold">{{name}}</span></h1>
+            {% if userTotal > 0 %}
+                <p>The average productivity of {{name}} between {{fromDate}} and {{toDate}} is {{userTotal|format_percent:"2"}}</p>
+            {% endif %}
+            {% if totalProductivity > 0 %}
+                <p>The workshop average between {{fromDate}} and {{toDate}} is {{totalProductivity|format_percent:"2"}}</p>
+            {% endif %}
+            {% if totalHoursExpected != 0 and totalHoursActual != 0 %}
+                <p>In this timeframe, {{name}} was expected to spend {{totalHoursExpected|floatformat:2}} hours welding. 
+                    They actually spent {{totalHoursActual|floatformat:2}} hours welding</p>
+            {% endif %}
+        </div>
+        <div class="report-tables">
+            <div class="report-2-jobs">
+                {%if bookedTime|length == 0 %}
+                    <h3 class="report-headers">{{name}} has not worked on any jobs from {{fromDate}} to {{toDate}}</h3>
+                {% else %}
+                    <h3 class="report-headers">Productivity of {{name}} based on Job</h3>
+                    <p>Note: Start Date and End Date refer to when this employee started and finished working on this job</p>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <th scope="col">Job</th>
+                            <th scope="col">Start Date</th>
+                            <th scope="col">End Date</th>
+                            <th scope="col">Hours Booked</th>
+                            <th scope="col">Hours Expected</th>
+                            <th scope="col">Hours Worked</th>
+                            <th scope="col">Productivity</th>
+                        </thead>
+                        <tbody class="">
+                            {% for key, value1 in bookedTime.items %}
+                                
+                            <tr>
+                                <td>{{key}}</td>
+                                <td>{{earliestDates|get_item:key}}</td>
+                                <td>{{latestDates|get_item:key}}</td>
+                                <td>{{ value1|floatformat:2}}</td>
+                                <td>{{ expectedTime|get_item:key|floatformat:2}}</td>
+                                <td>{{ actualTime|get_item:key|floatformat:2}}</td>
+                                <td>{{ productivityByJob|get_item:key|format_percent:"2"}}</td>
+                            </tr>
+                            {% endfor %}
+                            <tr>
+                                <th scope="row" style="font-weight: bold;">Total</th>
+                                <td></td>
+                                <td></td>
+                                <td style="font-weight: bold;">{{ totalHoursBooked|floatformat:2}}</td>
+                                <td style="font-weight: bold;">{{ totalHoursExpected|floatformat:2}}</td>
+                                <td style="font-weight: bold;">{{ totalHoursActual|floatformat:2}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+
+            
+            <div class="report-2-machines ">
+                {%if productivityByMachine|length == 0 %}
+                    <h3 class="report-headers">{{name}} has not logged into any machines from {{fromDate}} to {{toDate}}</h3>
+                {% else %}
+                    <h3 class="report-headers">Productivity of {{name}} based on Machine</h3>
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                            <th class="sortable" scope="col">Machine ID</th>
+                            <th scope="col">Average Productivity</th>
+                        </thead>
+                        <tbody class="">
+                                {% for k, v in productivityByMachine.items %}
+                                <tr>
+                                    <td>{{k}}</td>
+                                    <td>{{v|format_percent:"2"}}</td>
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+                {% endif %}
+            </div>
+        </div>
+        <p class="generated-data">Generated at {{currentTime}}</p>
+    </div>
+
+    {% else %}
+
+    <p>Sorry, you don't have access to view this page</p>
+
+    {% endif%}
+
+</div>
+{%endblock content%}
+
+{%block js%}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" ></script>
+    <script src="{%static 'js/create-pdf.js' %}" ></script>
+{%endblock%}

@@ -46,6 +46,9 @@ class Client:
     def receive(self):
         raw = b""
         prev_time = datetime.datetime.now()
+        time_list = {}
+
+        time_list[0] = prev_time
 
         while True:
             try:
@@ -55,9 +58,16 @@ class Client:
                     
                     data = self.callbackfn(raw)
 
-                    #to_sql(data, prev_time, self.session)
+                    if data.machineid not in time_list.keys():
 
-                    prev_time = convert_to_dateTime(data) #converts the date & time in the data object to a datetime object
+                        time_list[data.machineid] = datetime.datetime.now()
+
+                    if time_list[data.machineid].timestamp() - convert_to_dateTime(data).timestamp() > 30.0: #This should be rare
+                        time_list[data.machineid] = datetime.datetime.now() #has the connection interrupted for more than 30 secs?
+
+                    to_sql(data, time_list[data.machineid], self.session)
+
+                    time_list[data.machineid] = convert_to_dateTime(data) #converts the date & time in the data object to a datetime object
 
                     raw = raw[SENSORDATASIZE::]
 
@@ -112,9 +122,10 @@ def to_sql(data: SensorData, prevtime, session: session):
     realTime.GasUsed = data.rtdata.gasused/1000
     realTime.WireFeedrate = data.rtdata.wirefeedrate/1000
     realTime.Length = data.rtdata.length/1000
-    realTime.Time = convert_to_dateTime(data)
-    realTime.Power = (data.rtdata.current * data.rtdata.voltage)
-    realTime.Timedelta = (prevtime.timestamp() - realTime.Time.timestamp())
+    #dtime = convert_to_dateTime(data)
+    realTime.Time = convert_to_dateTime(data) # dtime.strftime('%Y/%m/%d %H:%M:%S.%f') #overcomes a legacy issue in pyodbc
+    realTime.Power = realTime.Current * realTime.Voltage
+    realTime.Timedelta = (realTime.Time.timestamp() - prevtime.timestamp()) #this is the issue. precision of the timestamp
     if realTime.Timedelta < 0.001: #resolution for big times
         realTime.TravelSpeed = 0
         realTime.HeatInput = 0
@@ -124,13 +135,13 @@ def to_sql(data: SensorData, prevtime, session: session):
     
 
     try:
-        queryText = f'JobID={data.jobid}'
+        queryText = f'JobID={data.jobid} and WelderID={data.welderid} and MachineID={data.machineid}'
         records = session.query(type(assignment)).filter(text(queryText)).all()
 
         if len(records) == 0:
                 #Assignment Details
-                assignment.Welder_id = data.welderid
-                assignment.Machine_id = data.machineid
+                assignment.WelderID = data.welderid
+                assignment.MachineID = data.machineid
                 assignment.JobID = data.jobid
 
                 session.add(assignment)
@@ -148,7 +159,7 @@ def to_sql(data: SensorData, prevtime, session: session):
         session.add(realTime)
         session.commit()
 
-        queryText = f'RunNo=1 and Assignment_id={assignment.id}'
+        queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
         records = session.query(type(weldTable)).filter(text(queryText)).all()
 
         if len(records) == 0:
@@ -170,8 +181,8 @@ def to_sql(data: SensorData, prevtime, session: session):
 
         weldingTable.RT_id = realTime.id
         weldingTable.WT_id = weldTable.id
-        weldingTable.Machine_id = assignment.Machine_id
-        weldingTable.Welder_id = assignment.Welder_id
+        weldingTable.Machine_id = assignment.MachineID
+        weldingTable.Welder_id = assignment.WelderID
 
         session.add(weldingTable)
 
@@ -180,6 +191,8 @@ def to_sql(data: SensorData, prevtime, session: session):
     except IntegrityError as ex:
         print("Integrity error")
         print(ex)
+    except ValueError:
+        print("Database returned more than one record")
 
 
 def convert_to_dateTime(data: SensorData):
@@ -187,7 +200,7 @@ def convert_to_dateTime(data: SensorData):
     date = datetime.date(data.date.year,data.date.month, data.date.day)
     seconds = int(data.time.second/1000)
     milliseconds = data.time.second - seconds * 1000
-    time = datetime.time(data.time.hour, data.time.minute, seconds, milliseconds)
+    time = datetime.time(data.time.hour, data.time.minute, seconds, milliseconds*1000)
     return datetime.datetime.combine(date, time)
 
 client = Client(HOST, PORT, process_sensor_data)

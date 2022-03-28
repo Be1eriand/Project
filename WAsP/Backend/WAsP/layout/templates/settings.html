@@ -1,0 +1,167 @@
+{% extends "base.html"%}
+
+{% block title %}Dashboard Settings{% endblock title %}
+
+{%block content%}
+
+    <h1 class="display-4 box-header">Dashboard Settings <button type="button" id="back_btn" class="btn btn-info mb-2" onclick="window.history.go(-1);"><i class="bi bi-backspace-fill"></i> Back</button></h1>
+
+    {% if user.is_authenticated %}
+
+        <div class="row">
+            <div class="col-lg-8">
+                {% if confirmation %}
+                <div class="alert alert-success" role="alert"><span>{{confirmation}}</span></div>
+                {%endif%}
+
+                {% if warning %}
+                <div class="alert alert-danger" role="alert"><span>{{warning}}</span></div>
+                {%endif%}
+
+                {% if request.user.is_superuser %}
+
+                <div class="row d-flex">
+                    <div class="col m-1 p-3 bg-light border shadow rounded">
+                    <h4>Productivity Targets</h4>
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" id="changeprod" name="changeprod" value="1">
+                            <div class="form-group">
+                            {%for s in settings%}
+                                <div class="form-row">
+                                    <div class="col-lg-3">
+                                        <label for="{{s.name}}">{{s.desc}}: </label>
+                                    </div>
+                                    <div class="col text-left">
+                                        <input type="text" name="{{s.name}}" id="{{s.name}}" setting_id="{{s.setting_id}}" value="{{s.value|floatformat:"2"}}" class="narrow-select" required>% <br />
+                                    </div>
+                                </div>
+                            {%endfor%}
+                                <small>Values must be between 0.00 and 100.00</small>
+                                <br />
+                                <button type="submit" class="btn btn-primary m-1">Submit</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="row d-flex">
+                    <div class="col m-1 p-3 bg-light border shadow rounded">
+                        <h4>Create New Account</h4>
+                        <a class="btn btn-primary m-1" href="register">Register</a>
+                    </div>
+                </div>        
+
+
+                <div class="row d-flex">
+                    <div class="col m-1 p-3 bg-light border shadow rounded">
+                        <h4>Change User Status</h4>
+                        <form method="POST">
+                            <input type="hidden" id="changeuser" name="changeuser" value="1">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <select id="userlist" name="userlist">
+                                {% for u in users %}
+                                    <option value="{{u.id}}" superuser="{{u.is_superuser}}" {% if user == u %}disabled{%endif%}>{{u}} ({% if u.is_superuser %}Admin{% else %}User{%endif%})</option>
+                                {% endfor %}
+                                </select>
+                                <br />
+                                <button type="submit" id="changeUserButton" class="btn btn-primary m-1">Change User</button>
+                            </div>
+                        </form>                
+                    </div>
+                </div>
+
+                <div class="row d-flex">
+                    <div class="col m-1 p-3 bg-light border shadow rounded">
+                        <h4>Delete User</h4>
+                        <p class="text-danger"><i class="bi bi-exclamation-triangle-fill"></i> Caution: Cannot Undo <i class="bi bi-exclamation-triangle-fill"></i></p>
+                        <form method="POST">
+                            <input type="hidden" id="deleteuser" name="deleteuser" value="1">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <select id="deleteuserlist" name="deleteuserlist" disabled>
+                                {% for u in users %}
+                                    <option value="{{u.id}}" superuser="{{u.is_superuser}}" {% if user == u %}disabled{%endif%}>{{u}} ({% if u.is_superuser %}Admin{% else %}User{%endif%})</option>
+                                {% endfor %}
+                                </select>
+                                <br />
+                                <button type="submit" id="deleteUserButton" class="btn btn-danger m-1" disabled>Delete User</button><span class="p-1"><input id="enableDeleteButton" name="enableDeleteButton" type="checkbox"> <label for="enableDeleteButton"><small>Enable Delete</small></label></span>
+                            </div>
+                        </form>                
+                    </div>
+                </div>
+
+                {% endif %}
+
+            <div class="row d-flex">
+                <div class="col m-1 p-3 bg-light border shadow rounded">
+                    <h4>Change Password</h4>
+                    <a class="btn btn-primary m-1" href="accounts/change-password">Change Password</a>
+                </div>
+            </div>
+
+            <div class="row d-flex">
+                <div class="col m-1 p-3 bg-light border shadow rounded">
+                    <h4>Log Out Account</h4>
+                    <a class="btn btn-warning m-1" href="/logout">Log Out</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 p-3 bg-light border shadow rounded">
+            <h4>Users</h4>
+
+                <table class="table table-bordered table-striped" id="sortTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for u in users %}                    
+                        <tr>
+                            <th scope="row">{{u.id}}</th>
+                            <td>{{u.username}}</td>
+                            <td>{%if u.is_superuser%}Admin{%else%}User{%endif%}</td>
+                            <td>{{u.last_login}}</td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+        </div>
+
+    </div>
+    {% endif %}
+{%endblock content%}
+{%block js%}
+
+<script>
+    $(document).ready(function(){
+        var is_superuser = ($("option:selected", this).attr("superuser") == "True") ? "User":"Administrator";
+        $("#changeUserButton").text("Change to " + is_superuser)
+    });
+
+    $("#userlist").change(function () {
+        var is_superuser = ($("option:selected", this).attr("superuser") == "True") ? "User":"Administrator";
+        $("#changeUserButton").text("Change to " + is_superuser)
+    });
+
+    $("#enableDeleteButton").change(function() {
+        $("#deleteUserButton").prop('disabled', (this.checked)?false:true);
+        $("#deleteuserlist").prop('disabled', (this.checked)?false:true);
+    });
+
+    $('#sortTable').DataTable({
+        "order": [[ 3, "desc"]]
+    });
+</script>
+{%endblock js%}

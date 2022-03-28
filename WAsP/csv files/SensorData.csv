@@ -1,0 +1,4 @@
+﻿id,Machineid,Welderid,Jobid,Runid,Current,Current_var,Voltage,Voltage_var,Temperature,Tempertaure_var,WeldLength,WeldLength_var,WFR,WFR_var,GasUsed,GasUsed_var
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+1,1,884677,8565,1,100,1,24,0.5,3000,100,10,1,15,1,10,0.05
+2,1,3213,123,1,200,2,30,1,3000,100,10,1,15,1,10,0.05

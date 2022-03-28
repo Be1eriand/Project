@@ -1,0 +1,242 @@
+{% extends "base.html"%} 
+{% load static %}
+{% load mathfilters %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+{%block css%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-TQQ3J4WkE/rwojNFo6OJdyu6G8Xe9z8rMrlF9y7xpFbQfW5g8aSWcygCQ4vqRiJqFsDsE1T6MoAOMJkFXlrI9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{%endblock%} {%block content%}
+
+    <h1 class="display-4 box-header">Jobs Tracking Dashboard <button type="button" id="back_btn" class="btn btn-info mb-2" onclick="window.history.go(-1);"><i class="bi bi-backspace-fill"></i> Back</button></h1>
+
+    <div class="alert alert-primary">
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group">
+                    <!-- Jobs -->
+                    <div class="dropdown show">
+                        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {%if j %}Job {{j_url}} ({{status}})
+                        {% else %}All Jobs
+                        {% endif %}
+                        </button>
+                        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                            <input class="form-control" id="jobSearch" type="text" placeholder="Search..">
+                            <span id="jobsList">
+                                {% if j %}
+                                <a class="dropdown-item text-center text-primary font-weight-bold" href="../{{j_url}}">
+                                    {{j_url}} ({{status}})
+                                </a>
+                                <a class="dropdown-item text-center font-italic" href="../">All</a>
+                                {% endif %}
+                                {% for job in jobs %}
+                                    {% if j_url != job.0 %}
+                                        <a class="dropdown-item text-center" href="../{{job.0}}">{{job.0}} ({%if job.4 >= job.5%}C{%else%}A{%endif%})</a>                                    
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row p-3 m-2 bg-light shadow rounded text-center">
+        <div class="col-4">
+            <button class="btn btn-primary btn-block text-center btn-view">
+                <i class="bi bi-file-earmark-arrow-down"></i>
+                <span>Report</span>
+            </button>
+        </div>
+        <div class="col-4">
+                <button class="btn btn-primary btn-block text-center" id="downloadExcel">
+                    <i class="bi bi-file-earmark-spreadsheet"></i>
+                    <span>Excel</span>
+                </button>
+        </div>
+        <div class="col-4">           
+            <div class="dropdown show">
+                <button class="btn btn-primary btn-block dropdown-toggle text-center" style="width:100% !important;" type="button" id="dropdownChartButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bi bi-card-image"></i>
+                    <span >Image</span>
+                </button>
+                <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="javascript:downloadChart('productivity_value_{%if w%}{{w.payroll_id}}{%else%}all{%endif%}_{{fd}}_{{td}}', gaugeChart_img);">Gauge Chart</a>
+                        <a class="dropdown-item" href="javascript:downloadChart('productivity_progress_{%if w%}{{w.payroll_id}}{%else%}all{%endif%}_{{fd}}_{{td}}', lineChart_img);">Line Chart</a>
+                </div>
+            </div>
+        </div>
+    </div>    
+    <div class="row d-flex justify-content-center" id="report">
+    {% if job_data != None %}
+        <div class="col-3 m-2">
+            <div class="row p-1">
+                <div class="col p-3 bg-light border shadow rounded text-center db-info-card">
+                    {% if j %}        
+                        {%if job_hrs <= job_total_hrs%}        
+                    <h4 class="box-header h3 align-text-bottom font-weight-bold">Job Remaining Hours</h4>
+                    <span class="h1 text-shadow text-success small-cap">{{job_total_hrs|sub:job_hrs|floatformat:"2"}}Hrs</span>
+                        {% else %}
+                    <h4 class="box-header h3 align-text-bottom font-weight-bold">Job Overworked Hours</h4>
+                    <span class="h1 text-shadow text-danger small-cap">{{job_hrs|sub:job_total_hrs|floatformat:"2"}}Hrs</span>
+                        {%endif%}
+                    {%else%}
+                    <h3>No Data</h3>
+                    {% endif %}
+                </div>
+            </div>        
+            <div class="row p-1">
+                <div class="col p-3 bg-light border shadow rounded text-center db-info-card">
+                    <h4 class="box-header h4 align-text-bottom font-weight-bold">Job {{j_url}} Hours</h4>
+                    {% if j %}
+                        <span class="h3 font-weight-bold small-cap">{{h_a}}Hrs {{m_a}}Mins /<br />{{h_t}}Hrs {{m_t}}Mins</span>
+                    {% else %}
+                    <h3>No Data</h3>
+                    {% endif %}
+                </div>
+            </div>
+         
+            <div class="row p-1" style="height: 150px;">
+                <div class="col bg-light shadow rounded">
+                    <div class="row">
+                        <canvas id="gaugeChartMain" width="225" height="125" class="gaugechart" cur="{{job_hrs}}" exp="{{job_total_hrs}}"></canvas>
+                    </div>
+                    <div class="row justify-content-center">
+                        <h5 class="font-weight-bold">Target: {{h_t}}Hrs {{m_t}}Mins</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-8 p-1 m-2 bg-light shadow rounded">
+            <canvas id="lineBarChartMain" class="linebarchart"  exp="{{job_total_hrs}}"></canvas>
+        </div>
+    {% else %}
+        <div class="col-12 p-2 bg-light border shadow rounded">
+        {% if valid_jobs.0 is None and valid_machines.0 is None and valid_welders.0 is None %}
+            <p class="h5">No match found, adjust date range.</p>
+        </div>
+        {% endif %}
+    {% endif %}     
+    </div>
+    <div class="row p-1">
+        <div class="col bg-light shadow rounded pt-1">
+            <table class="table table-bordered table-striped" id="sortTable">
+                <thead>
+                    <tr class="table-active">
+                        <th scope="col">Payroll</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Machine</th>
+                        <th scope="col">Hours</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {%for row in table_data %}
+                <tr class="clickable-row" data-href="../../{{row.1}}/{{row.4}}/{{j_url}}/{{earliest_date}}/{{latest_date}}">
+                    <th scope="row">{{row.1}}</th>
+                    <td>{{row.2.0.0}} {{row.2.0.1}}</td>
+                    <td>{{row.4}}</td>
+                    <td>{{row.5}}</td>
+                    <td>{{row.3}}</td>
+                </tr>
+                {%endfor%}
+            </table>
+        </div>
+    </div>
+{%endblock content%}
+
+{%block js%}
+
+
+<script>
+  $(document).ready(function(){
+ 
+        $("#jobSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#jobsList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+
+
+
+    });
+
+    $('#from_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1
+    });
+
+    $('#to_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1,
+    });
+
+    $("#filter_dates_btn").on("click",function(e){
+        from_date = $('#from_date_picker').children('input').val();
+        to_date = $('#to_date_picker').children('input').val();
+        e.preventDefault();
+        {%if home %}
+        location.href='0/0/0/'+from_date+'/'+to_date;
+        {%else %}
+        location.href='../../../../{{w_url}}/{{m_url}}/{{j_url}}/'+from_date+'/'+to_date;
+        {% endif %}
+   });
+
+    $('#sortTable').DataTable({
+        "order": [[ 4, "desc"]]
+    });
+
+    $('#back_btn').on("click", function(e) {
+        location.href='../';
+    });
+
+    $(".clickable-row").on("click", function (e) {
+        console.log($(this).attr('data-href'))
+        window.location = $(this).data('href');
+    });
+});
+
+
+
+
+
+var ws_data = {{table_data|safe}};
+var ws_uid = 0;
+
+var line_graph_data = {{y_values_bar}};
+var bar_graph_data = {{y_values_line}};
+var line_graph_labels = {{xlabels|safe}};
+var graph_job = {{j_url}};
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js" ></script>
+
+
+<script src="{% static 'js/gauge-chart-creator.js' %}"></script>
+<script src="{% static 'js/linebarchart-creator.js' %}"></script>
+<script src="{% static 'js/chart-downloader.js' %}"></script>
+<script src="{%static 'js/create-pdf-dashboards.js' %}" ></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js" integrity="sha512-nF0eXhMjJQ0K/XxPsxj6sTF2ATa2q5BSl13y6RQfORuh2xUMkf3pdpqu050l9vFHnp/PlE0tyXD0sDzAEt5vQA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js" integrity="sha512-Qlv6VSKh1gDKGoJbnyA5RMXYcvnpIqhO++MhIM2fStMcGT9i2T//tSwYFlcyoRRDcDZ+TYHpH8azBBCyhpSeqw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'js/excel-generator.js' %}" ws_data="{{productivity_list}}"></script>
+<script>
+
+$("#downloadExcel").click(function () {
+    saveAs(new Blob([s2ab(wbout)], { type: "application/octet-stream" }), ''.concat('productivity_', ws_uid, '_{{fd}}_{{td}}.xlsx'));
+});
+
+
+</script>
+{% endblock js %}
