@@ -151,15 +151,16 @@ def to_sql(data: SensorData, prevtime, session: session):
         queryText = f'JobID={data.jobid} and WelderID={data.welderid} and MachineID={data.machineid}'
         records = session.query(Assignment).filter(text(queryText)).all()
 
-        if records is None:
-            assignment = Assignment(
+        if (records is None) or len(records) == 0:
+            
+            weldtable = WeldTable(
+                RunNo=data.runid
+            )
+
+            weldtable.assignment = Assignment(
                 WelderID=data.welderid,
                 MachineID=data.machineid,
                 JobID=data.jobid
-            )
-
-            weldtable = WeldTable(
-                RunNo=data.runid
             )
         else:
             assignment=records[0]

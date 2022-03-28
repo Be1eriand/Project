@@ -34,8 +34,8 @@
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
 			<column name="JobID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="WelderID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="MachineID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="WelderID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<index name="pk_Assignment" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -44,7 +44,7 @@
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<column name="Time" type="datetime" length="7" jt="92" mandatory="y" />
+			<column name="Time" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
 			<column name="Temperature" type="float" length="53" decimal="0" jt="8" />
 			<column name="Current" type="float" length="53" decimal="0" jt="8" />
 			<column name="Voltage" type="float" length="53" decimal="0" jt="8" />
@@ -142,18 +142,18 @@
 			</fk>
 		</table>
 		<table name="WeldingTable" >
-			<column name="RT_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="WT_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="Welder_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="Machine_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<index name="unq_WeldingTable_RT_id" unique="UNIQUE_KEY" >
-				<column name="RT_id" />
-			</index>
+			<column name="Machine_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="RT_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="WT_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Welder_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<index name="pk_WeldingTable" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="unq_WeldingTable_RT_id" unique="UNIQUE_KEY" >
+				<column name="RT_id" />
 			</index>
 			<fk name="fk_WeldingTable_RealTime_Data" to_schema="SmartFab.dbo" to_table="RealTime_Data" >
 				<fk_column name="RT_id" pk="id" />
@@ -496,14 +496,14 @@
 	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
 		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1392" y="768" />
 		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1392" y="544" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="1232" y="976" />
-		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1920" y="992" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="1184" y="992" />
+		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1840" y="992" />
 		<entity schema="SmartFab.dbo" name="SpecType" color="3986C1" x="1200" y="608" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1840" y="528" />
 		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1616" y="752" />
 		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1616" y="528" />
-		<entity schema="SmartFab.dbo" name="WeldTable" color="3986C1" x="1440" y="976" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1632" y="976" />
+		<entity schema="SmartFab.dbo" name="WeldTable" color="3986C1" x="1376" y="992" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1568" y="992" />
 		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="416" y="272" />
 		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="592" y="176" />
 		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="336" y="112" />
@@ -548,12 +548,6 @@
 			<entity schema="SmartFab.dbo" name="WPS" />
 			<entity schema="SmartFab.dbo" name="Specification" />
 		</group>
-		<group name="Real Time" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="WeldingTable" />
-			<entity schema="SmartFab.dbo" name="Assignment" />
-			<entity schema="SmartFab.dbo" name="WeldTable" />
-			<entity schema="SmartFab.dbo" name="RealTime_Data" />
-		</group>
 		<group name="Alerts" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="AlertsTable" />
 			<entity schema="SmartFab.dbo" name="AlertTypes" />
@@ -575,5 +569,66 @@
 			<entity schema="SmartFab.dbo" name="dashboard_timesheet" />
 			<entity schema="SmartFab.dbo" name="dashboard_timesheet_entry" />
 		</group>
+		<group name="RealTime" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="Assignment" />
+			<entity schema="SmartFab.dbo" name="WeldTable" />
+			<entity schema="SmartFab.dbo" name="WeldingTable" />
+			<entity schema="SmartFab.dbo" name="RealTime_Data" />
+		</group>
+		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
+			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 
+	id                   int    IDENTITY  NOT NULL,
+	JobID                int      NOT NULL,
+	MachineID            int      NOT NULL,
+	WelderID             int      NOT NULL,
+	CONSTRAINT pk_Assignment PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.RealTime_Data ( 
+	id                   int    IDENTITY  NOT NULL,
+	Time                 datetime      NOT NULL,
+	Temperature          float      NULL,
+	[Current]            float      NULL,
+	Voltage              float      NULL,
+	Length               float  DEFAULT 0.00    NULL,
+	WireFeedRate         float      NULL,
+	GasUsed              float      NULL,
+	HeatInput            float      NULL,
+	TravelSpeed          float      NULL,
+	TimeDelta            float      NULL,
+	Power                float      NULL,
+	CONSTRAINT pk_RealTime_Data PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WeldTable ( 
+	id                   int    IDENTITY  NOT NULL,
+	RunNo                int      NOT NULL,
+	Assignment_id        int      NOT NULL,
+	CONSTRAINT pk_WeldTable PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WeldingTable ( 
+	id                   int    IDENTITY  NOT NULL,
+	Machine_id           int      NOT NULL,
+	RT_id                int      NOT NULL,
+	WT_id                int      NOT NULL,
+	Welder_id            int      NOT NULL,
+	CONSTRAINT unq_WeldingTable_RT_id UNIQUE ( RT_id ) ,
+	CONSTRAINT pk_WeldingTable PRIMARY KEY  ( id ) 
+ );
+GO
+
+ALTER TABLE SmartFab.dbo.WeldTable ADD CONSTRAINT fk_WeldTable FOREIGN KEY ( Assignment_id ) REFERENCES SmartFab.dbo.Assignment( id );
+GO
+
+ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_RealTime_Data FOREIGN KEY ( RT_id ) REFERENCES SmartFab.dbo.RealTime_Data( id );
+GO
+
+ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_WeldTable FOREIGN KEY ( WT_id ) REFERENCES SmartFab.dbo.WeldTable( id );
+GO]]></string>
+		</script>
 	</layout>
 </project>
