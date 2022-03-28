@@ -110,79 +110,66 @@ def process_sensor_data(raw_data):
 
 def to_sql(data: SensorData, prevtime, session: session):
 
-    assignment = Assignment()
-    weldTable = WeldTable()
-    weldingTable = WeldingTable()
-    realTime = RealTimeData()
-
     #RealTime Details
-    realTime.Current = data.rtdata.current/1000
-    realTime.Voltage = data.rtdata.voltage/1000
-    realTime.Temperature = data.rtdata.temperature/1000
-    realTime.GasUsed = data.rtdata.gasused/1000
-    realTime.WireFeedrate = data.rtdata.wirefeedrate/1000
-    realTime.Length = data.rtdata.length/1000
-    #dtime = convert_to_dateTime(data)
-    realTime.Time = convert_to_dateTime(data) # dtime.strftime('%Y/%m/%d %H:%M:%S.%f') #overcomes a legacy issue in pyodbc
-    realTime.Power = realTime.Current * realTime.Voltage
-    realTime.Timedelta = (realTime.Time.timestamp() - prevtime.timestamp()) #this is the issue. precision of the timestamp
-    if realTime.Timedelta < 0.001: #resolution for big times
-        realTime.TravelSpeed = 0
-        realTime.HeatInput = 0
+    current = data.rtdata.current/1000
+    voltage = data.rtdata.voltage/1000
+    temperature = data.rtdata.temperature/1000
+    gasUsed = data.rtdata.gasused/1000
+    wireFeedrate = data.rtdata.wirefeedrate/1000
+    length = data.rtdata.length/1000
+    time = convert_to_dateTime(data)
+    power = current *voltage
+    timedelta = (time.timestamp() - prevtime.timestamp())
+    if timedelta < 0.001: #resolution for big times
+        travelSpeed = 0
+        heatInput = 0
     else:
-        realTime.TravelSpeed = data.rtdata.length / realTime.Timedelta
-        realTime.HeatInput = ((data.rtdata.current * data.rtdata.voltage) * 60)/(1000 * realTime.TravelSpeed)
+        travelSpeed = data.rtdata.length / timedelta
+        heatInput = ((data.rtdata.current * data.rtdata.voltage) * 60)/(1000 * travelSpeed)
     
 
     try:
-        queryText = f'JobID={data.jobid} and WelderID={data.welderid} and MachineID={data.machineid}'
-        records = session.query(type(assignment)).filter(text(queryText)).all()
-
-        if len(records) == 0:
-                #Assignment Details
-                assignment.WelderID = data.welderid
-                assignment.MachineID = data.machineid
-                assignment.JobID = data.jobid
-
-                session.add(assignment)
-                session.commit()
-                
-                print("Added assignment into db")
-
-        elif len(records) != 1:  #Should never return more than one result
-            raise ValueError('Query of {classType} has more than one'.format(classType=type(object))) #Is this the best way?
-
-        else:
-            assignment = records[0]
-            print("Got Assignment details")
-
-        session.add(realTime)
-        session.commit()
-
-        queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
-        records = session.query(type(weldTable)).filter(text(queryText)).all()
-
-        if len(records) == 0:
-
-                weldTable.Assignment_id = assignment.id
-                weldTable.RunNo = data.runid
-
-                session.add(weldTable)
-                session.commit()
-                
-                print("Added WeldTable into db")
-        elif len(records) != 1:  #Should never return more than one result
-            raise ValueError('Query of {classType} has more than one'.format(classType=type(object))) #Is this the best way?
-        else:
-            weldTable = records[0]
-            print("Got Weld Table details")
-
         #create the welding table details
+        weldingTable = WeldingTable(
+            Machine_id = data.machineid,
+            Welder_id = data.welderid
+        )
 
-        weldingTable.RT_id = realTime.id
-        weldingTable.WT_id = weldTable.id
-        weldingTable.Machine_id = assignment.MachineID
-        weldingTable.Welder_id = assignment.WelderID
+        weldingTable.realtime = RealTimeData(
+            Current=current,
+            Voltage=voltage,
+            Temperature=temperature,
+            GasUsed=gasUsed,
+            WireFeedrate=wireFeedrate,
+            Time=time,
+            Timedelta=timedelta,
+            Length=length,
+            Power=power,
+            HeatInput=heatInput
+        )
+        
+        queryText = f'JobID={data.jobid} and WelderID={data.welderid} and MachineID={data.machineid}'
+        records = session.query(Assignment).filter(text(queryText)).all()
+
+        if records is None:
+            assignment = Assignment(
+                WelderID=data.welderid,
+                MachineID=data.machineid,
+                JobID=data.jobid
+            )
+
+            weldtable = WeldTable(
+                RunNo=data.runid
+            )
+        else:
+            assignment=records[0]
+
+            queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
+            records = session.query(WeldTable).filter(text(queryText)).all()
+
+            weldtable = records[0]
+
+        weldingTable.weldtable = weldtable
 
         session.add(weldingTable)
 
@@ -191,9 +178,10 @@ def to_sql(data: SensorData, prevtime, session: session):
     except IntegrityError as ex:
         print("Integrity error")
         print(ex)
+        session.rollback()
     except ValueError:
         print("Database returned more than one record")
-
+        session.rollback()
 
 def convert_to_dateTime(data: SensorData):
 

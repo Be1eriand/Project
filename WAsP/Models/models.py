@@ -20,6 +20,8 @@ class WeldTable(Base):
     RunNo = Column(Integer)
     Assignment_id = Column(Integer, ForeignKey('Assignment.id'))
 
+    assignment = relationship("Assignment", backref="Assignment")
+
 class WeldingTable(Base):
     __tablename__ = "WeldingTable"
 
@@ -28,6 +30,9 @@ class WeldingTable(Base):
     WT_id = Column(Integer, ForeignKey('WeldTable.id'))
     Welder_id = Column(Integer)
     Machine_id = Column(Integer)
+
+    realtime = relationship("RealTimeData", backref="WeldingTable")
+    weldtable = relationship("WeldTable", backref="WeldingTable")
 
 class RealTimeData(Base):
     __tablename__ = "RealTime_Data"
