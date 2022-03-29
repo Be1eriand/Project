@@ -1,13 +1,10 @@
-#from django.db import models
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (Integer, String, Date, DateTime, Float, Text, Time)
+from sqlalchemy import (Integer, DateTime, Float)
 
-Base = declarative_base()
+from .models import Base, BaseModel
 
-# Create your models here.
-class Assignment(Base):
+class Assignment(Base, BaseModel):
     __tablename__ = "Assignment"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -15,20 +12,16 @@ class Assignment(Base):
     MachineID = Column(Integer)
     JobID = Column(Integer)
 
-    def to_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-class WeldTable(Base):
+class WeldTable(Base, BaseModel):
     __tablename__ = "WeldTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RunNo = Column(Integer)
     Assignment_id = Column(Integer, ForeignKey('Assignment.id'))
 
-    def to_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    assignment = relationship("Assignment", backref="Assignment")
 
-class WeldingTable(Base):
+class WeldingTable(Base, BaseModel):
     __tablename__ = "WeldingTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -37,10 +30,10 @@ class WeldingTable(Base):
     Welder_id = Column(Integer)
     Machine_id = Column(Integer)
 
-    def to_dict(self):
-       return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+    realtime = relationship("RealTimeData", backref="WeldingTable")
+    weldtable = relationship("WeldTable", backref="WeldingTable")
 
-class RealTimeData(Base):
+class RealTimeData(Base, BaseModel):
     __tablename__ = "RealTime_Data"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")

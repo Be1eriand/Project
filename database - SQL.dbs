@@ -5,7 +5,7 @@
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<column name="AlertType" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
+			<column name="Description" prior="AlertType" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_AlertTable" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -25,7 +25,7 @@
 			<fk name="fk_AlertsTable_AlertTypes" to_schema="SmartFab.dbo" to_table="AlertTypes" >
 				<fk_column name="AlertType" pk="id" />
 			</fk>
-			<fk name="fk_AlertsTable_SpecType" to_schema="SmartFab.dbo" to_table="SpecType" >
+			<fk name="fk_AlertsTable_SpecType" to_schema="SmartFab.dbo" to_table="SpecTypes" >
 				<fk_column name="SpecType" pk="id" />
 			</fk>
 		</table>
@@ -39,6 +39,45 @@
 			<index name="pk_Assignment" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+		</table>
+		<table name="Category" >
+			<column name="category_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="arctime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_dashboard_category" unique="PRIMARY_KEY" >
+				<column name="category_id" />
+			</index>
+		</table>
+		<table name="Job" >
+			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="category" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="start_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="end_date" type="date" length="10" decimal="0" jt="91" />
+			<column name="accum_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
+			<column name="total_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
+			<index name="pk_dashboard_job" unique="PRIMARY_KEY" >
+				<column name="job_id" />
+			</index>
+			<fk name="fk_dashboard_job_dashboard_category" to_schema="SmartFab.dbo" to_table="Category" >
+				<fk_column name="category" pk="category_id" />
+			</fk>
+		</table>
+		<table name="Locations" prior="Location" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+		</table>
+		<table name="Machines" prior="Machine" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="location_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_dashboard_machine" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_dashboard_machine_dashboard_location" to_schema="SmartFab.dbo" to_table="Locations" >
+				<fk_column name="location_id" pk="id" />
+			</fk>
 		</table>
 		<table name="RealTime_Data" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
@@ -61,11 +100,11 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="SpecType" >
+		<table name="SpecTypes" prior="SpecType" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<column name="SpecType" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
+			<column name="Description" prior="SpecType" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_SpecType" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -92,6 +131,116 @@
 			<column name="Heat_Input_Max" type="float" length="53" decimal="0" jt="8" />
 			<index name="pk_Specification" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+		</table>
+		<table name="Task" >
+			<column name="task_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="machine_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="datetime" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
+			<index name="pk_dashboard_task" unique="PRIMARY_KEY" >
+				<column name="task_id" />
+			</index>
+			<fk name="fk_dashboard_task_dashboard_job" to_schema="SmartFab.dbo" to_table="Job" >
+				<fk_column name="job_id" pk="job_id" />
+			</fk>
+			<fk name="fk_dashboard_task_dashboard_machine" to_schema="SmartFab.dbo" to_table="Machines" >
+				<fk_column name="machine_id" pk="id" />
+			</fk>
+			<fk name="fk_dashboard_task_dashboard_task_type" to_schema="SmartFab.dbo" to_table="Task_type" >
+				<fk_column name="type_id" pk="task_type_id" />
+			</fk>
+		</table>
+		<table name="Task_type" prior="dashboard_task_type" >
+			<column name="task_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
+				<column name="task_type_id" />
+			</index>
+		</table>
+		<table name="Timesheet" >
+			<column name="timesheet_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="shift_start" type="time" length="7" decimal="7" jt="92" mandatory="y" />
+			<column name="shift_end" type="time" length="7" decimal="7" jt="92" mandatory="y" />
+			<index name="pk_dashboard_timesheet" unique="PRIMARY_KEY" >
+				<column name="timesheet_id" />
+			</index>
+			<fk name="fk_dashboard_timesheet_dashboard_user_list" to_schema="SmartFab.dbo" to_table="UserList" >
+				<fk_column name="payroll_id" pk="payroll_id" />
+			</fk>
+		</table>
+		<table name="Timesheet_entry" >
+			<column name="tid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="org_timesheet_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
+			<column name="shift_end" type="time" length="7" decimal="7" jt="92" mandatory="y" />
+			<column name="shift_start" type="time" length="7" decimal="7" jt="92" mandatory="y" />
+			<column name="shift_length" type="real" length="24" decimal="0" jt="7" mandatory="y" />
+			<index name="pk_dashboard_timesheet_entry" unique="PRIMARY_KEY" >
+				<column name="tid" />
+			</index>
+			<fk name="fk_dashboard_timesheet_entry_dashboard_user_list" to_schema="SmartFab.dbo" to_table="UserList" >
+				<fk_column name="payroll_id" pk="payroll_id" />
+			</fk>
+		</table>
+		<table name="User" prior="dashboard_user" >
+			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="timesheet_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<column name="status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="pk_dashboard_user" unique="PRIMARY_KEY" >
+				<column name="uid" />
+			</index>
+			<fk name="fk_dashboard_user_dashboard_user_list" to_schema="SmartFab.dbo" to_table="UserList" >
+				<fk_column name="payroll_id" pk="payroll_id" />
+			</fk>
+		</table>
+		<table name="UserList" >
+			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="employment_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="pk_dashboard_user_list" unique="PRIMARY_KEY" >
+				<column name="payroll_id" />
+			</index>
+		</table>
+		<table name="UserRole" prior="dashboard_user_role" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_dashboard_user_role" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_dashboard_user_role_dashboard_user_type" to_schema="SmartFab.dbo" to_table="UserType" >
+				<fk_column name="type_id" pk="type_id" />
+			</fk>
+			<fk name="fk_dashboard_user_role_dashboard_user" to_schema="SmartFab.dbo" to_table="User" >
+				<fk_column name="uid" pk="uid" />
+			</fk>
+		</table>
+		<table name="UserType" prior="dashboard_user_type" >
+			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="level" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
+			<index name="pk_dashboard_user_type" unique="PRIMARY_KEY" >
+				<column name="type_id" />
+			</index>
+		</table>
+		<table name="WASP_Settings" prior="dashboard_db_settings" >
+			<column name="setting_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="name" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="desc" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="value" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<index name="pk_dashboard_db_settings" unique="PRIMARY_KEY" >
+				<column name="setting_id" />
 			</index>
 		</table>
 		<table name="WPS" >
@@ -260,164 +409,6 @@
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="dashboard_category" >
-			<column name="category_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="arctime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_dashboard_category" unique="PRIMARY_KEY" >
-				<column name="category_id" />
-			</index>
-		</table>
-		<table name="dashboard_db_settings" >
-			<column name="setting_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="name" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<column name="desc" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<column name="value" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_dashboard_db_settings" unique="PRIMARY_KEY" >
-				<column name="setting_id" />
-			</index>
-		</table>
-		<table name="dashboard_job" >
-			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="category" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="start_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
-			<column name="end_date" type="date" length="10" decimal="0" jt="91" />
-			<column name="accum_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
-			<column name="total_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
-			<index name="pk_dashboard_job" unique="PRIMARY_KEY" >
-				<column name="job_id" />
-			</index>
-			<fk name="fk_dashboard_job_dashboard_category" to_schema="SmartFab.dbo" to_table="dashboard_category" >
-				<fk_column name="category" pk="category_id" />
-			</fk>
-		</table>
-		<table name="dashboard_location" >
-			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-		</table>
-		<table name="dashboard_machine" >
-			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="location_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_dashboard_machine" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-			<fk name="fk_dashboard_machine_dashboard_location" to_schema="SmartFab.dbo" to_table="dashboard_location" >
-				<fk_column name="location_id" pk="id" />
-			</fk>
-		</table>
-		<table name="dashboard_payroll_user" >
-			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="employment_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<index name="pk_dashboard_payroll_user" unique="PRIMARY_KEY" >
-				<column name="payroll_id" />
-			</index>
-		</table>
-		<table name="dashboard_task" >
-			<column name="task_id" type="nvarchar" length="128" jt="12" mandatory="y" />
-			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="machine_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="datetime" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
-			<index name="pk_dashboard_task" unique="PRIMARY_KEY" >
-				<column name="task_id" />
-			</index>
-			<fk name="fk_dashboard_task_dashboard_job" to_schema="SmartFab.dbo" to_table="dashboard_job" >
-				<fk_column name="job_id" pk="job_id" />
-			</fk>
-			<fk name="fk_dashboard_task_dashboard_machine" to_schema="SmartFab.dbo" to_table="dashboard_machine" >
-				<fk_column name="machine_id" pk="id" />
-			</fk>
-			<fk name="fk_dashboard_task_dashboard_task_type" to_schema="SmartFab.dbo" to_table="dashboard_task_type" >
-				<fk_column name="type_id" pk="task_type_id" />
-			</fk>
-		</table>
-		<table name="dashboard_task_type" >
-			<column name="task_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
-				<column name="task_type_id" />
-			</index>
-		</table>
-		<table name="dashboard_timesheet" >
-			<column name="timesheet_id" type="nvarchar" length="128" jt="12" mandatory="y" />
-			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
-			<column name="shift_start" type="time" length="7" decimal="7" jt="92" mandatory="y" />
-			<column name="shift_end" type="time" length="7" decimal="7" jt="92" mandatory="y" />
-			<index name="pk_dashboard_timesheet" unique="PRIMARY_KEY" >
-				<column name="timesheet_id" />
-			</index>
-			<fk name="fk_dashboard_timesheet_dashboard_user_list" to_schema="SmartFab.dbo" to_table="dashboard_user_list" >
-				<fk_column name="payroll_id" pk="payroll_id" />
-			</fk>
-		</table>
-		<table name="dashboard_timesheet_entry" >
-			<column name="tid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="org_timesheet_id" type="nvarchar" length="128" jt="12" mandatory="y" />
-			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="date" type="date" jt="91" mandatory="y" />
-			<column name="shift_end" type="time" length="7" decimal="7" jt="92" mandatory="y" />
-			<column name="shift_start" type="time" length="7" decimal="7" jt="92" mandatory="y" />
-			<column name="shift_length" type="real" length="24" decimal="0" jt="7" mandatory="y" />
-			<index name="pk_dashboard_timesheet_entry" unique="PRIMARY_KEY" >
-				<column name="tid" />
-			</index>
-			<fk name="fk_dashboard_timesheet_entry_dashboard_user_list" to_schema="SmartFab.dbo" to_table="dashboard_user_list" >
-				<fk_column name="payroll_id" pk="payroll_id" />
-			</fk>
-		</table>
-		<table name="dashboard_user" >
-			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="timesheet_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<column name="status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<index name="pk_dashboard_user" unique="PRIMARY_KEY" >
-				<column name="uid" />
-			</index>
-			<fk name="fk_dashboard_user_dashboard_user_list" to_schema="SmartFab.dbo" to_table="dashboard_user_list" >
-				<fk_column name="payroll_id" pk="payroll_id" />
-			</fk>
-		</table>
-		<table name="dashboard_user_list" >
-			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="employment_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<index name="pk_dashboard_user_list" unique="PRIMARY_KEY" >
-				<column name="payroll_id" />
-			</index>
-		</table>
-		<table name="dashboard_user_role" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_dashboard_user_role" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-			<fk name="fk_dashboard_user_role_dashboard_user_type" to_schema="SmartFab.dbo" to_table="dashboard_user_type" >
-				<fk_column name="type_id" pk="type_id" />
-			</fk>
-			<fk name="fk_dashboard_user_role_dashboard_user" to_schema="SmartFab.dbo" to_table="dashboard_user" >
-				<fk_column name="uid" pk="uid" />
-			</fk>
-		</table>
-		<table name="dashboard_user_type" >
-			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="level" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<index name="pk_dashboard_user_type" unique="PRIMARY_KEY" >
-				<column name="type_id" />
-			</index>
-		</table>
 		<table name="django_admin_log" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="action_time" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
@@ -497,9 +488,22 @@
 		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1392" y="768" />
 		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1392" y="544" />
 		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="1184" y="992" />
+		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="1376" />
+		<entity schema="SmartFab.dbo" name="Job" color="3986C1" x="256" y="1120" />
+		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="464" y="1312" />
+		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="464" y="1120" />
 		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1840" y="992" />
-		<entity schema="SmartFab.dbo" name="SpecType" color="3986C1" x="1200" y="608" />
+		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1200" y="608" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1840" y="528" />
+		<entity schema="SmartFab.dbo" name="Task" color="3986C1" x="256" y="896" />
+		<entity schema="SmartFab.dbo" name="Task_type" color="3986C1" x="48" y="1120" />
+		<entity schema="SmartFab.dbo" name="Timesheet" color="3986C1" x="240" y="672" />
+		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="464" y="640" />
+		<entity schema="SmartFab.dbo" name="User" color="3986C1" x="720" y="1088" />
+		<entity schema="SmartFab.dbo" name="UserList" color="3986C1" x="464" y="896" />
+		<entity schema="SmartFab.dbo" name="UserRole" color="3986C1" x="720" y="896" />
+		<entity schema="SmartFab.dbo" name="UserType" color="3986C1" x="896" y="896" />
+		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="1360" y="288" />
 		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1616" y="752" />
 		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1616" y="528" />
 		<entity schema="SmartFab.dbo" name="WeldTable" color="3986C1" x="1376" y="992" />
@@ -510,20 +514,6 @@
 		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="80" y="304" />
 		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="256" y="256" />
 		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="96" y="80" />
-		<entity schema="SmartFab.dbo" name="dashboard_category" color="3986C1" x="48" y="1280" />
-		<entity schema="SmartFab.dbo" name="dashboard_db_settings" color="3986C1" x="96" y="672" />
-		<entity schema="SmartFab.dbo" name="dashboard_job" color="3986C1" x="80" y="960" />
-		<entity schema="SmartFab.dbo" name="dashboard_location" color="3986C1" x="544" y="1312" />
-		<entity schema="SmartFab.dbo" name="dashboard_machine" color="3986C1" x="752" y="1216" />
-		<entity schema="SmartFab.dbo" name="dashboard_payroll_user" color="3986C1" x="96" y="800" />
-		<entity schema="SmartFab.dbo" name="dashboard_task" color="3986C1" x="272" y="960" />
-		<entity schema="SmartFab.dbo" name="dashboard_task_type" color="3986C1" x="288" y="1312" />
-		<entity schema="SmartFab.dbo" name="dashboard_timesheet" color="3986C1" x="816" y="640" />
-		<entity schema="SmartFab.dbo" name="dashboard_timesheet_entry" color="3986C1" x="496" y="608" />
-		<entity schema="SmartFab.dbo" name="dashboard_user" color="3986C1" x="480" y="928" />
-		<entity schema="SmartFab.dbo" name="dashboard_user_list" color="3986C1" x="896" y="832" />
-		<entity schema="SmartFab.dbo" name="dashboard_user_role" color="3986C1" x="736" y="1024" />
-		<entity schema="SmartFab.dbo" name="dashboard_user_type" color="3986C1" x="976" y="1024" />
 		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="928" y="288" />
 		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="848" y="96" />
 		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1136" y="96" />
@@ -543,7 +533,7 @@
 			<entity schema="SmartFab.dbo" name="auth_group" />
 			<entity schema="SmartFab.dbo" name="auth_user_user_permissions" />
 		</group>
-		<group name="Specification" color="C4E0F9" >
+		<group name="Procedures" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="WPS_Run" />
 			<entity schema="SmartFab.dbo" name="WPS" />
 			<entity schema="SmartFab.dbo" name="Specification" />
@@ -551,29 +541,27 @@
 		<group name="Alerts" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="AlertsTable" />
 			<entity schema="SmartFab.dbo" name="AlertTypes" />
-			<entity schema="SmartFab.dbo" name="SpecType" />
+			<entity schema="SmartFab.dbo" name="SpecTypes" />
 		</group>
-		<group name="Dashboard" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="dashboard_category" />
-			<entity schema="SmartFab.dbo" name="dashboard_db_settings" />
-			<entity schema="SmartFab.dbo" name="dashboard_payroll_user" />
-			<entity schema="SmartFab.dbo" name="dashboard_job" />
-			<entity schema="SmartFab.dbo" name="dashboard_location" />
-			<entity schema="SmartFab.dbo" name="dashboard_machine" />
-			<entity schema="SmartFab.dbo" name="dashboard_user_type" />
-			<entity schema="SmartFab.dbo" name="dashboard_user_role" />
-			<entity schema="SmartFab.dbo" name="dashboard_user_list" />
-			<entity schema="SmartFab.dbo" name="dashboard_task_type" />
-			<entity schema="SmartFab.dbo" name="dashboard_task" />
-			<entity schema="SmartFab.dbo" name="dashboard_user" />
-			<entity schema="SmartFab.dbo" name="dashboard_timesheet" />
-			<entity schema="SmartFab.dbo" name="dashboard_timesheet_entry" />
+		<group name="Productivity" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="Machines" />
+			<entity schema="SmartFab.dbo" name="Locations" />
+			<entity schema="SmartFab.dbo" name="UserType" />
+			<entity schema="SmartFab.dbo" name="UserRole" />
+			<entity schema="SmartFab.dbo" name="Task_type" />
+			<entity schema="SmartFab.dbo" name="User" />
+			<entity schema="SmartFab.dbo" name="Task" />
+			<entity schema="SmartFab.dbo" name="Timesheet" />
+			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
+			<entity schema="SmartFab.dbo" name="UserList" />
+			<entity schema="SmartFab.dbo" name="Category" />
+			<entity schema="SmartFab.dbo" name="Job" />
 		</group>
 		<group name="RealTime" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 			<entity schema="SmartFab.dbo" name="Assignment" />
 			<entity schema="SmartFab.dbo" name="WeldTable" />
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
-			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 

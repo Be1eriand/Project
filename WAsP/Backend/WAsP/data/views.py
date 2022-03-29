@@ -13,8 +13,7 @@ from rest_framework import viewsets
 import json
 
 from django.conf import settings
-from data.models import Assignment, RealTimeData, WeldingTable, WeldTable
-from data.serialisers import RealTimeserialiser
+from Models.Realtime import Assignment, RealTimeData, WeldingTable, WeldTable
 
 session = settings.SESSION
 

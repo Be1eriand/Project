@@ -1,11 +1,10 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import (Integer, String, Date, DateTime, Float, Text, Time)
+from sqlalchemy import (Integer, String, Float)
 
-Base = declarative_base()
+from .models import Base, BaseModel
 
-class WPS(Base):
+class WPS(Base, BaseModel):
     __tablename__ = "WPS"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -13,7 +12,7 @@ class WPS(Base):
     Welding_Code = Column(String)
     Joint_type = Column(String)
 
-class WPS_Run(Base):
+class WPS_Run(Base, BaseModel):
     __tablename__ = "WPS_Run"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -24,7 +23,7 @@ class WPS_Run(Base):
     specifications = relationship("Specification", backref="WPS_Run")
     wps = relationship("WPS", backref="WPS_Run")
 
-class Specification(Base):
+class Specification(Base, BaseModel):
     __tablename__ = "Specification"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
