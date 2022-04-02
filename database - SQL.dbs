@@ -33,7 +33,7 @@
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<column name="JobID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="TaskID" prior="JobID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="MachineID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="WelderID" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<index name="pk_Assignment" unique="PRIMARY_KEY" >
@@ -100,6 +100,19 @@
 				<column name="id" />
 			</index>
 		</table>
+		<table name="RunTable" prior="WeldTable" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="RunNo" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Assignment_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<index name="pk_WeldTable" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<fk name="fk_WeldTable" to_schema="SmartFab.dbo" to_table="Assignment" >
+				<fk_column name="Assignment_id" pk="id" />
+			</fk>
+		</table>
 		<table name="SpecTypes" prior="SpecType" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
@@ -151,6 +164,18 @@
 			</fk>
 			<fk name="fk_dashboard_task_dashboard_task_type" to_schema="SmartFab.dbo" to_table="Task_type" >
 				<fk_column name="type_id" pk="task_type_id" />
+			</fk>
+		</table>
+		<table name="TaskAssignment" >
+			<column name="Taskid" prior="id" type="int" jt="4" mandatory="y" />
+			<column name="WPSNo" prior="WPSid" type="int" jt="4" mandatory="y" />
+			<column name="Welderid" type="int" jt="4" mandatory="y" />
+			<column name="Machineid" type="int" jt="4" mandatory="y" />
+			<index name="pk_TaskAssignment" unique="PRIMARY_KEY" >
+				<column name="Taskid" />
+			</index>
+			<fk name="fk_TaskAssignment_WPS" to_schema="SmartFab.dbo" to_table="WPS" >
+				<fk_column name="WPSNo" pk="WPS_No" />
 			</fk>
 		</table>
 		<table name="Task_type" prior="dashboard_task_type" >
@@ -277,19 +302,6 @@
 				<fk_column name="WPS_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldTable" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
-				<identity><![CDATA[IDENTITY]]></identity>
-			</column>
-			<column name="RunNo" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="Assignment_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_WeldTable" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-			<fk name="fk_WeldTable" to_schema="SmartFab.dbo" to_table="Assignment" >
-				<fk_column name="Assignment_id" pk="id" />
-			</fk>
-		</table>
 		<table name="WeldingTable" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
@@ -307,7 +319,7 @@
 			<fk name="fk_WeldingTable_RealTime_Data" to_schema="SmartFab.dbo" to_table="RealTime_Data" >
 				<fk_column name="RT_id" pk="id" />
 			</fk>
-			<fk name="fk_WeldingTable_WeldTable" to_schema="SmartFab.dbo" to_table="WeldTable" >
+			<fk name="fk_WeldingTable_WeldTable" to_schema="SmartFab.dbo" to_table="RunTable" >
 				<fk_column name="WT_id" pk="id" />
 			</fk>
 		</table>
@@ -485,29 +497,30 @@
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
-		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1392" y="768" />
-		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1392" y="544" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="1184" y="992" />
+		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1136" y="768" />
+		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1136" y="544" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="992" y="1104" />
 		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="1376" />
 		<entity schema="SmartFab.dbo" name="Job" color="3986C1" x="256" y="1120" />
 		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="464" y="1312" />
 		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="464" y="1120" />
-		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1840" y="992" />
-		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1200" y="608" />
+		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1648" y="1104" />
+		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1184" y="1104" />
+		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="944" y="608" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1840" y="528" />
 		<entity schema="SmartFab.dbo" name="Task" color="3986C1" x="256" y="896" />
+		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="1376" y="848" />
 		<entity schema="SmartFab.dbo" name="Task_type" color="3986C1" x="48" y="1120" />
 		<entity schema="SmartFab.dbo" name="Timesheet" color="3986C1" x="240" y="672" />
 		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="464" y="640" />
 		<entity schema="SmartFab.dbo" name="User" color="3986C1" x="720" y="1088" />
 		<entity schema="SmartFab.dbo" name="UserList" color="3986C1" x="464" y="896" />
 		<entity schema="SmartFab.dbo" name="UserRole" color="3986C1" x="720" y="896" />
-		<entity schema="SmartFab.dbo" name="UserType" color="3986C1" x="896" y="896" />
+		<entity schema="SmartFab.dbo" name="UserType" color="3986C1" x="720" y="656" />
 		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="1360" y="288" />
 		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1616" y="752" />
 		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1616" y="528" />
-		<entity schema="SmartFab.dbo" name="WeldTable" color="3986C1" x="1376" y="992" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1568" y="992" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1376" y="1104" />
 		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="416" y="272" />
 		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="592" y="176" />
 		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="336" y="112" />
@@ -546,21 +559,21 @@
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Machines" />
 			<entity schema="SmartFab.dbo" name="Locations" />
-			<entity schema="SmartFab.dbo" name="UserType" />
 			<entity schema="SmartFab.dbo" name="UserRole" />
 			<entity schema="SmartFab.dbo" name="Task_type" />
 			<entity schema="SmartFab.dbo" name="User" />
-			<entity schema="SmartFab.dbo" name="Task" />
 			<entity schema="SmartFab.dbo" name="Timesheet" />
 			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
 			<entity schema="SmartFab.dbo" name="UserList" />
 			<entity schema="SmartFab.dbo" name="Category" />
 			<entity schema="SmartFab.dbo" name="Job" />
+			<entity schema="SmartFab.dbo" name="UserType" />
+			<entity schema="SmartFab.dbo" name="Task" />
 		</group>
 		<group name="RealTime" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 			<entity schema="SmartFab.dbo" name="Assignment" />
-			<entity schema="SmartFab.dbo" name="WeldTable" />
+			<entity schema="SmartFab.dbo" name="RunTable" />
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
