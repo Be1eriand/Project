@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from dashboard.models import User_List
 # Create your views here.
 
-
+"""
 @login_required
 def register(response):
     if response.method == "POST":
@@ -27,4 +27,4 @@ def register(response):
 def changePassword(request):
 
     return render(request, "change-password.html")
-
+"""
