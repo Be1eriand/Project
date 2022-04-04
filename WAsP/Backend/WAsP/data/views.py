@@ -14,7 +14,7 @@ session = settings.SESSION
 
 # Create your views here.
 class DataAPI(APIView): #GET, POST
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request): 
 
