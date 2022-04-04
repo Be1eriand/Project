@@ -1,8 +1,9 @@
 export class User {
-    id: string; //Is this needed?
+    id: string;
     username: string;
     password: string;
     firstName: string;
     lastName: string;
-    token: string;
+    access: string;
+    refresh: string;
 }

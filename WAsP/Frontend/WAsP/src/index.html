@@ -30,7 +30,13 @@
         <div class="row">
             <div class="col">
                 <!-- Load Content -->
-              <app-root><img id="loading-image" src="/assets/loading.gif" alt="Loading..." /></app-root>                
+              <app-root>
+                <mat-progress-spinner
+                class="example-margin"
+                [color]="blue"
+                [mode]="indeterminate">
+            </mat-progress-spinner>
+              </app-root>                
              </div>
         </div>
     </div>
