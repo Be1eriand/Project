@@ -1,6 +1,9 @@
 
 <nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
   <div class="navbar-nav">
+      <div>
+        <button mat-flat-button color="accent">{{user.username}} Button</button>
+      </div> 
       <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
       <a class="nav-item nav-link" routerLink="/users" routerLinkActive="active">Users</a>
       <a class="nav-item nav-link" (click)="logout()">Logout</a>
@@ -10,7 +13,11 @@
 <!-- main app container -->
 <div class="app-container" [ngClass]="{ 'bg-light': user }">
   <alert></alert>
-  <router-outlet></router-outlet>
+  <router-outlet>
+    <mat-progress-spinner
+      class="example-margin">
+    </mat-progress-spinner>
+</router-outlet>
 </div>
 
 <div>

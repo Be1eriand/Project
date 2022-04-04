@@ -10,12 +10,16 @@ import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 
+import {User} from './_models'
+import {AccountService} from './_services'
+
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportsComponent } from './reports/reports.component';
 import { AccountComponent } from './account/account.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -24,7 +28,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
         HttpClientModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatButtonModule
     ],
     declarations: [
         AppComponent,
@@ -41,4 +46,10 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     bootstrap: [AppComponent]
 })
 
-export class AppModule { }
+export class AppModule { 
+    user: User;
+
+    constructor(private accountService: AccountService) {
+        this.user = this.accountService.userValue;
+    }
+}
