@@ -10,16 +10,17 @@ import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 
-import {User} from './_models'
-import {AccountService} from './_services'
+import { User } from './_models'
+import { AccountService } from './_services'
 
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReportsComponent } from './reports/reports.component';
 import { AccountComponent } from './account/account.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-import {MatButtonModule} from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon'
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import {MatButtonModule} from '@angular/material/button';
         AppRoutingModule,
         BrowserAnimationsModule,
         MatProgressSpinnerModule,
-        MatButtonModule
+        MatButtonModule,
+        MatIconModule
     ],
     declarations: [
         AppComponent,

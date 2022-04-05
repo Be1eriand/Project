@@ -19,30 +19,16 @@
 </head>
 <body class="mat-typography">
 
-  <div class="wrapper">
-    <!-- Page Content  -->
-    <div id="content">
-        <div class="row" style="background-color: #374785; color: #A8D0E6; border-bottom: 3px solid #dd0029;">
-            <div class="col-9 p-2 text-center">
-                <span class="h1" style="color:#FFFFFF;">Smart Fabrication Dashboards</span>
-            </div>    
-        </div>
-        <div class="row">
-            <div class="col">
-                <!-- Load Content -->
-              <app-root>
+    <div class="wrapper">
+            <!-- Load Content -->
+            <app-root>
                 <mat-progress-spinner
-                    class="example-margin"
                     [color]="blue"
                     [mode]="indeterminate">
                 </mat-progress-spinner>
-              </app-root>                
-             </div>
-        </div>
+            </app-root> 
+        <div class="overlay"></div>
     </div>
-
-    <div class="overlay"></div>
-  </div>
   <!-- Popper.JS -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
   <!-- JQUERY & Bootstrap JS -->
