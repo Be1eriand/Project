@@ -10,7 +10,7 @@ class Assignment(Base, BaseModel):
     id = Column(Integer, primary_key=True, autoincrement="auto")
     WelderID = Column(Integer)
     MachineID = Column(Integer)
-    JobID = Column(Integer)
+    TaskID = Column(Integer)
 
 class WeldTable(Base, BaseModel):
     __tablename__ = "WeldTable"
