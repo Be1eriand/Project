@@ -10,10 +10,10 @@ class Assignment(Base, BaseModel):
     id = Column(Integer, primary_key=True, autoincrement="auto")
     WelderID = Column(Integer)
     MachineID = Column(Integer)
-    JobID = Column(Integer)
+    TaskID = Column(Integer)
 
-class WeldTable(Base, BaseModel):
-    __tablename__ = "WeldTable"
+class RunTable(Base, BaseModel):
+    __tablename__ = "RunTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RunNo = Column(Integer)
@@ -26,7 +26,7 @@ class WeldingTable(Base, BaseModel):
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RT_id = Column(Integer, ForeignKey('RealTime_Data.id'))
-    WT_id = Column(Integer, ForeignKey('WeldTable.id'))
+    WT_id = Column(Integer, ForeignKey('RunTable.id'))
     Welder_id = Column(Integer)
     Machine_id = Column(Integer)
 

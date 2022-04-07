@@ -52,31 +52,30 @@
 			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<column name="employment_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<column name="timesheetstatus" type="bit" jt="-7" />
 			<index name="pk_dashboard_user_list" unique="PRIMARY_KEY" >
 				<column name="payroll_id" />
 			</index>
 		</table>
 		<table name="JobContract" prior="Job Contract" >
 			<column name="id" type="int" jt="4" mandatory="y" />
-			<column name="Contract Name" type="varchar" length="100" jt="12" />
+			<column name="ContractName" prior="Contract Name" type="varchar" length="100" jt="12" />
 			<column name="Details" type="text" jt="-1" />
 			<index name="pk_Job Contract" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<fk name="fk_JobContract_JobTimeTracker" to_schema="SmartFab.dbo" to_table="JobTimeTracker" >
-				<fk_column name="id" pk="job_id" />
+				<fk_column name="id" pk="id" />
 			</fk>
 		</table>
 		<table name="JobTimeTracker" >
-			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="id" prior="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="category" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="start_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
 			<column name="end_date" type="date" length="10" decimal="0" jt="91" />
 			<column name="accum_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
 			<column name="total_hrs" type="real" length="24" decimal="0" jt="7" mandatory="y" />
 			<index name="pk_dashboard_job" unique="PRIMARY_KEY" >
-				<column name="job_id" />
+				<column name="id" />
 			</index>
 			<fk name="fk_dashboard_job_dashboard_category" to_schema="SmartFab.dbo" to_table="Category" >
 				<fk_column name="category" pk="category_id" />
@@ -84,20 +83,20 @@
 		</table>
 		<table name="Locations" prior="Location" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="location" prior="description" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="Location" prior="location" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
 		<table name="Machines" prior="Machine" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="description" prior="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
-			<column name="location_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Description" prior="description" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="locid" prior="location_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<index name="pk_dashboard_machine" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<fk name="fk_dashboard_machine_dashboard_location" to_schema="SmartFab.dbo" to_table="Locations" >
-				<fk_column name="location_id" pk="id" />
+				<fk_column name="locid" pk="id" />
 			</fk>
 		</table>
 		<table name="RealTime_Data" >
@@ -200,7 +199,7 @@
 		</table>
 		<table name="TimesheetTask" >
 			<column name="task_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<column name="payroll_id" prior="uid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="payroll_id" prior="payrollid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="machine_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -209,23 +208,23 @@
 				<column name="task_id" />
 			</index>
 			<fk name="fk_dashboard_task_dashboard_job" to_schema="SmartFab.dbo" to_table="JobTimeTracker" >
-				<fk_column name="job_id" pk="job_id" />
+				<fk_column name="job_id" pk="id" />
 			</fk>
 			<fk name="fk_dashboard_task_dashboard_machine" to_schema="SmartFab.dbo" to_table="Machines" >
 				<fk_column name="machine_id" pk="id" />
 			</fk>
 			<fk name="fk_dashboard_task_dashboard_task_type" to_schema="SmartFab.dbo" to_table="TimesheetTaskType" >
-				<fk_column name="type_id" pk="task_type_id" />
+				<fk_column name="type_id" pk="id" />
 			</fk>
 			<fk name="fk_TimesheetTask_Employees" to_schema="SmartFab.dbo" to_table="Employees" >
 				<fk_column name="payroll_id" pk="payroll_id" />
 			</fk>
 		</table>
 		<table name="TimesheetTaskType" >
-			<column name="task_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="id" prior="task_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="Description" prior="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
-				<column name="task_type_id" />
+				<column name="id" />
 			</index>
 		</table>
 		<table name="Timesheet_entry" >
@@ -481,39 +480,39 @@
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
-		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1408" y="576" />
-		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1600" y="464" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="880" y="1168" />
-		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="368" y="928" />
-		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="272" y="704" />
-		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="832" y="944" />
-		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="624" y="944" />
-		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="656" y="1296" />
-		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1152" />
-		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1536" y="1168" />
-		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1072" y="1168" />
-		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1408" y="416" />
-		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1424" y="752" />
-		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="1024" y="944" />
-		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="784" />
-		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="144" y="1040" />
-		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="128" y="1280" />
-		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="640" />
-		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="928" y="560" />
-		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1200" y="976" />
-		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1200" y="752" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1168" />
-		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="464" y="272" />
-		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="640" y="176" />
-		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="384" y="112" />
-		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="128" y="304" />
-		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="304" y="256" />
-		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="144" y="80" />
-		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="976" y="288" />
-		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="896" y="96" />
-		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1184" y="96" />
-		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1216" y="304" />
-		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="1152" y="544" />
+		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1376" y="576" />
+		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1568" y="464" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="848" y="1168" />
+		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="368" y="960" />
+		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="752" />
+		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="944" />
+		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="592" y="944" />
+		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="656" y="1328" />
+		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1184" />
+		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1168" />
+		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1040" y="1168" />
+		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1376" y="416" />
+		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="752" />
+		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="992" y="944" />
+		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="864" y="784" />
+		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1040" />
+		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1280" />
+		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="672" />
+		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="896" y="560" />
+		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1168" y="976" />
+		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="752" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1232" y="1168" />
+		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="432" y="272" />
+		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="608" y="176" />
+		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="352" y="112" />
+		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="96" y="304" />
+		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="272" y="256" />
+		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="112" y="80" />
+		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="944" y="288" />
+		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="864" y="96" />
+		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1152" y="96" />
+		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1184" y="304" />
+		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="1120" y="544" />
 		<group name="Django Admin" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="django_content_type" />
 			<entity schema="SmartFab.dbo" name="django_session" />
@@ -540,8 +539,8 @@
 		</group>
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
-			<entity schema="SmartFab.dbo" name="Employees" />
 			<entity schema="SmartFab.dbo" name="Category" />
+			<entity schema="SmartFab.dbo" name="Employees" />
 			<entity schema="SmartFab.dbo" name="Machines" />
 			<entity schema="SmartFab.dbo" name="Locations" />
 		</group>
@@ -553,8 +552,8 @@
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
-			<entity schema="SmartFab.dbo" name="JobContract" />
 			<entity schema="SmartFab.dbo" name="TaskAssociation" />
+			<entity schema="SmartFab.dbo" name="JobContract" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 
@@ -611,25 +610,5 @@ GO
 ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_WeldTable FOREIGN KEY ( WT_id ) REFERENCES SmartFab.dbo.WeldTable( id );
 GO]]></string>
 		</script>
-	</layout>
-	<layout name="Django" id="Layout-141f" show_relation="columns" >
-		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="480" y="320" />
-		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="400" y="128" />
-		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="224" y="352" />
-		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="816" y="336" />
-		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="624" y="304" />
-		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="416" y="512" />
-		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="768" y="48" />
-		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="224" y="48" />
-		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="48" y="192" />
-		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="64" y="48" />
-	</layout>
-	<layout name="Old Database Layout" id="Layout-1395" show_relation="columns" >
-		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="592" y="496" />
-		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="464" y="304" />
-		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="208" y="624" />
-		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="192" y="480" />
-		<entity schema="SmartFab.dbo" name="TaskAssignment" color="3986C1" x="48" y="144" />
-		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="464" y="48" />
 	</layout>
 </project>

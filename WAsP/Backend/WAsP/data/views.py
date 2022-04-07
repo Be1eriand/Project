@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from django.conf import settings
-from Models.Realtime import Assignment, RealTimeData, WeldingTable, WeldTable
+from Models.Realtime import Assignment, RealTimeData, WeldingTable, RunTable
 
 session = settings.SESSION
 
@@ -26,5 +26,33 @@ class DataAPI(APIView): #GET, POST
             return Response(e.args[0],status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+
+class RealtimeView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+
+class SpecificationView(APIView): #Follows CRUD
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+    
+    def put(self, request):
 
         return Response(status.HTTP_400_BAD_REQUEST)
