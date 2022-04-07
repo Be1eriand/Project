@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from django.conf import settings
-from Models.Realtime import Assignment, RealTimeData, WeldingTable, WeldTable
+from Models.Realtime import Assignment, RealTimeData, WeldingTable, RunTable
 
 session = settings.SESSION
 
