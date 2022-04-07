@@ -12,8 +12,8 @@ class Assignment(Base, BaseModel):
     MachineID = Column(Integer)
     TaskID = Column(Integer)
 
-class WeldTable(Base, BaseModel):
-    __tablename__ = "WeldTable"
+class RunTable(Base, BaseModel):
+    __tablename__ = "RunTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RunNo = Column(Integer)
