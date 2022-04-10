@@ -12,6 +12,8 @@ class WPS(Base, BaseModel):
     Welding_Code = Column(String)
     Joint_type = Column(String)
 
+    runs = relationship("WPS_Run", back_populates="wps")
+
 class WPS_Run(Base, BaseModel):
     __tablename__ = "WPS_Run"
 
@@ -21,7 +23,7 @@ class WPS_Run(Base, BaseModel):
     Specification_id = Column(Integer, ForeignKey("Specification.id"))
 
     specifications = relationship("Specification", backref="WPS_Run")
-    wps = relationship("WPS", backref="WPS_Run")
+    wps = relationship("WPS", back_populates="runs")
 
 class Specification(Base, BaseModel):
     __tablename__ = "Specification"

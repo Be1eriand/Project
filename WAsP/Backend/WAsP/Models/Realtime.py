@@ -19,7 +19,7 @@ class RunTable(Base, BaseModel):
     RunNo = Column(Integer)
     Assignment_id = Column(Integer, ForeignKey('Assignment.id'))
 
-    assignment = relationship("Assignment", backref="Assignment")
+    assignment = relationship("Assignment", backref="RunTable")
 
 class WeldingTable(Base, BaseModel):
     __tablename__ = "WeldingTable"
@@ -31,7 +31,7 @@ class WeldingTable(Base, BaseModel):
     Machine_id = Column(Integer)
 
     realtime = relationship("RealTimeData", backref="WeldingTable")
-    weldtable = relationship("WeldTable", backref="WeldingTable")
+    weldtable = relationship("RunTable", backref="WeldingTable")
 
 class RealTimeData(Base, BaseModel):
     __tablename__ = "RealTime_Data"

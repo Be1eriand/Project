@@ -33,10 +33,13 @@ ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    #WAsP Applications
     'layout.apps.LayoutConfig',
     'dashboard.apps.DashboardConfig',
     'report.apps.ReportConfig',
     'accounts.apps.AccountsConfig',
+
+    #Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,6 +47,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+
+    #Third party apps
+    'channels',
     'mathfilters',
     'crispy_forms',
     'rest_framework',
@@ -57,8 +63,6 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        #'rest_framework.authentication.SessionAuthentication',
-        #'rest_framework.authentication.BasicAuthentication',
     ),
 }
 
@@ -80,6 +84,20 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# Channels settings
+ASGI_APPLICATION = "WAsP.asgi.application" 
+CHANNEL_REDIS_HOST = ("localhost", 8000) #IP address and port for the WAsP channel
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [CHANNEL_REDIS_HOST],
+            "routing": 'WAsP.routing.websocket_routing',
+        },
+    },
+}
+
 CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'WAsP.urls'
@@ -100,7 +118,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'WAsP.wsgi.application'
+#WSGI_APPLICATION = 'WAsP.wsgi.application'
 
 
 # Database
@@ -138,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'UTC' #probably change this to ACST
 
 USE_I18N = True
 

@@ -13,26 +13,26 @@ class Assignment(Base):
     MachineID = Column(Integer)
     JobID = Column(Integer)
 
-class WeldTable(Base):
-    __tablename__ = "WeldTable"
+class RunTable(Base):
+    __tablename__ = "RunTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RunNo = Column(Integer)
     Assignment_id = Column(Integer, ForeignKey('Assignment.id'))
 
-    assignment = relationship("Assignment", backref="Assignment")
+    assignment = relationship("Assignment", backref="RunTable")
 
 class WeldingTable(Base):
     __tablename__ = "WeldingTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
     RT_id = Column(Integer, ForeignKey('RealTime_Data.id'))
-    WT_id = Column(Integer, ForeignKey('WeldTable.id'))
+    WT_id = Column(Integer, ForeignKey('RunTable.id'))
     Welder_id = Column(Integer)
     Machine_id = Column(Integer)
 
     realtime = relationship("RealTimeData", backref="WeldingTable")
-    weldtable = relationship("WeldTable", backref="WeldingTable")
+    weldtable = relationship("RunTable", backref="WeldingTable")
 
 class RealTimeData(Base):
     __tablename__ = "RealTime_Data"

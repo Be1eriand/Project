@@ -16,13 +16,13 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include, re_path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from accounts.views import WAsPTokenObtainPairView
 
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     path('', include('layout.urls')), #probably will need to change this
-    re_path(r'^auth_api/', WAsPTokenObtainPairView.as_view(), name='token_obtain_pair'), #TokenObtainPairView.as_view()
+    re_path(r'^auth_api/', WAsPTokenObtainPairView.as_view(), name='token_obtain_pair'),
     re_path(r'^auth_api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     re_path(r'^auth_api/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('dashboard/', include('dashboard.urls')),
@@ -31,7 +31,7 @@ urlpatterns = [
     re_path(r'^accounts/', include('accounts.urls')),
     path('', include("django.contrib.auth.urls")),
     #path('settings', include("layout.urls")),
-    re_path(r'^', include('data.urls'))
+    re_path(r'^data/', include('data.urls'))
 ]
 
 
