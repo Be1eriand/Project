@@ -51,6 +51,7 @@
 			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
+			<column name="FullName" type="varchar" length="200" jt="12" definition="first_name + &#039; &#039; + last_name" spec="computed" mandatory="y" />
 			<column name="employment_status" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
 			<index name="pk_dashboard_user_list" unique="PRIMARY_KEY" >
 				<column name="payroll_id" />
@@ -142,37 +143,37 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Specification" >
+		<table name="Specification" generator_rows="6" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
-			<column name="Side" type="varchar" length="10" decimal="0" jt="12" />
-			<column name="Position" type="varchar" length="20" decimal="0" jt="12" />
-			<column name="Class" type="varchar" length="20" decimal="0" jt="12" />
-			<column name="Size" type="float" length="53" decimal="0" jt="8" />
-			<column name="Gas_Flux_Type" type="varchar" length="20" decimal="0" jt="12" />
-			<column name="Current_Max" type="float" length="53" decimal="0" jt="8" />
-			<column name="Current_Min" prior="Current_min" type="float" length="53" decimal="0" jt="8" />
-			<column name="Voltage_Min" type="float" length="53" decimal="0" jt="8" />
-			<column name="Voltage_Max" type="float" length="53" decimal="0" jt="8" />
-			<column name="Polarity" type="varchar" length="10" jt="12" />
-			<column name="Travel_Speed_Min" type="float" length="53" decimal="0" jt="8" />
-			<column name="Travel_Speed_Max" type="float" length="53" decimal="0" jt="8" />
-			<column name="Interpass_Temp_Min" type="float" length="53" decimal="0" jt="8" />
-			<column name="Interpass_Temp_Max" type="float" length="53" decimal="0" jt="8" />
-			<column name="Heat_Input_Min" type="float" length="53" decimal="0" jt="8" />
-			<column name="Heat_Input_Max" type="float" length="53" decimal="0" jt="8" />
+			<column name="Side" type="varchar" length="10" decimal="0" jt="12" regexp="[1-2]" regexp_nulls="0" />
+			<column name="Position" type="varchar" length="20" decimal="0" jt="12" regexp="[1-4][A-H]" regexp_nulls="0" />
+			<column name="Class" type="varchar" length="20" decimal="0" jt="12" regexp="ES-[1-9]" regexp_nulls="0" />
+			<column name="Size" type="float" length="53" decimal="0" jt="8" regexp="0.9" regexp_nulls="0" />
+			<column name="Gas_Flux_Type" type="varchar" length="20" decimal="0" jt="12" regexp="Argon/CO2/O2" regexp_nulls="0" />
+			<column name="Current_Max" type="float" length="53" decimal="0" jt="8" regexp="double:from=100;to=300;format=####################.;" regexp_nulls="0" />
+			<column name="Current_Min" prior="Current_min" type="float" length="53" decimal="0" jt="8" regexp_nulls="0" />
+			<column name="Voltage_Min" type="float" length="53" decimal="0" jt="8" regexp_nulls="0" />
+			<column name="Voltage_Max" type="float" length="53" decimal="0" jt="8" regexp="double:from=20;to=40;format=####################.;" regexp_nulls="0" />
+			<column name="Polarity" type="varchar" length="10" jt="12" regexp="DC+" regexp_nulls="0" />
+			<column name="Travel_Speed_Min" type="float" length="53" decimal="0" jt="8" regexp_nulls="0" />
+			<column name="Travel_Speed_Max" type="float" length="53" decimal="0" jt="8" regexp="double:from=200;to=600;format=####################.;" regexp_nulls="0" />
+			<column name="Interpass_Temp_Min" type="float" length="53" decimal="0" jt="8" regexp="0" regexp_nulls="0" />
+			<column name="Interpass_Temp_Max" type="float" length="53" decimal="0" jt="8" regexp="double:from=250;to=400;format=####################.;" regexp_nulls="0" />
+			<column name="Heat_Input_Min" type="float" length="53" decimal="0" jt="8" regexp="double:from=0.5;to=3.5;format=####################.##;" regexp_nulls="0" />
+			<column name="Heat_Input_Max" type="float" length="53" decimal="0" jt="8" regexp_nulls="0" />
 			<index name="pk_Specification" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="TaskAssignment" >
-			<column name="Taskid" prior="id" type="int" jt="4" mandatory="y" />
+		<table name="TaskAssignment" generator_rows="100" >
+			<column name="id" prior="Taskid" type="int" jt="4" mandatory="y" regexp="sequence:from=1;step=1;" />
 			<column name="WPSNo" prior="WPSid" type="int" jt="4" mandatory="y" />
 			<column name="Welderid" type="int" jt="4" mandatory="y" />
 			<column name="Machineid" type="int" jt="4" mandatory="y" />
 			<index name="pk_TaskAssignment" unique="PRIMARY_KEY" >
-				<column name="Taskid" />
+				<column name="id" />
 			</index>
 			<fk name="fk_TaskAssignment_WPS" to_schema="SmartFab.dbo" to_table="WPS" >
 				<fk_column name="WPSNo" pk="WPS_No" />
@@ -191,7 +192,7 @@
 				<column name="Taskid" />
 			</index>
 			<fk name="fk_TaskAssociation_TaskAssignment" to_schema="SmartFab.dbo" to_table="TaskAssignment" >
-				<fk_column name="Taskid" pk="Taskid" />
+				<fk_column name="Taskid" pk="id" />
 			</fk>
 			<fk name="fk_TaskAssociation_Job Contract" to_schema="SmartFab.dbo" to_table="JobContract" >
 				<fk_column name="Jobid" pk="id" />
@@ -477,22 +478,67 @@
 				<column name="name" />
 			</index>
 		</table>
+		<view name="ContracttaskView" >
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT j.id as ContractID, j.ContractName, t1.id as TaskID, w.WPS_No, e.FullName, m.Description
+FROM SmartFab.dbo.JobContract j 
+	INNER JOIN SmartFab.dbo.TaskAssociation t ON ( j.id = t.Jobid  )  
+	INNER JOIN SmartFab.dbo.TaskAssignment t1 ON ( t.Taskid = t1.id  )  
+	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.WPS_No  )  
+	INNER JOIN SmartFab.dbo.Employees e ON ( t1.Welderid = e.payroll_id  )  
+	INNER JOIN SmartFab.dbo.Machines m ON ( t1.Machineid = m.id  )  ]]></view_script>
+			<column name="id" type="int" />
+			<column name="ContractName" type="varchar" />
+			<column name="TaskID" type="int" />
+			<column name="WPS_No" type="int" />
+			<column name="FullName" type="varchar" />
+			<column name="Description" type="varchar" />
+			<column name="ContractID" type="int" />
+		</view>
+		<view name="SpecificationView" >
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT w.id, w.WPS_No, w.Welding_Code, w.Joint_type, wr.Run_No, s.Side, s.Position, s.Class, s.Size, s.Gas_Flux_Type, s.Current_Max, s.Current_Min, s.Voltage_Min, s.Voltage_Max, s.Polarity, s.Travel_Speed_Min, s.Travel_Speed_Max, s.Interpass_Temp_Min, s.Interpass_Temp_Max, s.Heat_Input_Min, s.Heat_Input_Max
+FROM SmartFab.dbo.WPS w 
+	INNER JOIN SmartFab.dbo.WPS_Run wr ON ( w.id = wr.WPS_id  )  
+	INNER JOIN SmartFab.dbo.Specification s ON ( wr.Specification_id = s.id  ) ]]></view_script>
+			<column name="id" type="int" />
+			<column name="WPS_No" type="int" />
+			<column name="Welding_Code" type="varchar" />
+			<column name="Joint_type" type="varchar" />
+			<column name="Run_No" type="int" />
+			<column name="Side" type="varchar" />
+			<column name="Position" type="varchar" />
+			<column name="Class" type="varchar" />
+			<column name="Size" type="float" />
+			<column name="Gas_Flux_Type" type="varchar" />
+			<column name="Current_Max" type="float" />
+			<column name="Current_Min" type="float" />
+			<column name="Voltage_Min" type="float" />
+			<column name="Voltage_Max" type="float" />
+			<column name="Polarity" type="varchar" />
+			<column name="Travel_Speed_Min" type="float" />
+			<column name="Travel_Speed_Max" type="float" />
+			<column name="Interpass_Temp_Min" type="float" />
+			<column name="Interpass_Temp_Max" type="float" />
+			<column name="Heat_Input_Min" type="float" />
+			<column name="Heat_Input_Max" type="float" />
+		</view>
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
 		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1376" y="576" />
 		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1568" y="464" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="848" y="1168" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1232" />
 		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="368" y="960" />
+		<entity schema="SmartFab.dbo" name="ContracttaskView" color="3986C1" x="640" y="1488" />
 		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="752" />
-		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="944" />
-		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="592" y="944" />
-		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="656" y="1328" />
+		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="784" y="944" />
+		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="608" y="928" />
+		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1328" />
 		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1184" />
 		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1168" />
-		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1040" y="1168" />
+		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1232" />
 		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1376" y="416" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="752" />
+		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="864" y="1488" />
 		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="992" y="944" />
 		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="864" y="784" />
 		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1040" />
@@ -501,7 +547,7 @@
 		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="896" y="560" />
 		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1168" y="976" />
 		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="752" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1232" y="1168" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1216" />
 		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="432" y="272" />
 		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="608" y="176" />
 		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="352" y="112" />
@@ -529,8 +575,8 @@
 		</group>
 		<group name="Procedures" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="WPS_Run" />
-			<entity schema="SmartFab.dbo" name="WPS" />
 			<entity schema="SmartFab.dbo" name="Specification" />
+			<entity schema="SmartFab.dbo" name="WPS" />
 		</group>
 		<group name="Alerts" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="AlertsTable" />
@@ -539,20 +585,23 @@
 		</group>
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
-			<entity schema="SmartFab.dbo" name="Category" />
-			<entity schema="SmartFab.dbo" name="Employees" />
 			<entity schema="SmartFab.dbo" name="Machines" />
 			<entity schema="SmartFab.dbo" name="Locations" />
+			<entity schema="SmartFab.dbo" name="TimesheetTask" />
+			<entity schema="SmartFab.dbo" name="TimesheetTaskType" />
+			<entity schema="SmartFab.dbo" name="Category" />
+			<entity schema="SmartFab.dbo" name="JobTimeTracker" />
+			<entity schema="SmartFab.dbo" name="Employees" />
 		</group>
 		<group name="RealTime" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 			<entity schema="SmartFab.dbo" name="Assignment" />
-			<entity schema="SmartFab.dbo" name="RunTable" />
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
+			<entity schema="SmartFab.dbo" name="RunTable" />
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 			<entity schema="SmartFab.dbo" name="TaskAssociation" />
+			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 			<entity schema="SmartFab.dbo" name="JobContract" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
@@ -610,5 +659,527 @@ GO
 ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_WeldTable FOREIGN KEY ( WT_id ) REFERENCES SmartFab.dbo.WeldTable( id );
 GO]]></string>
 		</script>
+		<script name="SQL_Editor_001" id="Editor-95f" language="SQL" >
+			<string><![CDATA[CREATE TABLE SmartFab.dbo.AlertTypes ( 
+	id                   int    IDENTITY  NOT NULL,
+	Description          varchar(40)      NOT NULL,
+	CONSTRAINT pk_AlertTable PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Assignment ( 
+	id                   int    IDENTITY  NOT NULL,
+	TaskID               int      NOT NULL,
+	MachineID            int      NOT NULL,
+	WelderID             int      NOT NULL,
+	CONSTRAINT pk_Assignment PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Category ( 
+	category_id          int      NOT NULL,
+	arctime              int      NOT NULL,
+	CONSTRAINT pk_dashboard_category PRIMARY KEY  ( category_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Employees ( 
+	payroll_id           int      NOT NULL,
+	first_name           varchar(25)      NOT NULL,
+	last_name            varchar(25)      NOT NULL,
+	employment_status    bit      NOT NULL,
+	CONSTRAINT pk_dashboard_user_list PRIMARY KEY  ( payroll_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.JobTimeTracker ( 
+	id                   int      NOT NULL,
+	category             int      NOT NULL,
+	start_date           date      NOT NULL,
+	end_date             date      NULL,
+	accum_hrs            real      NOT NULL,
+	total_hrs            real      NOT NULL,
+	CONSTRAINT pk_dashboard_job PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Locations ( 
+	id                   int      NOT NULL,
+	Location             varchar(25)      NOT NULL,
+	CONSTRAINT pk_dashboard_location PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Machines ( 
+	id                   int      NOT NULL,
+	Description          varchar(25)      NOT NULL,
+	locid                int      NOT NULL,
+	CONSTRAINT pk_dashboard_machine PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.RealTime_Data ( 
+	id                   int    IDENTITY  NOT NULL,
+	Time                 datetime      NOT NULL,
+	Temperature          float      NULL,
+	[Current]            float      NULL,
+	Voltage              float      NULL,
+	Length               float  DEFAULT 0.00    NULL,
+	WireFeedRate         float      NULL,
+	GasUsed              float      NULL,
+	HeatInput            float      NULL,
+	TravelSpeed          float      NULL,
+	TimeDelta            float      NULL,
+	Power                float      NULL,
+	CONSTRAINT pk_RealTime_Data PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.RunTable ( 
+	id                   int    IDENTITY  NOT NULL,
+	RunNo                int      NOT NULL,
+	Assignment_id        int      NOT NULL,
+	CONSTRAINT pk_WeldTable PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.SpecTypes ( 
+	id                   int    IDENTITY  NOT NULL,
+	Description          varchar(40)      NOT NULL,
+	CONSTRAINT pk_SpecType PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Specification ( 
+	id                   int    IDENTITY  NOT NULL,
+	Side                 varchar(10)      NULL,
+	Position             varchar(20)      NULL,
+	Class                varchar(20)      NULL,
+	Size                 float      NULL,
+	Gas_Flux_Type        varchar(20)      NULL,
+	Current_Max          float      NULL,
+	Current_Min          float      NULL,
+	Voltage_Min          float      NULL,
+	Voltage_Max          float      NULL,
+	Polarity             varchar(10)      NULL,
+	Travel_Speed_Min     float      NULL,
+	Travel_Speed_Max     float      NULL,
+	Interpass_Temp_Min   float      NULL,
+	Interpass_Temp_Max   float      NULL,
+	Heat_Input_Min       float      NULL,
+	Heat_Input_Max       float      NULL,
+	CONSTRAINT pk_Specification PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.TimesheetTaskType ( 
+	id                   int      NOT NULL,
+	Description          varchar(25)      NOT NULL,
+	CONSTRAINT pk_dashboard_task_type PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.Timesheet_entry ( 
+	tid                  int      NOT NULL,
+	org_timesheet_id     nvarchar(128)      NOT NULL,
+	payroll_id           int      NOT NULL,
+	date                 date      NOT NULL,
+	shift_end            time(7)      NOT NULL,
+	shift_start          time(7)      NOT NULL,
+	shift_length         real      NOT NULL,
+	CONSTRAINT pk_dashboard_timesheet_entry PRIMARY KEY  ( tid ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WASP_Settings ( 
+	setting_id           int      NOT NULL,
+	name                 varchar(128)      NOT NULL,
+	[desc]               varchar(128)      NOT NULL,
+	value                varchar(128)      NOT NULL,
+	CONSTRAINT pk_dashboard_db_settings PRIMARY KEY  ( setting_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WPS ( 
+	id                   int    IDENTITY  NOT NULL,
+	WPS_No               int      NOT NULL,
+	Welding_Code         varchar(20)      NULL,
+	Joint_type           varchar(20)      NULL,
+	CONSTRAINT pk_WPS PRIMARY KEY  ( id ) ,
+	UNIQUE  INDEX unq_WPS_WPS_No (WPS_No) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WPS_Run ( 
+	id                   int    IDENTITY  NOT NULL,
+	Run_No               int      NULL,
+	WPS_id               int      NOT NULL,
+	Specification_id     int      NOT NULL,
+	CONSTRAINT pk_WPS_Run PRIMARY KEY  ( id ) ,
+	CONSTRAINT unq_WPS_Run_Specification_id UNIQUE ( Specification_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.WeldingTable ( 
+	id                   int    IDENTITY  NOT NULL,
+	Machine_id           int      NOT NULL,
+	RT_id                int      NOT NULL,
+	WT_id                int      NOT NULL,
+	Welder_id            int      NOT NULL,
+	CONSTRAINT pk_WeldingTable PRIMARY KEY  ( id ) ,
+	CONSTRAINT unq_WeldingTable_RT_id UNIQUE ( RT_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_group ( 
+	id                   int      NOT NULL,
+	name                 varchar(150)      NOT NULL,
+	CONSTRAINT pk_auth_group PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_user ( 
+	id                   int      NOT NULL,
+	password             varchar(128)      NOT NULL,
+	last_login           datetime      NULL,
+	is_superuser         bit      NOT NULL,
+	username             varchar(150)      NOT NULL,
+	last_name            varchar(150)      NOT NULL,
+	email                varchar(254)      NOT NULL,
+	is_staff             bit      NOT NULL,
+	is_active            bit      NOT NULL,
+	date_joined          datetime      NOT NULL,
+	first_name           varchar(150)      NOT NULL,
+	CONSTRAINT pk_auth_user PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_user_groups ( 
+	id                   int      NOT NULL,
+	user_id              int      NOT NULL,
+	group_id             int      NOT NULL,
+	CONSTRAINT pk_auth_user_groups PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.django_content_type ( 
+	id                   int      NOT NULL,
+	app_label            varchar(100)      NOT NULL,
+	model                varchar(100)      NOT NULL,
+	CONSTRAINT pk_django_content_type PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.django_migrations ( 
+	id                   int      NOT NULL,
+	app                  varchar(255)      NOT NULL,
+	name                 varchar(255)      NOT NULL,
+	applied              datetime      NOT NULL,
+	CONSTRAINT pk_django_migrations PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.django_session ( 
+	session_key          varchar(40)      NOT NULL,
+	session_data         text      NOT NULL,
+	expire_date          datetime      NOT NULL,
+	CONSTRAINT pk_django_session PRIMARY KEY  ( session_key ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.sysdiagrams ( 
+	diagram_id           int    IDENTITY  NOT NULL,
+	name                 sysname      NOT NULL,
+	principal_id         int      NOT NULL,
+	version              int      NULL,
+	definition           varbinary(max)      NULL,
+	CONSTRAINT PK__sysdiagr__C2B05B6112D23299 PRIMARY KEY  ( diagram_id ) ,
+	CONSTRAINT UK_principal_name UNIQUE ( principal_id, name ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.AlertsTable ( 
+	id                   int    IDENTITY  NOT NULL,
+	JobId                int      NOT NULL,
+	AlertType            int      NOT NULL,
+	SpecType             int      NOT NULL,
+	StartTime            datetime      NOT NULL,
+	FinishTime           datetime      NULL,
+	CONSTRAINT pk_AlertsTable PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.JobContract ( 
+	id                   int      NOT NULL,
+	ContractName         varchar(100)      NULL,
+	Details              text      NULL,
+	CONSTRAINT [pk_Job Contract] PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.TaskAssignment ( 
+	id                   int      NOT NULL,
+	WPSNo                int      NOT NULL,
+	Welderid             int      NOT NULL,
+	Machineid            int      NOT NULL,
+	CONSTRAINT pk_TaskAssignment PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.TaskAssociation ( 
+	Jobid                int      NOT NULL,
+	Taskid               int      NOT NULL,
+	CONSTRAINT unq_TaskAssociation UNIQUE ( Taskid ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.TimesheetTask ( 
+	task_id              nvarchar(128)      NOT NULL,
+	payroll_id           int      NOT NULL,
+	type_id              int      NOT NULL,
+	job_id               int      NOT NULL,
+	machine_id           int      NOT NULL,
+	datetime             datetime      NOT NULL,
+	CONSTRAINT pk_dashboard_task PRIMARY KEY  ( task_id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_permission ( 
+	id                   int      NOT NULL,
+	content_type_id      int      NOT NULL,
+	codename             varchar(100)      NOT NULL,
+	name                 varchar(255)      NOT NULL,
+	CONSTRAINT pk_auth_permission PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_user_user_permissions ( 
+	id                   int      NOT NULL,
+	user_id              int      NOT NULL,
+	permission_id        int      NOT NULL,
+	CONSTRAINT pk_auth_user_user_permissions PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.django_admin_log ( 
+	id                   int      NOT NULL,
+	action_time          datetime      NOT NULL,
+	object_id            text      NULL,
+	object_repr          varchar(200)      NOT NULL,
+	change_message       text      NOT NULL,
+	content_type_id      int      NULL,
+	user_id              int      NOT NULL,
+	action_flag          smallint      NOT NULL,
+	[CHECK]              varchar(1)      NULL,
+	CONSTRAINT pk_django_admin_log PRIMARY KEY  ( id ) ,
+	CONSTRAINT Cns_django_admin_log_CHECK CHECK ( [action_flag]>=(0) )
+ );
+GO
+
+CREATE TABLE SmartFab.dbo.auth_group_permissions ( 
+	id                   int      NOT NULL,
+	group_id             int      NOT NULL,
+	permission_id        int      NOT NULL,
+	CONSTRAINT pk_auth_group_permissions PRIMARY KEY  ( id ) 
+ );
+GO
+
+CREATE  INDEX auth_user_groups_group_id_97559544 ON SmartFab.dbo.auth_user_groups ( group_id );
+GO
+
+CREATE  INDEX auth_user_groups_user_id_6a12ed8b ON SmartFab.dbo.auth_user_groups ( user_id );
+GO
+
+CREATE  INDEX django_session_expire_date_a5c62663 ON SmartFab.dbo.django_session ( expire_date );
+GO
+
+CREATE  INDEX auth_permission_content_type_id_2f476e4b ON SmartFab.dbo.auth_permission ( content_type_id );
+GO
+
+CREATE  INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON SmartFab.dbo.auth_user_user_permissions ( permission_id );
+GO
+
+CREATE  INDEX auth_user_user_permissions_user_id_a95ead1b ON SmartFab.dbo.auth_user_user_permissions ( user_id );
+GO
+
+CREATE  INDEX django_admin_log_content_type_id_c4bce8eb ON SmartFab.dbo.django_admin_log ( content_type_id );
+GO
+
+CREATE  INDEX django_admin_log_user_id_c564eba6 ON SmartFab.dbo.django_admin_log ( user_id );
+GO
+
+CREATE  INDEX auth_group_permissions_group_id_b120cbf9 ON SmartFab.dbo.auth_group_permissions ( group_id );
+GO
+
+CREATE  INDEX auth_group_permissions_permission_id_84c5c92e ON SmartFab.dbo.auth_group_permissions ( permission_id );
+GO
+
+ALTER TABLE SmartFab.dbo.AlertsTable ADD CONSTRAINT fk_AlertsTable_AlertTypes FOREIGN KEY ( AlertType ) REFERENCES SmartFab.dbo.AlertTypes( id );
+GO
+
+ALTER TABLE SmartFab.dbo.AlertsTable ADD CONSTRAINT fk_AlertsTable_SpecType FOREIGN KEY ( SpecType ) REFERENCES SmartFab.dbo.SpecTypes( id );
+GO
+
+ALTER TABLE SmartFab.dbo.JobContract ADD CONSTRAINT fk_JobContract_JobTimeTracker FOREIGN KEY ( id ) REFERENCES SmartFab.dbo.JobTimeTracker( id );
+GO
+
+ALTER TABLE SmartFab.dbo.JobTimeTracker ADD CONSTRAINT fk_dashboard_job_dashboard_category FOREIGN KEY ( category ) REFERENCES SmartFab.dbo.Category( category_id );
+GO
+
+ALTER TABLE SmartFab.dbo.Machines ADD CONSTRAINT fk_dashboard_machine_dashboard_location FOREIGN KEY ( locid ) REFERENCES SmartFab.dbo.Locations( id );
+GO
+
+ALTER TABLE SmartFab.dbo.RunTable ADD CONSTRAINT fk_WeldTable FOREIGN KEY ( Assignment_id ) REFERENCES SmartFab.dbo.Assignment( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TaskAssignment ADD CONSTRAINT fk_TaskAssignment_WPS FOREIGN KEY ( WPSNo ) REFERENCES SmartFab.dbo.WPS( WPS_No );
+GO
+
+ALTER TABLE SmartFab.dbo.TaskAssignment ADD CONSTRAINT fk_TaskAssignment_Machines FOREIGN KEY ( Machineid ) REFERENCES SmartFab.dbo.Machines( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TaskAssignment ADD CONSTRAINT fk_TaskAssignment_Employees FOREIGN KEY ( Welderid ) REFERENCES SmartFab.dbo.Employees( payroll_id );
+GO
+
+ALTER TABLE SmartFab.dbo.TaskAssociation ADD CONSTRAINT fk_TaskAssociation_TaskAssignment FOREIGN KEY ( Taskid ) REFERENCES SmartFab.dbo.TaskAssignment( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TaskAssociation ADD CONSTRAINT [fk_TaskAssociation_Job Contract] FOREIGN KEY ( Jobid ) REFERENCES SmartFab.dbo.JobContract( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TimesheetTask ADD CONSTRAINT fk_dashboard_task_dashboard_job FOREIGN KEY ( job_id ) REFERENCES SmartFab.dbo.JobTimeTracker( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TimesheetTask ADD CONSTRAINT fk_dashboard_task_dashboard_machine FOREIGN KEY ( machine_id ) REFERENCES SmartFab.dbo.Machines( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TimesheetTask ADD CONSTRAINT fk_dashboard_task_dashboard_task_type FOREIGN KEY ( type_id ) REFERENCES SmartFab.dbo.TimesheetTaskType( id );
+GO
+
+ALTER TABLE SmartFab.dbo.TimesheetTask ADD CONSTRAINT fk_TimesheetTask_Employees FOREIGN KEY ( payroll_id ) REFERENCES SmartFab.dbo.Employees( payroll_id );
+GO
+
+ALTER TABLE SmartFab.dbo.Timesheet_entry ADD CONSTRAINT fk_dashboard_timesheet_entry_dashboard_user_list FOREIGN KEY ( payroll_id ) REFERENCES SmartFab.dbo.Employees( payroll_id );
+GO
+
+ALTER TABLE SmartFab.dbo.WPS_Run ADD CONSTRAINT fk_WPS_Run_Specification FOREIGN KEY ( Specification_id ) REFERENCES SmartFab.dbo.Specification( id );
+GO
+
+ALTER TABLE SmartFab.dbo.WPS_Run ADD CONSTRAINT fk_WPS_Run_WPS FOREIGN KEY ( WPS_id ) REFERENCES SmartFab.dbo.WPS( id );
+GO
+
+ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_RealTime_Data FOREIGN KEY ( RT_id ) REFERENCES SmartFab.dbo.RealTime_Data( id );
+GO
+
+ALTER TABLE SmartFab.dbo.WeldingTable ADD CONSTRAINT fk_WeldingTable_WeldTable FOREIGN KEY ( WT_id ) REFERENCES SmartFab.dbo.RunTable( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_group_permissions ADD CONSTRAINT [FK_auth_group_permissions auth_group] FOREIGN KEY ( group_id ) REFERENCES SmartFab.dbo.auth_group( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_group_permissions ADD CONSTRAINT [FK_auth_group_permissions auth_permission] FOREIGN KEY ( permission_id ) REFERENCES SmartFab.dbo.auth_permission( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_permission ADD CONSTRAINT [FK_auth_permission django_content_type] FOREIGN KEY ( content_type_id ) REFERENCES SmartFab.dbo.django_content_type( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_user_groups ADD CONSTRAINT [FK_auth_user_groups auth_group] FOREIGN KEY ( group_id ) REFERENCES SmartFab.dbo.auth_group( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_user_groups ADD CONSTRAINT [FK_auth_user_groups auth_user] FOREIGN KEY ( user_id ) REFERENCES SmartFab.dbo.auth_user( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_user_user_permissions ADD CONSTRAINT [FK_auth_user_user_permissions auth_permission] FOREIGN KEY ( permission_id ) REFERENCES SmartFab.dbo.auth_permission( id );
+GO
+
+ALTER TABLE SmartFab.dbo.auth_user_user_permissions ADD CONSTRAINT [FK_auth_user_user_permissions auth_user] FOREIGN KEY ( user_id ) REFERENCES SmartFab.dbo.auth_user( id );
+GO
+
+ALTER TABLE SmartFab.dbo.django_admin_log ADD CONSTRAINT [FK_django_admin_log auth_user] FOREIGN KEY ( user_id ) REFERENCES SmartFab.dbo.auth_user( id );
+GO
+
+ALTER TABLE SmartFab.dbo.django_admin_log ADD CONSTRAINT [FK_django_admin_log django_content_type] FOREIGN KEY ( content_type_id ) REFERENCES SmartFab.dbo.django_content_type( id );
+GO
+]]></string>
+		</script>
+		<browser id="Browse-13e" name="JobContract_002" confirm_updates="y" >
+			<browse_table schema="SmartFab.dbo" entity="JobContract" x="20" y="20" width="400" height="300" >
+				<browse_table schema="SmartFab.dbo" entity="TaskAssociation" fk="fk_TaskAssociation_Job Contract" x="460" y="20" width="500" height="350" >
+					<browse_table schema="SmartFab.dbo" entity="TaskAssignment" fk="fk_TaskAssociation_TaskAssignment" x="1000" y="20" width="500" height="350" record_view="y" />
+				</browse_table>
+			</browse_table>
+		</browser>
+		<query id="Query-21bf" name="JobContract" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+			</query_table>
+		</query>
+		<query id="Query-89e" name="JobContract_001" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
+					<column name="Jobid" />
+					<column name="Taskid" />
+					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
+				</query_table>
+			</query_table>
+		</query>
+		<query id="Query-e2e" name="JobContract_003" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
+					<column name="Jobid" />
+					<column name="Taskid" />
+					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
+				</query_table>
+			</query_table>
+		</query>
+		<query id="Query-d06" name="JobContract_004" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
+					<column name="Jobid" />
+					<column name="Taskid" />
+					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
+				</query_table>
+			</query_table>
+		</query>
+		<query id="Query-f11" name="JobContract_005" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
+					<column name="Jobid" />
+					<column name="Taskid" />
+					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
+				</query_table>
+			</query_table>
+		</query>
+		<query id="Query-29" name="JobContract_006" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+			</query_table>
+		</query>
+		<query id="Query-2234" name="JobContract_007" >
+			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
+				<column name="id" />
+				<column name="ContractName" />
+				<column name="Details" />
+			</query_table>
+		</query>
+		<form name="Report" id="Report-e01" template="Page" css="container-fluid" view="frame" >
+			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2},{-2}}" scroll="n" html="n" />
+		</form>
 	</layout>
 </project>

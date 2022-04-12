@@ -4,9 +4,18 @@ export class Contract {
     Details: string;
 }
 
-export class Task {
-    id: string;
+export class TaskView {
+    TaskID: string;
     WPS_No: string;
-    WelderID: string;
-    MachineID: string;
+    FullName: string;
+    MachineName: string;
+}
+
+export class ContractTaskView {
+    ContractID: string;
+    ContractName: string;
+    TaskID: string;
+    WPS_No: string;
+    FullName: string;
+    Description: string; //Machine Name
 }

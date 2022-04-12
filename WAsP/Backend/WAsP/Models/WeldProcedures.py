@@ -2,9 +2,9 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import (Integer, String, Float)
 
-from .models import Base, BaseModel
+from .models import Base
 
-class WPS(Base, BaseModel):
+class WPS(Base):
     __tablename__ = "WPS"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -14,7 +14,7 @@ class WPS(Base, BaseModel):
 
     runs = relationship("WPS_Run", back_populates="wps")
 
-class WPS_Run(Base, BaseModel):
+class WPS_Run(Base):
     __tablename__ = "WPS_Run"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -25,7 +25,7 @@ class WPS_Run(Base, BaseModel):
     specifications = relationship("Specification", backref="WPS_Run")
     wps = relationship("WPS", back_populates="runs")
 
-class Specification(Base, BaseModel):
+class Specification(Base):
     __tablename__ = "Specification"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")

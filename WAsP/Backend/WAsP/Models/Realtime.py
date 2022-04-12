@@ -2,9 +2,9 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import (Integer, DateTime, Float)
 
-from .models import Base, BaseModel
+from .models import Base
 
-class Assignment(Base, BaseModel):
+class Assignment(Base):
     __tablename__ = "Assignment"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -12,7 +12,7 @@ class Assignment(Base, BaseModel):
     MachineID = Column(Integer)
     TaskID = Column(Integer)
 
-class RunTable(Base, BaseModel):
+class RunTable(Base):
     __tablename__ = "RunTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -21,7 +21,7 @@ class RunTable(Base, BaseModel):
 
     assignment = relationship("Assignment", backref="RunTable")
 
-class WeldingTable(Base, BaseModel):
+class WeldingTable(Base):
     __tablename__ = "WeldingTable"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -33,7 +33,7 @@ class WeldingTable(Base, BaseModel):
     realtime = relationship("RealTimeData", backref="WeldingTable")
     weldtable = relationship("RunTable", backref="WeldingTable")
 
-class RealTimeData(Base, BaseModel):
+class RealTimeData(Base):
     __tablename__ = "RealTime_Data"
 
     id = Column(Integer, primary_key=True, autoincrement="auto")
@@ -48,11 +48,3 @@ class RealTimeData(Base, BaseModel):
     TravelSpeed = Column(Float) #Computed value
     Timedelta = Column(Float) #Computed value
     Power = Column(Float) #Computed value
-
-    def to_dict(self):
-
-        _dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-
-        _dict['Time'] = _dict["Time"].strftime('%Y-%m-%d %H:%M:%S.%f') #definitely a hack to get Datetime2 as a string.
-
-        return _dict

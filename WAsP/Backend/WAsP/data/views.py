@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -6,10 +7,14 @@ from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from sqlalchemy import text
 
+#Serialisers
+from .serializers import *
+
 #WAsP Model imports
-from Models.Realtime import Assignment, RealTimeData, WeldingTable, RunTable
-from Models.WeldProcedures import Specification, WPS, WPS_Run
-from Models.Contract import JobContract, TaskAssociation, TaskAssignment
+from Models.Realtime import *
+from Models.WeldProcedures import *
+from Models.Contract import *
+from Models.Views import *
 
 session = settings.SESSION
 
@@ -21,7 +26,6 @@ class DataAPI(APIView): #GET, POST
 
         try:
             results = session.query(RealTimeData).all()
-            print(request.data)
             return  JsonResponse(results, safe=False, json_dumps_params={"default": RealTimeData.to_dict})
 
         except ValueError as e:
@@ -32,11 +36,19 @@ class DataAPI(APIView): #GET, POST
         return Response(status.HTTP_400_BAD_REQUEST)
 
 class RealtimeView(APIView):
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
+    def get(self, *args):
 
-        return Response(status.HTTP_400_BAD_REQUEST)
+        if len(args) > 1 :
+            return Response(status.HTTP_400_BAD_REQUEST)
+
+        #return all active data within the last 30 secs
+        results = session.query(RealTimeData).select_from(RunTable).all()
+
+        serialised = RealTimeSerializer(results, many=True)
+
+        return JsonResponse(serialised.data, safe=False)
 
     def post(self, request):
 
@@ -45,44 +57,22 @@ class RealtimeView(APIView):
 class SpecificationView(APIView): #Follows CRUD
     #permission_classes = (IsAuthenticated,)
 
-    def serialise(self, data):
-
-        wps_d, run_d, spec_d = data
-        
-        dict = wps_d.__dict__
-        dict['run'] = run_d
-
-        dict_s = {}
-        dict_s = spec_d.__dict__
-        del dict_s['id']
-            
-
-        dict |= (dict_s)
-        del dict['_sa_instance_state']
-
-        return dict
-
     def get(self, *args):
 
-        wps= args[1] if len(args)==2 else None 
-        run= args[2] if len(args)==3 else None
+        wps= args[1] if len(args)>=2 else None 
+        run= args[2] if len(args)>=3 else None
+
+        qText = ''
 
         if wps is not None:
-            if run is not None:
-                 qText = f'WPS_No={wps} and Run_No={run}' 
-            else:
-                qText = f'WPS_No={wps}' 
-
-            data = session.query(WPS, WPS_Run.Run_No, Specification).filter(text(qText)).join(WPS.runs).join(Specification).all()
             
-            results = [self.serialise(d) for d in data]
+            qText = f'WPS_No={wps} and Run_No={run}' if run is not None else f'WPS_No={wps}' 
+            
+        data = session.query(WPSView).filter(text(qText)).all()
+        
+        serialised = WPSViewSerializer(data, many=True)
 
-        else:
-            data = session.query(WPS, WPS_Run.Run_No, Specification).join(WPS.runs).join(Specification).all()
-
-            results = [self.serialise(d) for d in data]
-
-        return JsonResponse(results, safe=False)
+        return JsonResponse(serialised.data, safe=False)
 
     def post(self, request):
 
@@ -95,20 +85,19 @@ class SpecificationView(APIView): #Follows CRUD
     def delete(self, request):
 
         return Response(status.HTTP_400_BAD_REQUEST)
+
 
 class ContractView(APIView):    #Follows CRUD
     #permission_classes = (IsAuthenticated,)
 
-    def serialise(self, data):
-        pass
-
     def get(self, *args):
         
-        data = session.query(JobContract).all() if len(args) == 1 else session.query(JobContract).filter(text(f'id={args(1)}')).all()
+        data = session.query(ContractTaskView).all() if len(args) == 1 else session.query(ContractTaskView).filter(text(f'id={args[1]}')).all()
 
-        results = [d.__dict__ for d in data]
+        serialised = ContractTaskSerializer(data, many=True)
 
-        return JsonResponse(results, safe=False)
+        return JsonResponse(serialised.data, safe=False)
+        
 
     def post(self, request):
 
@@ -122,19 +111,17 @@ class ContractView(APIView):    #Follows CRUD
 
         return Response(status.HTTP_400_BAD_REQUEST)
 
-class TaskView(APIView):    #Follows CRUD
-    #permission_classes = (IsAuthenticated,)
 
-    def serialise(self, data):
-        pass
+class TaskAssingmentView(APIView):    #Follows CRUD
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
-        data = session.query(TaskAssignment).all() if len(args) == 1 else session.query(TaskAssignment).filter(text(f'id={args(1)}')).all()
+        data = session.query(TaskView).all() if len(args) == 1 else session.query(TaskView).filter(text(f'TaskID={args[1]}')).all()
 
-        results = [d.__dict__ for d in data]
+        serialised = TaskViewSerializer(data, many=True)
 
-        return JsonResponse(results, safe=False)
+        return JsonResponse(serialised.data, safe=False)
 
     def post(self, request):
 

@@ -19,5 +19,4 @@ export class Specification{
     Interpass_Temp_Max: string;
     Heat_Input_Min: string;
     Heat_Input_Max: string;
-
 }
