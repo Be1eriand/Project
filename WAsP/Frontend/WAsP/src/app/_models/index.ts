@@ -1,5 +1,6 @@
 export { Alert, AlertType } from './alert';
 export { User } from './user';
-export { RealTimeData, TaskData } from './realtime';
+export { RealTimeData, TaskData, RealTimeView } from './realtime';
 export { Specification } from './specification';
-export { Contract, Task } from './contract';
+export { Contract, TaskView, ContractTaskView } from './contract';
+export { RTAlert } from './RTAlerts';
