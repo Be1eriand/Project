@@ -478,7 +478,19 @@
 				<column name="name" />
 			</index>
 		</table>
-		<view name="ContracttaskView" >
+		<view name="AlertView" >
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT a.id as AlertID, a.JobId, a.StartTime, a.FinishTime, a1.Description as AlertType, s.Description as SpecType
+FROM SmartFab.dbo.AlertsTable a 
+	INNER JOIN SmartFab.dbo.AlertTypes a1 ON ( a.AlertType = a1.id  )  
+	INNER JOIN SmartFab.dbo.SpecTypes s ON ( a.SpecType = s.id  )  ]]></view_script>
+			<column name="AlertID" type="int" />
+			<column name="JobId" type="int" />
+			<column name="StartTime" type="datetime" />
+			<column name="FinishTime" type="datetime" />
+			<column name="AlertType" type="varchar" />
+			<column name="SpecType" type="varchar" />
+		</view>
+		<view name="ContractTaskView" >
 			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT j.id as ContractID, j.ContractName, t1.id as TaskID, w.WPS_No, e.FullName, m.Description
 FROM SmartFab.dbo.JobContract j 
 	INNER JOIN SmartFab.dbo.TaskAssociation t ON ( j.id = t.Jobid  )  
@@ -486,13 +498,32 @@ FROM SmartFab.dbo.JobContract j
 	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.WPS_No  )  
 	INNER JOIN SmartFab.dbo.Employees e ON ( t1.Welderid = e.payroll_id  )  
 	INNER JOIN SmartFab.dbo.Machines m ON ( t1.Machineid = m.id  )  ]]></view_script>
-			<column name="id" type="int" />
+			<column name="ContractID" type="int" />
 			<column name="ContractName" type="varchar" />
 			<column name="TaskID" type="int" />
 			<column name="WPS_No" type="int" />
 			<column name="FullName" type="varchar" />
 			<column name="Description" type="varchar" />
-			<column name="ContractID" type="int" />
+		</view>
+		<view name="RealTimeView" >
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT w.Machine_id, w.Welder_id, rd.Time, rd.Temperature, rd.[Current], rd.Voltage, rd.Length, rd.WireFeedRate, rd.GasUsed, rd.HeatInput, rd.TravelSpeed, rd.TimeDelta, rd.Power, r.RunNo
+FROM SmartFab.dbo.WeldingTable w 
+	INNER JOIN SmartFab.dbo.RealTime_Data rd ON ( w.RT_id = rd.id  )  
+	INNER JOIN SmartFab.dbo.RunTable r ON ( w.WT_id = r.id  )  ]]></view_script>
+			<column name="RunNo" type="int" />
+			<column name="Machine_id" type="int" />
+			<column name="Welder_id" type="int" />
+			<column name="Time" type="datetime" />
+			<column name="Temperature" type="float" />
+			<column name="Current" type="float" />
+			<column name="Voltage" type="float" />
+			<column name="Length" type="float" />
+			<column name="WireFeedRate" type="float" />
+			<column name="GasUsed" type="float" />
+			<column name="HeatInput" type="float" />
+			<column name="TravelSpeed" type="float" />
+			<column name="TimeDelta" type="float" />
+			<column name="Power" type="float" />
 		</view>
 		<view name="SpecificationView" >
 			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT w.id, w.WPS_No, w.Welding_Code, w.Joint_type, wr.Run_No, s.Side, s.Position, s.Class, s.Size, s.Gas_Flux_Type, s.Current_Max, s.Current_Min, s.Voltage_Min, s.Voltage_Max, s.Polarity, s.Travel_Speed_Min, s.Travel_Speed_Max, s.Interpass_Temp_Min, s.Interpass_Temp_Max, s.Heat_Input_Min, s.Heat_Input_Max
@@ -521,26 +552,40 @@ FROM SmartFab.dbo.WPS w
 			<column name="Heat_Input_Min" type="float" />
 			<column name="Heat_Input_Max" type="float" />
 		</view>
+		<view name="TaskView" >
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT t.id as TaskID, w.WPS_No, e.FullName, m.Description MachineName
+FROM SmartFab.dbo.TaskAssignment t 
+	INNER JOIN SmartFab.dbo.WPS w ON ( t.WPSNo = w.WPS_No  )  
+	INNER JOIN SmartFab.dbo.Employees e ON ( t.Welderid = e.payroll_id  )  
+	INNER JOIN SmartFab.dbo.Machines m ON ( t.Machineid = m.id  )  ]]></view_script>
+			<column name="TaskID" type="int" />
+			<column name="WPS_No" type="int" />
+			<column name="FullName" type="varchar" />
+			<column name="MachineName" type="varchar" />
+		</view>
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
 		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1376" y="576" />
+		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="592" y="1504" />
 		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1568" y="464" />
 		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1232" />
 		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="368" y="960" />
-		<entity schema="SmartFab.dbo" name="ContracttaskView" color="3986C1" x="640" y="1488" />
+		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="736" y="1504" />
 		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="752" />
 		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="784" y="944" />
 		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="608" y="928" />
 		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1328" />
 		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1184" />
+		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="1152" y="1504" />
 		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1168" />
 		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1232" />
 		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1376" y="416" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="752" />
-		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="864" y="1488" />
+		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="928" y="1488" />
 		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="992" y="944" />
 		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="864" y="784" />
+		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="672" y="1696" />
 		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1040" />
 		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1280" />
 		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="672" />
@@ -579,9 +624,9 @@ FROM SmartFab.dbo.WPS w
 			<entity schema="SmartFab.dbo" name="WPS" />
 		</group>
 		<group name="Alerts" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="AlertsTable" />
 			<entity schema="SmartFab.dbo" name="AlertTypes" />
 			<entity schema="SmartFab.dbo" name="SpecTypes" />
+			<entity schema="SmartFab.dbo" name="AlertsTable" />
 		</group>
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
@@ -595,14 +640,21 @@ FROM SmartFab.dbo.WPS w
 		</group>
 		<group name="RealTime" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="RealTime_Data" />
+			<entity schema="SmartFab.dbo" name="RunTable" />
 			<entity schema="SmartFab.dbo" name="Assignment" />
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
-			<entity schema="SmartFab.dbo" name="RunTable" />
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="TaskAssociation" />
-			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 			<entity schema="SmartFab.dbo" name="JobContract" />
+			<entity schema="SmartFab.dbo" name="TaskAssignment" />
+		</group>
+		<group name="WAsP Views" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="SpecificationView" />
+			<entity schema="SmartFab.dbo" name="AlertView" />
+			<entity schema="SmartFab.dbo" name="ContractTaskView" />
+			<entity schema="SmartFab.dbo" name="RealTimeView" />
+			<entity schema="SmartFab.dbo" name="TaskView" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 
@@ -1176,6 +1228,20 @@ GO
 				<column name="id" />
 				<column name="ContractName" />
 				<column name="Details" />
+			</query_table>
+		</query>
+		<query id="Query-e22" name="TaskAssignment" >
+			<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t" x="256" y="48" >
+				<column name="id" alias="TaskID" />
+				<query_table schema="SmartFab.dbo" name="WPS" alias="w" x="48" y="64" fk="fk_TaskAssignment_WPS" type="Inner Join" >
+					<column name="WPS_No" />
+				</query_table>
+				<query_table schema="SmartFab.dbo" name="Employees" alias="e" x="592" y="64" fk="fk_TaskAssignment_Employees" type="Inner Join" >
+					<column name="FullName" />
+				</query_table>
+				<query_table schema="SmartFab.dbo" name="Machines" alias="m" x="432" y="208" fk="fk_TaskAssignment_Machines" type="Inner Join" >
+					<column name="Description" alias="MachineName" />
+				</query_table>
 			</query_table>
 		</query>
 		<form name="Report" id="Report-e01" template="Page" css="container-fluid" view="frame" >

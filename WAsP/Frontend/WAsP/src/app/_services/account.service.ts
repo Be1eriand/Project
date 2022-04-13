@@ -46,12 +46,8 @@ export class AccountService {
         return this.http.post(`${environment.apiUrl}/users/register`, user); // change this
     }
 
-    getById(id: string) {
-        return this.http.get<User>(`${environment.apiUrl}/users/${id}`); // change this
-    }
-
     update(id: string, params: any) {
-        return this.http.put(`${environment.apiUrl}/users/${id}`, params) // change this
+        return this.http.put(`${environment.apiUrl}/users/${id}`, params) // change this to change password
             .pipe(map(x => {
                 // update stored user if the logged in user updated their own record
                 if (id == this.userValue.id) {
