@@ -10,8 +10,11 @@ seq:
   - id: welderid
     type: u4
     
-  - id: jobid
+  - id: taskid
     type: u4
+    
+  - id: runid
+    type: u1
     
   - id: time
     type: time
@@ -79,7 +82,7 @@ types:
   data:
     seq:
       - id: current
-        type: u4 #32-bit integer xxxx.yyy *1000 = xxxxyyy
+        type: u4 #32-bit integer xxxx.yyy * 1000 = xxxxyyy
       - id: voltage
         type: u4
       - id: temperature

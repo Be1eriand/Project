@@ -11,7 +11,7 @@ class Assignment(Base):
     id = Column(Integer, primary_key=True, autoincrement="auto")
     WelderID = Column(Integer)
     MachineID = Column(Integer)
-    JobID = Column(Integer)
+    TaskID = Column(Integer)
 
 class RunTable(Base):
     __tablename__ = "RunTable"

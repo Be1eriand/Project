@@ -2,7 +2,7 @@
 
 from pkg_resources import parse_version
 import kaitaistruct
-from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
+from kaitaistruct import KaitaiStruct #, KaitaiStream, BytesIO
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
@@ -18,7 +18,7 @@ class SensorData(KaitaiStruct):
     def _read(self):
         self.machineid = self._io.read_u2le()
         self.welderid = self._io.read_u4le()
-        self.jobid = self._io.read_u4le()
+        self.taskid = self._io.read_u4le()
         self.runid = self._io.read_u1()
         self.time = SensorData.Time(self._io, self, self._root)
         self.date = SensorData.Date(self._io, self, self._root)

@@ -1,37 +1,46 @@
-import datetime
-from sqlalchemy import text, select
-from sqlalchemy.orm import session
-from sqlalchemy.exc import IntegrityError
-from kaitaistruct import KaitaiStream, BytesIO
-import kaitaistruct
 import socket
 import threading
 from sys import path
 import os
 from pathlib import Path
+import datetime
+
+from sqlalchemy import text
+from sqlalchemy.orm import session
+from sqlalchemy.exc import IntegrityError
+from kaitaistruct import KaitaiStream, BytesIO
+import kaitaistruct
+
+from middleware import MiddlewareManager
+from utils import Settings, convert_to_dateTime
 
 #get the current working directory to allow the get the models
 current_path = os.path.dirname(Path.cwd())+'\WAsP'
 path.append(current_path)
 
-from Models.models import Assignment, RealTimeData, WeldTable, WeldingTable
+from Models.models import Assignment, RealTimeData, RunTable, WeldingTable
 from sqlserver import SqlConnection
 from SensorData import SensorData
 
-HOST = '127.0.0.1'
-PORT = 8888
-SENSORDATASIZE = 47
-
-
 class Client:
-    def __init__(self, host, port, callbackfn):
+    def __init__(self, settings, pipes):
 
-        self.sqlconnection = SqlConnection('local', 'SmartFab')
+        sensor_settings = settings.getdict('SENSOR')
+        sql_settings = settings.getdict('DATABASE')
+
+        self.sqlconnection = SqlConnection(sql_settings)
         self.session = self.sqlconnection.session
+        self.packetsize = settings.getint('SENSORDATASIZE')
 
-        self.callbackfn = callbackfn
+        self.pipes = pipes
+        
+        host = sensor_settings['HOST']
+        port = sensor_settings['PORT']
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect((host, port))
+
+
+    def start (self):
 
         receive_thread = threading.Thread(target=self.receive)
         receive_thread.start()
@@ -54,22 +63,27 @@ class Client:
             try:
                 raw = raw + self.sock.recv(1024)
 
-                while (len(raw) >= SENSORDATASIZE):
+                while (len(raw) >= self.packetsize):
                     
-                    data = self.callbackfn(raw)
+                    data = {}
+                    data['session'] = self.session
+                    data['raw'] = raw
 
-                    if data.machineid not in time_list.keys():
+                    for method in self.pipes.methods['process_data']:
+                        data = method(data)
 
-                        time_list[data.machineid] = datetime.datetime.now()
+                    #if data.machineid not in time_list.keys():
 
-                    if time_list[data.machineid].timestamp() - convert_to_dateTime(data).timestamp() > 30.0: #This should be rare
-                        time_list[data.machineid] = datetime.datetime.now() #has the connection interrupted for more than 30 secs?
+                    #    time_list[data.machineid] = datetime.datetime.now()
 
-                    to_sql(data, time_list[data.machineid], self.session)
+                    #if time_list[data.machineid].timestamp() - convert_to_dateTime(data).timestamp() > 30.0: #This should be rare
+                    #    time_list[data.machineid] = datetime.datetime.now() #has the connection interrupted for more than 30 secs?
 
-                    time_list[data.machineid] = convert_to_dateTime(data) #converts the date & time in the data object to a datetime object
+                    #to_sql(data, time_list[data.machineid], self.session)
 
-                    raw = raw[SENSORDATASIZE::]
+                    #time_list[data.machineid] = convert_to_dateTime(data) #converts the date & time in the data object to a datetime object
+
+                    raw = raw[self.packetsize::]
 
             except ConnectionAbortedError:
                 break
@@ -153,7 +167,7 @@ def to_sql(data: SensorData, prevtime, session: session):
 
         if (records is None) or len(records) == 0:
             
-            weldtable = WeldTable(
+            weldtable = RunTable(
                 RunNo=data.runid
             )
 
@@ -166,7 +180,7 @@ def to_sql(data: SensorData, prevtime, session: session):
             assignment=records[0]
 
             queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
-            records = session.query(WeldTable).filter(text(queryText)).all()
+            records = session.query(RunTable).filter(text(queryText)).all()
 
             weldtable = records[0]
 
@@ -184,14 +198,24 @@ def to_sql(data: SensorData, prevtime, session: session):
         print("Database returned more than one record")
         session.rollback()
 
-def convert_to_dateTime(data: SensorData):
 
-    date = datetime.date(data.date.year,data.date.month, data.date.day)
-    seconds = int(data.time.second/1000)
-    milliseconds = data.time.second - seconds * 1000
-    time = datetime.time(data.time.hour, data.time.minute, seconds, milliseconds*1000)
-    return datetime.datetime.combine(date, time)
+def main(*args, **kwargs):
 
-client = Client(HOST, PORT, process_sensor_data)
+    SETTINGS_MODULE = 'RealTimeInterface.settings'
+
+    settings = Settings()
+
+    settings.setmodule(SETTINGS_MODULE, priority='project')
+
+    dataPipes = MiddlewareManager.from_settings(settings)
+
+    client = Client(settings, dataPipes)
+
+    client.start()
+
+    while True:
+        pass
 
 
+if __name__ =="__main__":
+    main()
