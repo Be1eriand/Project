@@ -1,9 +1,10 @@
 #Displaying the Data Processing
+from pipelines.pipe import Pipe
 
-class DisplayDataPipe():
+class DisplayDataPipe(Pipe):
 
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
     def process_data(self, dict):
 

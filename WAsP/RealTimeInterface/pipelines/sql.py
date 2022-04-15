@@ -1,15 +1,14 @@
 #Writing the data to the SQL database
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
-from Backend.WAsP import data
-from RealTimeInterface.utils import convert_to_dateTime
+from core.utils import convert_to_dateTime
+from pipelines.pipe import Pipe
+from models.models import Assignment, RealTimeData, RunTable, WeldingTable
 
-from Models.models import Assignment, RealTimeData, RunTable, WeldingTable
-
-class SqlWriterPipe():
+class SqlWriterPipe(Pipe):
 
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
     def process_data(self, dict):
 
@@ -28,11 +27,11 @@ class SqlWriterPipe():
         power = current *voltage
         timedelta = (time.timestamp() - prevtime.timestamp())
         if timedelta < 0.001: #resolution for big times
-            travelSpeed = 0
+            travelspeed = 0
             heatInput = 0
         else:
-            travelSpeed = data.rtdata.length / timedelta
-            heatInput = ((data.rtdata.current * data.rtdata.voltage) * 60)/(1000 * travelSpeed)
+            travelspeed = data.rtdata.length / timedelta
+            heatInput = ((data.rtdata.current * data.rtdata.voltage) * 60)/(1000 * travelspeed)
         
 
         try:
@@ -52,7 +51,8 @@ class SqlWriterPipe():
                 Timedelta=timedelta,
                 Length=length,
                 Power=power,
-                HeatInput=heatInput
+                HeatInput=heatInput,
+                TravelSpeed=travelspeed,
             )
             
             queryText = f'TaskID={data.taskid} and WelderID={data.welderid} and MachineID={data.machineid}'

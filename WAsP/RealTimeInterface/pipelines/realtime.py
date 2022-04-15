@@ -1,13 +1,13 @@
 #Real Time Data Processing
 from kaitaistruct import KaitaiStream, BytesIO
 import kaitaistruct
-
+from pipelines.pipe import Pipe
 from SensorData import SensorData
 
-class RealTimePipe():
+class RealTimePipe(Pipe):
 
     def __init__(self) -> None:
-        pass
+        super().__init__()
 
     def process_data(self, dict):
 

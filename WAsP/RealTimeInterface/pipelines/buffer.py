@@ -1,12 +1,14 @@
 #Displaying the Data Processing
 import datetime
-from utils import convert_to_dateTime
+from core.utils import convert_to_dateTime
+from pipelines.pipe import Pipe
 
-class DataBufferPipe():
+class DataBufferPipe(Pipe):
 
     def __init__(self) -> None:
+        super().__init__()
+        
         self.time_list = {}
-
         self.time_list[0] = datetime.datetime.now()
 
     def process_data(self, dict):
