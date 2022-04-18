@@ -1,10 +1,6 @@
 
 import kaitaistruct
 import socket
-import threading
-
-#RealTime Interface Core Modules
-from core.sqlserver import SqlConnection
 
 class Client:
     def __init__(self, settings):
@@ -26,9 +22,6 @@ class Client:
         
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.sock.connect(self.server)
-
-        receive_thread = threading.Thread(target=self.receive)
-        receive_thread.start()
 
     def write(self, message):
         message = message.encode('utf-8')
@@ -57,6 +50,11 @@ class Client:
 
             except ConnectionAbortedError:
                 break
+            except ConnectionResetError:
+                print('Connection was reset by the Sensor Server')
+                break
+            except ConnectionError:
+                break
             except kaitaistruct.ValidationGreaterThanError:
                 print("Error Validating the Sensor Data")
             except kaitaistruct.ValidationLessThanError:
@@ -64,3 +62,4 @@ class Client:
             except Exception as ex:
                 print("Error")
                 print(ex)
+                break

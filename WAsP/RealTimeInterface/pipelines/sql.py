@@ -67,7 +67,7 @@ class SqlWriterPipe(Pipe):
                 weldtable.assignment = Assignment(
                     WelderID=data.welderid,
                     MachineID=data.machineid,
-                    taskid=data.taskid
+                    TaskID=data.taskid
                 )
             else:
                 assignment=records[0]

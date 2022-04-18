@@ -1,7 +1,7 @@
 import pprint
 from collections import defaultdict, deque
 from typing import Callable, Deque, Dict, Optional #, cast, Iterable
-from core.utils import load_object, create_instance, build_component_list, Settings
+from core.utils import load_object, create_instance, Settings
 from core.exceptions import NotConfigured
 
 class DatabaseManager:

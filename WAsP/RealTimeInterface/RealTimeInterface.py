@@ -24,6 +24,7 @@ def main(*args, **kwargs):
         
         try:
             client.start()
+            client.receive()
         except ConnectionRefusedError:
             print("Unable to connect to the Sensor Server to retrieve the data")
 

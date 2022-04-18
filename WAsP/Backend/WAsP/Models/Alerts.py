@@ -2,29 +2,33 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy import (Integer, DateTime, String)
 
-from .models import Base, BaseModel
+from .models import Base
 
-class AlertsTable(Base, BaseModel):
+class AlertsTable(Base):
     __tablename__="AlertsTable"
 
     id=Column(Integer, primary_key=True, autoincrement="auto")
-    Jobid = Column(Integer)
+    TaskID = Column(Integer)
     AlertType = Column(Integer, ForeignKey("AlertTypes.id"))
-    SpecType = Column(Integer, ForeignKey("SpecType.id"))
+    SpecType = Column(Integer, ForeignKey("SpecTypes.id"))
     StartTime = Column(DateTime)
-    EndTime = Column(DateTime)
+    FinishTime = Column(DateTime)
 
-    alerttype = relationship("AlertTypes", backref="AlertsTable")
-    spectype = relationship("SpecTypes", backref="AlertsTable")
+    alerttype = relationship("AlertTypes", back_populates="alert")
+    spectype = relationship("SpecTypes", back_populates="alert")
 
-class AlertTypes(Base, BaseModel):
-    __tablename__="AlertsType"
+class AlertTypes(Base):
+    __tablename__="AlertTypes"
+
+    id=Column(Integer, primary_key=True, autoincrement="auto")
+    Description = Column(String)
+
+    alert = relationship("AlertsTable", back_populates="alerttype")
+
+class SpecTypes(Base):
+    __tablename__="SpecTypes"
 
     id=Column(Integer, primary_key=True, autoincrement="auto")
     Description = Column(String)
 
-class SpecTypes(Base, BaseModel):
-    __tablename__="SpecType"
-
-    id=Column(Integer, primary_key=True, autoincrement="auto")
-    Description = Column(String)
+    alert = relationship("AlertsTable", back_populates="spectype")

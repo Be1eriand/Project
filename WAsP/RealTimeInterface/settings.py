@@ -5,8 +5,9 @@ MIDDLEWARES = {
     'pipelines.realtime.RealTimePipe': 100, #Must always be first
     'pipelines.display.DisplayDataPipe': 150, #Must always be second
     'pipelines.buffer.DataBufferPipe': 200, #Must always be third
-    'pipelines.alerts.AlertsPipe': 900,
-    'pipelines.sql.SqlWriterPipe': 1000, #Must be Last
+    'pipelines.process.ProcessDataPipe': 250,
+    'pipelines.sql.SqlWriterPipe': 950, #Must be 2nd Last
+    'pipelines.alerts.AlertsPipe': 1000, #Must be last
     #SQL Server Side
 }
 
@@ -33,3 +34,12 @@ DATABASE = {
 
 #How long to wait before re-attempting to reconnect with the sensor server in seconds
 SENSOR_RECONNECT_TIME = 5.0
+
+#Specification Variables to Monitor to generate out of Specification
+#To be defined as the columns in the RealTimeData table
+ALERT_LIST = [
+    'Current',
+    'Voltage',
+    'HeatInput',
+    'TravelSpeed',
+]

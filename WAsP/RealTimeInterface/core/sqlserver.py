@@ -1,9 +1,6 @@
 import urllib
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import pprint
-from core.utils import load_object, create_instance, build_component_list, Settings
-from core.exceptions import NotConfigured
 
 from models.models import *
 

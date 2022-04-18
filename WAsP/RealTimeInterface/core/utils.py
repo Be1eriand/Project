@@ -10,6 +10,16 @@ from pprint import pformat
 
 from SensorData import SensorData
 
+def hash_numbers( a: int, b: int) -> int:
+    #Szudzik's hashing function see http://szudzik.com/ElegantPairing.pdf
+
+    A = (2 * a if a >= 0  else -2 * a - 1)
+    B = (2 * b if b >= 0 else -2 * b - 1)
+    C = ((A * A + A + B if A >= B else A + B * B) / 2)
+
+    return C if (a < 0 and b < 0) or (a >= 0 and b >= 0) else -C - 1
+
+
 def convert_to_dateTime(data: SensorData):
 
     date = datetime.date(data.date.year,data.date.month, data.date.day)
