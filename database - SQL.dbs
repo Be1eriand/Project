@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <project name="SmartFab" id="Project-18a7" database="SqlServer" >
 	<schema name="dbo" catalogname="SmartFab" >
-		<table name="AlertTypes" prior="AlertTable" >
+		<table name="AlertTypes" prior="AlertTable" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -10,7 +10,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="AlertsTable" >
+		<table name="AlertsTable" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -29,7 +29,7 @@
 				<fk_column name="SpecType" pk="id" />
 			</fk>
 		</table>
-		<table name="Assignment" >
+		<table name="Assignment" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -40,14 +40,14 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Category" >
+		<table name="Category" generator_rows="100" >
 			<column name="category_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="arctime" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<index name="pk_dashboard_category" unique="PRIMARY_KEY" >
 				<column name="category_id" />
 			</index>
 		</table>
-		<table name="Employees" prior="UserList" >
+		<table name="Employees" prior="UserList" generator_rows="100" >
 			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="first_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<column name="last_name" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
@@ -57,18 +57,18 @@
 				<column name="payroll_id" />
 			</index>
 		</table>
-		<table name="JobContract" prior="Job Contract" >
-			<column name="id" type="int" jt="4" mandatory="y" />
-			<column name="ContractName" prior="Contract Name" type="varchar" length="100" jt="12" />
-			<column name="Details" type="text" jt="-1" />
-			<index name="pk_Job Contract" unique="PRIMARY_KEY" >
+		<table name="JobContract" generator_rows="225" >
+			<column name="id" type="int" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="ContractID" prior="JobID" type="int" jt="4" mandatory="y" />
+			<column name="ContractName" type="varchar" length="100" jt="12" regexp="Contract [0-9]{3}" regexp_nulls="0" />
+			<column name="Details" type="text" jt="-1" regexp="Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime mollitia,&#10;molestiae quas vel sint commodi repudiandae consequuntur voluptatum laborum&#10;numquam blanditiis harum quisquam eius sed odit fugiat iusto fuga praesentium&#10;optio, eaque rerum! Provident similique accusantium nemo autem. Veritatis&#10;obcaecati tenetur iure eius earum ut molestias architecto voluptate aliquam&#10;nihil, eveniet aliquid culpa officia aut! Impedit sit sunt quaerat, odit,&#10;tenetur error, harum nesciunt ipsum debitis quas aliquid. Reprehenderit,&#10;quia. Quo neque error repudiandae fuga? Ipsa laudantium molestias eos &#10;sapiente officiis modi at sunt excepturi expedita sint? Sed quibusdam&#10;recusandae alias error harum maxime adipisci amet laborum. Perspiciatis &#10;minima nesciunt dolorem! Officiis iure rerum voluptates a cumque velit &#10;quibusdam sed amet tempora. Sit laborum ab, eius fugit doloribus tenetur &#10;fugiat, temporibus enim commodi iusto libero magni deleniti quod quam &#10;consequuntur! Commodi minima excepturi repudiandae velit hic maxime&#10;doloremque. Quaerat provident commodi consectetur veniam similique ad &#10;earum omnis ipsum saepe, voluptas, hic voluptates pariatur est explicabo &#10;fugiat, dolorum eligendi quam cupiditate excepturi mollitia maiores labore &#10;suscipit quas? Nulla, placeat. Voluptatem quaerat non architecto ab laudantium&#10;modi minima sunt esse temporibus sint culpa, recusandae aliquam numquam &#10;totam ratione voluptas quod exercitationem fuga. Possimus quis earum veniam &#10;quasi aliquam eligendi, placeat qui corporis!" regexp_nulls="0" />
+			<index name="pk_JobContract" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<fk name="fk_JobContract_JobTimeTracker" to_schema="SmartFab.dbo" to_table="JobTimeTracker" >
-				<fk_column name="id" pk="id" />
-			</fk>
 		</table>
-		<table name="JobTimeTracker" >
+		<table name="JobTimeTracker" generator_rows="150" >
 			<column name="id" prior="job_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="category" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="start_date" type="date" length="10" decimal="0" jt="91" mandatory="y" />
@@ -82,14 +82,14 @@
 				<fk_column name="category" pk="category_id" />
 			</fk>
 		</table>
-		<table name="Locations" prior="Location" >
+		<table name="Locations" prior="Location" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="Location" prior="location" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_dashboard_location" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Machines" prior="Machine" >
+		<table name="Machines" prior="Machine" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="Description" prior="description" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<column name="locid" prior="location_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -100,7 +100,7 @@
 				<fk_column name="locid" pk="id" />
 			</fk>
 		</table>
-		<table name="RealTime_Data" >
+		<table name="RealTime_Data" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -121,7 +121,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="RunTable" prior="WeldTable" >
+		<table name="RunTable" prior="WeldTable" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -134,7 +134,7 @@
 				<fk_column name="Assignment_id" pk="id" />
 			</fk>
 		</table>
-		<table name="SpecTypes" prior="SpecType" >
+		<table name="SpecTypes" prior="SpecType" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -168,7 +168,9 @@
 			</index>
 		</table>
 		<table name="TaskAssignment" generator_rows="100" >
-			<column name="id" prior="Taskid" type="int" jt="4" mandatory="y" regexp="sequence:from=1;step=1;" />
+			<column name="id" prior="Taskid" type="int" length="10" decimal="0" jt="4" mandatory="y" regexp="skip" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
 			<column name="WPSNo" prior="WPSid" type="int" jt="4" mandatory="y" />
 			<column name="Welderid" type="int" jt="4" mandatory="y" />
 			<column name="Machineid" type="int" jt="4" mandatory="y" />
@@ -182,23 +184,23 @@
 				<fk_column name="Welderid" pk="payroll_id" />
 			</fk>
 			<fk name="fk_TaskAssignment_WPS" to_schema="SmartFab.dbo" to_table="WPS" >
-				<fk_column name="WPSNo" pk="WPS_No" />
+				<fk_column name="WPSNo" pk="id" />
 			</fk>
 		</table>
-		<table name="TaskAssociation" >
+		<table name="TaskAssociation" generator_rows="337" >
 			<column name="Jobid" type="int" jt="4" mandatory="y" />
 			<column name="Taskid" type="int" jt="4" mandatory="y" />
-			<index name="unq_TaskAssociation" unique="UNIQUE_KEY" >
+			<index name="unq_TaskAssociation_Taskid" unique="UNIQUE_KEY" >
 				<column name="Taskid" />
 			</index>
 			<fk name="fk_TaskAssociation_TaskAssignment" to_schema="SmartFab.dbo" to_table="TaskAssignment" >
 				<fk_column name="Taskid" pk="id" />
 			</fk>
-			<fk name="fk_TaskAssociation_Job Contract" to_schema="SmartFab.dbo" to_table="JobContract" >
+			<fk name="fk_TaskAssociation_JobContract" to_schema="SmartFab.dbo" to_table="JobContract" >
 				<fk_column name="Jobid" pk="id" />
 			</fk>
 		</table>
-		<table name="TimesheetTask" >
+		<table name="TimesheetTask" generator_rows="225" >
 			<column name="task_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
 			<column name="payroll_id" prior="payrollid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -208,9 +210,6 @@
 			<index name="pk_dashboard_task" unique="PRIMARY_KEY" >
 				<column name="task_id" />
 			</index>
-			<fk name="fk_dashboard_task_dashboard_job" to_schema="SmartFab.dbo" to_table="JobTimeTracker" >
-				<fk_column name="job_id" pk="id" />
-			</fk>
 			<fk name="fk_dashboard_task_dashboard_machine" to_schema="SmartFab.dbo" to_table="Machines" >
 				<fk_column name="machine_id" pk="id" />
 			</fk>
@@ -221,14 +220,14 @@
 				<fk_column name="payroll_id" pk="payroll_id" />
 			</fk>
 		</table>
-		<table name="TimesheetTaskType" >
+		<table name="TimesheetTaskType" generator_rows="100" >
 			<column name="id" prior="task_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="Description" prior="desc" type="varchar" length="25" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_dashboard_task_type" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="Timesheet_entry" >
+		<table name="Timesheet_entry" generator_rows="150" >
 			<column name="tid" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="org_timesheet_id" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
 			<column name="payroll_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -243,7 +242,7 @@
 				<fk_column name="payroll_id" pk="payroll_id" />
 			</fk>
 		</table>
-		<table name="WASP_Settings" prior="dashboard_db_settings" >
+		<table name="WASP_Settings" prior="dashboard_db_settings" generator_rows="100" >
 			<column name="setting_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="name" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
 			<column name="desc" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
@@ -252,7 +251,7 @@
 				<column name="setting_id" />
 			</index>
 		</table>
-		<table name="WPS" >
+		<table name="WPS" generator_rows="100" >
 			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -266,7 +265,7 @@
 				<column name="WPS_No" />
 			</index>
 		</table>
-		<table name="WPS_Run" >
+		<table name="WPS_Run" generator_rows="150" >
 			<column name="id" type="int" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -286,7 +285,7 @@
 				<fk_column name="WPS_id" pk="id" />
 			</fk>
 		</table>
-		<table name="WeldingTable" >
+		<table name="WeldingTable" generator_rows="225" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -307,14 +306,14 @@
 				<fk_column name="WT_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_group" >
+		<table name="auth_group" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="name" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
 			<index name="pk_auth_group" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="auth_group_permissions" >
+		<table name="auth_group_permissions" generator_rows="225" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="group_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="permission_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -334,7 +333,7 @@
 				<fk_column name="permission_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_permission" >
+		<table name="auth_permission" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="content_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="codename" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
@@ -349,7 +348,7 @@
 				<fk_column name="content_type_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user" >
+		<table name="auth_user" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="password" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
 			<column name="last_login" type="datetime" length="23" decimal="3" jt="92" />
@@ -365,7 +364,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="auth_user_groups" >
+		<table name="auth_user_groups" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="user_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="group_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -385,7 +384,7 @@
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user_user_permissions" >
+		<table name="auth_user_user_permissions" generator_rows="225" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="user_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="permission_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
@@ -405,7 +404,7 @@
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="django_admin_log" >
+		<table name="django_admin_log" generator_rows="150" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="action_time" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
 			<column name="object_id" type="text" length="2147483647" decimal="0" jt="-1" />
@@ -434,7 +433,7 @@
 				<fk_column name="content_type_id" pk="id" />
 			</fk>
 		</table>
-		<table name="django_content_type" >
+		<table name="django_content_type" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="app_label" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
 			<column name="model" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
@@ -442,7 +441,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="django_migrations" >
+		<table name="django_migrations" generator_rows="100" >
 			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="app" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
 			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
@@ -451,7 +450,7 @@
 				<column name="id" />
 			</index>
 		</table>
-		<table name="django_session" >
+		<table name="django_session" generator_rows="100" >
 			<column name="session_key" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
 			<column name="session_data" type="text" length="2147483647" decimal="0" jt="-1" mandatory="y" />
 			<column name="expire_date" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
@@ -462,7 +461,7 @@
 				<column name="expire_date" />
 			</index>
 		</table>
-		<table name="sysdiagrams" >
+		<table name="sysdiagrams" generator_rows="100" >
 			<column name="diagram_id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
@@ -491,7 +490,7 @@ FROM SmartFab.dbo.AlertsTable a
 			<column name="SpecType" type="varchar" />
 		</view>
 		<view name="ContractTaskView" >
-			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT j.id as ContractID, j.ContractName, t1.id as TaskID, w.WPS_No, e.FullName, m.Description
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT j.id as ContractID, j.ContractName, j.Details,t1.id as TaskID, w.WPS_No, e.FullName, m.Description
 FROM SmartFab.dbo.JobContract j 
 	INNER JOIN SmartFab.dbo.TaskAssociation t ON ( j.id = t.Jobid  )  
 	INNER JOIN SmartFab.dbo.TaskAssignment t1 ON ( t.Taskid = t1.id  )  
@@ -500,6 +499,7 @@ FROM SmartFab.dbo.JobContract j
 	INNER JOIN SmartFab.dbo.Machines m ON ( t1.Machineid = m.id  )  ]]></view_script>
 			<column name="ContractID" type="int" />
 			<column name="ContractName" type="varchar" />
+			<column name="Details" type="text" />
 			<column name="TaskID" type="int" />
 			<column name="WPS_No" type="int" />
 			<column name="FullName" type="varchar" />
@@ -566,18 +566,452 @@ FROM SmartFab.dbo.TaskAssignment t
 			<column name="FullName" type="varchar" />
 			<column name="MachineName" type="varchar" />
 		</view>
+		<procedure name="sp_alterdiagram" id="Procedure-23e3" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_alterdiagram
+	(
+		@diagramname 	sysname,
+		@owner_id	int	= null,
+		@version 	int,
+		@definition 	varbinary(max)
+	)
+	WITH EXECUTE AS 'dbo'
+	AS
+	BEGIN
+		set nocount on
+	
+		declare @theId 			int
+		declare @retval 		int
+		declare @IsDbo 			int
+		
+		declare @UIDFound 		int
+		declare @DiagId			int
+		declare @ShouldChangeUID	int
+	
+		if(@diagramname is null)
+		begin
+			RAISERROR ('Invalid ARG', 16, 1)
+			return -1
+		end
+	
+		execute as caller;
+		select @theId = DATABASE_PRINCIPAL_ID();	 
+		select @IsDbo = IS_MEMBER(N'db_owner'); 
+		if(@owner_id is null)
+			select @owner_id = @theId;
+		revert;
+	
+		select @ShouldChangeUID = 0
+		select @DiagId = diagram_id, @UIDFound = principal_id from dbo.sysdiagrams where principal_id = @owner_id and name = @diagramname 
+		
+		if(@DiagId IS NULL or (@IsDbo = 0 and @theId <> @UIDFound))
+		begin
+			RAISERROR ('Diagram does not exist or you do not have permission.', 16, 1);
+			return -3
+		end
+	
+		if(@IsDbo <> 0)
+		begin
+			if(@UIDFound is null or USER_NAME(@UIDFound) is null) -- invalid principal_id
+			begin
+				select @ShouldChangeUID = 1 ;
+			end
+		end
+		-- update dds data			
+		update dbo.sysdiagrams set definition = @definition where diagram_id = @DiagId ;
+		-- change owner
+		if(@ShouldChangeUID = 1)
+			update dbo.sysdiagrams set principal_id = @theId where diagram_id = @DiagId ;
+		-- update dds version
+		if(@version is not null)
+			update dbo.sysdiagrams set version = @version where diagram_id = @DiagId ;
+		return 0
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<input_param name="@version" jt="4" type="int" />
+			<input_param name="@definition" jt="-3" type="varbinary" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_creatediagram" id="Procedure-1cef" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_creatediagram
+	(
+		@diagramname 	sysname,
+		@owner_id		int	= null, 	
+		@version 		int,
+		@definition 	varbinary(max)
+	)
+	WITH EXECUTE AS 'dbo'
+	AS
+	BEGIN
+		set nocount on
+	
+		declare @theId int
+		declare @retval int
+		declare @IsDbo	int
+		declare @userName sysname
+		if(@version is null or @diagramname is null)
+		begin
+			RAISERROR (N'E_INVALIDARG', 16, 1);
+			return -1
+		end
+	
+		execute as caller;
+		select @theId = DATABASE_PRINCIPAL_ID(); 
+		select @IsDbo = IS_MEMBER(N'db_owner');
+		revert; 
+		
+		if @owner_id is null
+		begin
+			select @owner_id = @theId;
+		end
+		else
+		begin
+			if @theId <> @owner_id
+			begin
+				if @IsDbo = 0
+				begin
+					RAISERROR (N'E_INVALIDARG', 16, 1);
+					return -1
+				end
+				select @theId = @owner_id
+			end
+		end
+		-- next 2 line only for test, will be removed after define name unique
+		if EXISTS(select diagram_id from dbo.sysdiagrams where principal_id = @theId and name = @diagramname)
+		begin
+			RAISERROR ('The name is already used.', 16, 1);
+			return -2
+		end
+	
+		insert into dbo.sysdiagrams(name, principal_id , version, definition)
+				VALUES(@diagramname, @theId, @version, @definition) ;
+		
+		select @retval = @@IDENTITY 
+		return @retval
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<input_param name="@version" jt="4" type="int" />
+			<input_param name="@definition" jt="-3" type="varbinary" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_dropdiagram" id="Procedure-9e9" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_dropdiagram
+	(
+		@diagramname 	sysname,
+		@owner_id	int	= null
+	)
+	WITH EXECUTE AS 'dbo'
+	AS
+	BEGIN
+		set nocount on
+		declare @theId 			int
+		declare @IsDbo 			int
+		
+		declare @UIDFound 		int
+		declare @DiagId			int
+	
+		if(@diagramname is null)
+		begin
+			RAISERROR ('Invalid value', 16, 1);
+			return -1
+		end
+	
+		EXECUTE AS CALLER;
+		select @theId = DATABASE_PRINCIPAL_ID();
+		select @IsDbo = IS_MEMBER(N'db_owner'); 
+		if(@owner_id is null)
+			select @owner_id = @theId;
+		REVERT; 
+		
+		select @DiagId = diagram_id, @UIDFound = principal_id from dbo.sysdiagrams where principal_id = @owner_id and name = @diagramname 
+		if(@DiagId IS NULL or (@IsDbo = 0 and @UIDFound <> @theId))
+		begin
+			RAISERROR ('Diagram does not exist or you do not have permission.', 16, 1)
+			return -3
+		end
+	
+		delete from dbo.sysdiagrams where diagram_id = @DiagId;
+	
+		return 0;
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_helpdiagramdefinition" id="Procedure-1025" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_helpdiagramdefinition
+	(
+		@diagramname 	sysname,
+		@owner_id	int	= null 		
+	)
+	WITH EXECUTE AS N'dbo'
+	AS
+	BEGIN
+		set nocount on
+		declare @theId 		int
+		declare @IsDbo 		int
+		declare @DiagId		int
+		declare @UIDFound	int
+	
+		if(@diagramname is null)
+		begin
+			RAISERROR (N'E_INVALIDARG', 16, 1);
+			return -1
+		end
+	
+		execute as caller;
+		select @theId = DATABASE_PRINCIPAL_ID();
+		select @IsDbo = IS_MEMBER(N'db_owner');
+		if(@owner_id is null)
+			select @owner_id = @theId;
+		revert; 
+	
+		select @DiagId = diagram_id, @UIDFound = principal_id from dbo.sysdiagrams where principal_id = @owner_id and name = @diagramname;
+		if(@DiagId IS NULL or (@IsDbo = 0 and @UIDFound <> @theId ))
+		begin
+			RAISERROR ('Diagram does not exist or you do not have permission.', 16, 1);
+			return -3
+		end
+		select version, definition FROM dbo.sysdiagrams where diagram_id = @DiagId ; 
+		return 0
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_helpdiagrams" id="Procedure-1952" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_helpdiagrams
+	(
+		@diagramname sysname = NULL,
+		@owner_id int = NULL
+	)
+	WITH EXECUTE AS N'dbo'
+	AS
+	BEGIN
+		DECLARE @user sysname
+		DECLARE @dboLogin bit
+		EXECUTE AS CALLER;
+			SET @user = USER_NAME();
+			SET @dboLogin = CONVERT(bit,IS_MEMBER('db_owner'));
+		REVERT;
+		SELECT
+			[Database] = DB_NAME(),
+			[Name] = name,
+			[ID] = diagram_id,
+			[Owner] = USER_NAME(principal_id),
+			[OwnerID] = principal_id
+		FROM
+			sysdiagrams
+		WHERE
+			(@dboLogin = 1 OR USER_NAME(principal_id) = @user) AND
+			(@diagramname IS NULL OR name = @diagramname) AND
+			(@owner_id IS NULL OR principal_id = @owner_id)
+		ORDER BY
+			4, 5, 1
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_renamediagram" id="Procedure-cf8" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_renamediagram
+	(
+		@diagramname 		sysname,
+		@owner_id		int	= null,
+		@new_diagramname	sysname
+	
+	)
+	WITH EXECUTE AS 'dbo'
+	AS
+	BEGIN
+		set nocount on
+		declare @theId 			int
+		declare @IsDbo 			int
+		
+		declare @UIDFound 		int
+		declare @DiagId			int
+		declare @DiagIdTarg		int
+		declare @u_name			sysname
+		if((@diagramname is null) or (@new_diagramname is null))
+		begin
+			RAISERROR ('Invalid value', 16, 1);
+			return -1
+		end
+	
+		EXECUTE AS CALLER;
+		select @theId = DATABASE_PRINCIPAL_ID();
+		select @IsDbo = IS_MEMBER(N'db_owner'); 
+		if(@owner_id is null)
+			select @owner_id = @theId;
+		REVERT;
+	
+		select @u_name = USER_NAME(@owner_id)
+	
+		select @DiagId = diagram_id, @UIDFound = principal_id from dbo.sysdiagrams where principal_id = @owner_id and name = @diagramname 
+		if(@DiagId IS NULL or (@IsDbo = 0 and @UIDFound <> @theId))
+		begin
+			RAISERROR ('Diagram does not exist or you do not have permission.', 16, 1)
+			return -3
+		end
+	
+		-- if((@u_name is not null) and (@new_diagramname = @diagramname))	-- nothing will change
+		--	return 0;
+	
+		if(@u_name is null)
+			select @DiagIdTarg = diagram_id from dbo.sysdiagrams where principal_id = @theId and name = @new_diagramname
+		else
+			select @DiagIdTarg = diagram_id from dbo.sysdiagrams where principal_id = @owner_id and name = @new_diagramname
+	
+		if((@DiagIdTarg is not null) and  @DiagId <> @DiagIdTarg)
+		begin
+			RAISERROR ('The name is already used.', 16, 1);
+			return -2
+		end		
+	
+		if(@u_name is null)
+			update dbo.sysdiagrams set [name] = @new_diagramname, principal_id = @theId where diagram_id = @DiagId
+		else
+			update dbo.sysdiagrams set [name] = @new_diagramname where diagram_id = @DiagId
+		return 0
+	END
+	]]></string>
+			<input_param name="@diagramname" jt="-9" type="sysname" />
+			<input_param name="@owner_id" jt="4" type="int" />
+			<input_param name="@new_diagramname" jt="-9" type="sysname" />
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<procedure name="sp_upgraddiagrams" id="Procedure-88d" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE PROCEDURE dbo.sp_upgraddiagrams
+	AS
+	BEGIN
+		IF OBJECT_ID(N'dbo.sysdiagrams') IS NOT NULL
+			return 0;
+	
+		CREATE TABLE dbo.sysdiagrams
+		(
+			name sysname NOT NULL,
+			principal_id int NOT NULL,	-- we may change it to varbinary(85)
+			diagram_id int PRIMARY KEY IDENTITY,
+			version int,
+	
+			definition varbinary(max)
+			CONSTRAINT UK_principal_name UNIQUE
+			(
+				principal_id,
+				name
+			)
+		);
+
+		/* Add this if we need to have some form of extended properties for diagrams */
+		/*
+		IF OBJECT_ID(N'dbo.sysdiagram_properties') IS NULL
+		BEGIN
+			CREATE TABLE dbo.sysdiagram_properties
+			(
+				diagram_id int,
+				name sysname,
+				value varbinary(max) NOT NULL
+			)
+		END
+		*/
+		IF OBJECT_ID(N'dbo.dtproperties') IS NOT NULL
+		begin
+			insert into dbo.sysdiagrams
+			(
+				[name],
+				[principal_id],
+				[version],
+				[definition]
+			)
+			select	 
+				convert(sysname, dgnm.[uvalue]),
+				DATABASE_PRINCIPAL_ID(N'dbo'),			-- will change to the sid of sa
+				0,							-- zero for old format, dgdef.[version],
+				dgdef.[lvalue]
+			from dbo.[dtproperties] dgnm
+				inner join dbo.[dtproperties] dggd on dggd.[property] = 'DtgSchemaGUID' and dggd.[objectid] = dgnm.[objectid]	
+				inner join dbo.[dtproperties] dgdef on dgdef.[property] = 'DtgSchemaDATA' and dgdef.[objectid] = dgnm.[objectid]
+				
+			where dgnm.[property] = 'DtgSchemaNAME' and dggd.[uvalue] like N'_EA3E6268-D998-11CE-9454-00AA00A3F36E_' 
+			return 2;
+		end
+		return 1;
+	END
+	]]></string>
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</procedure>
+		<function name="fn_diagramobjects" id="Function-16f5" isSystem="false" params_known="y" >
+			<string><![CDATA[
+	CREATE FUNCTION dbo.fn_diagramobjects() 
+	RETURNS int
+	WITH EXECUTE AS N'dbo'
+	AS
+	BEGIN
+		declare @id_upgraddiagrams		int
+		declare @id_sysdiagrams			int
+		declare @id_helpdiagrams		int
+		declare @id_helpdiagramdefinition	int
+		declare @id_creatediagram	int
+		declare @id_renamediagram	int
+		declare @id_alterdiagram 	int 
+		declare @id_dropdiagram		int
+		declare @InstalledObjects	int
+		select @InstalledObjects = 0
+		select 	@id_upgraddiagrams = object_id(N'dbo.sp_upgraddiagrams'),
+			@id_sysdiagrams = object_id(N'dbo.sysdiagrams'),
+			@id_helpdiagrams = object_id(N'dbo.sp_helpdiagrams'),
+			@id_helpdiagramdefinition = object_id(N'dbo.sp_helpdiagramdefinition'),
+			@id_creatediagram = object_id(N'dbo.sp_creatediagram'),
+			@id_renamediagram = object_id(N'dbo.sp_renamediagram'),
+			@id_alterdiagram = object_id(N'dbo.sp_alterdiagram'), 
+			@id_dropdiagram = object_id(N'dbo.sp_dropdiagram')
+		if @id_upgraddiagrams is not null
+			select @InstalledObjects = @InstalledObjects + 1
+		if @id_sysdiagrams is not null
+			select @InstalledObjects = @InstalledObjects + 2
+		if @id_helpdiagrams is not null
+			select @InstalledObjects = @InstalledObjects + 4
+		if @id_helpdiagramdefinition is not null
+			select @InstalledObjects = @InstalledObjects + 8
+		if @id_creatediagram is not null
+			select @InstalledObjects = @InstalledObjects + 16
+		if @id_renamediagram is not null
+			select @InstalledObjects = @InstalledObjects + 32
+		if @id_alterdiagram  is not null
+			select @InstalledObjects = @InstalledObjects + 64
+		if @id_dropdiagram is not null
+			select @InstalledObjects = @InstalledObjects + 128
+		
+		return @InstalledObjects 
+	END
+	]]></string>
+			<result_param name="@RETURN_VALUE" jt="4" type="int" />
+		</function>
 	</schema>
-	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication" host="localhost" port="1433" instance="SmartFab" />
-	<layout name="Default Layout" id="Layout-239" confirmed="y" show_relation="name" >
+	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication, Current User" host="localhost" port="1433" instance="SmartFab" />
+	<layout name="Parsed Script Layout" id="Layout-239" confirmed="y" show_relation="name" >
 		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1696" y="1312" />
 		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="1712" y="672" />
 		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1888" y="1200" />
 		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1232" />
-		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="368" y="960" />
+		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="320" y="944" />
 		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="1872" y="672" />
 		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="752" />
-		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="784" y="944" />
-		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="608" y="928" />
+		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="944" />
+		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="512" y="928" />
 		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1328" />
 		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1184" />
 		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="2224" y="672" />
@@ -586,14 +1020,14 @@ FROM SmartFab.dbo.TaskAssignment t
 		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1696" y="1152" />
 		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="752" />
 		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="2032" y="672" />
-		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="992" y="944" />
-		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="864" y="784" />
+		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="976" y="944" />
+		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="816" />
 		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="1792" y="864" />
 		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1040" />
 		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1280" />
 		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="672" />
 		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="848" y="512" />
-		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1168" y="976" />
+		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1184" y="960" />
 		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="752" />
 		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1216" />
 		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="432" y="272" />
@@ -607,6 +1041,10 @@ FROM SmartFab.dbo.TaskAssignment t
 		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1152" y="96" />
 		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1184" y="304" />
 		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="1024" y="512" />
+		<callout x="976" y="832" pointer="Round" >
+			<comment><![CDATA[Current layout is generated by parsing the SQL script.
+DbSchema is in 'offline' mode (not connected to any database).]]></comment>
+		</callout>
 		<group name="Django Admin" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="django_content_type" />
 			<entity schema="SmartFab.dbo" name="django_session" />
@@ -633,13 +1071,13 @@ FROM SmartFab.dbo.TaskAssignment t
 		</group>
 		<group name="Productivity" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Timesheet_entry" />
-			<entity schema="SmartFab.dbo" name="Machines" />
 			<entity schema="SmartFab.dbo" name="Locations" />
-			<entity schema="SmartFab.dbo" name="TimesheetTask" />
 			<entity schema="SmartFab.dbo" name="TimesheetTaskType" />
-			<entity schema="SmartFab.dbo" name="Category" />
-			<entity schema="SmartFab.dbo" name="JobTimeTracker" />
+			<entity schema="SmartFab.dbo" name="Machines" />
 			<entity schema="SmartFab.dbo" name="Employees" />
+			<entity schema="SmartFab.dbo" name="TimesheetTask" />
+			<entity schema="SmartFab.dbo" name="JobTimeTracker" />
+			<entity schema="SmartFab.dbo" name="Category" />
 		</group>
 		<group name="RealTime" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="RealTime_Data" />
@@ -648,16 +1086,16 @@ FROM SmartFab.dbo.TaskAssignment t
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="TaskAssociation" />
-			<entity schema="SmartFab.dbo" name="JobContract" />
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
+			<entity schema="SmartFab.dbo" name="JobContract" />
+			<entity schema="SmartFab.dbo" name="TaskAssociation" />
 		</group>
 		<group name="WAsP Views" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="SpecificationView" />
-			<entity schema="SmartFab.dbo" name="RealTimeView" />
-			<entity schema="SmartFab.dbo" name="ContractTaskView" />
-			<entity schema="SmartFab.dbo" name="AlertView" />
 			<entity schema="SmartFab.dbo" name="TaskView" />
+			<entity schema="SmartFab.dbo" name="AlertView" />
+			<entity schema="SmartFab.dbo" name="ContractTaskView" />
+			<entity schema="SmartFab.dbo" name="RealTimeView" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 
@@ -1157,101 +1595,6 @@ ALTER TABLE SmartFab.dbo.django_admin_log ADD CONSTRAINT [FK_django_admin_log dj
 GO
 ]]></string>
 		</script>
-		<browser id="Browse-f6a" name="AlertView" confirm_updates="y" >
-			<browse_table schema="SmartFab.dbo" entity="AlertsTable" x="20" y="20" width="400" height="300" >
-				<browse_table schema="SmartFab.dbo" entity="AlertTypes" fk="fk_AlertsTable_AlertTypes" x="460" y="20" width="500" height="350" record_view="y" />
-			</browse_table>
-		</browser>
-		<browser id="Browse-13e" name="JobContract_002" confirm_updates="y" >
-			<browse_table schema="SmartFab.dbo" entity="JobContract" x="20" y="20" width="400" height="300" >
-				<browse_table schema="SmartFab.dbo" entity="TaskAssociation" fk="fk_TaskAssociation_Job Contract" x="460" y="20" width="500" height="350" >
-					<browse_table schema="SmartFab.dbo" entity="TaskAssignment" fk="fk_TaskAssociation_TaskAssignment" x="1000" y="20" width="500" height="350" record_view="y" />
-				</browse_table>
-			</browse_table>
-		</browser>
-		<query id="Query-bd1" name="AlertsTable" >
-			<query_table schema="SmartFab.dbo" name="AlertsTable" alias="a" x="272" y="48" >
-				<column name="id" />
-				<column name="TaskID" />
-				<column name="StartTime" />
-				<column name="FinishTime" />
-				<query_table schema="SmartFab.dbo" name="AlertTypes" alias="a1" x="512" y="48" fk="fk_AlertsTable_AlertTypes" type="Inner Join" >
-					<column name="Description" alias="AlertType" />
-				</query_table>
-				<query_table schema="SmartFab.dbo" name="SpecTypes" alias="s" x="48" y="48" fk="fk_AlertsTable_SpecTypes" type="Inner Join" >
-					<column name="Description" alias="SpecType" />
-				</query_table>
-			</query_table>
-		</query>
-		<query id="Query-21bf" name="JobContract" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-			</query_table>
-		</query>
-		<query id="Query-89e" name="JobContract_001" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
-					<column name="Jobid" />
-					<column name="Taskid" />
-					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
-				</query_table>
-			</query_table>
-		</query>
-		<query id="Query-e2e" name="JobContract_003" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
-					<column name="Jobid" />
-					<column name="Taskid" />
-					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
-				</query_table>
-			</query_table>
-		</query>
-		<query id="Query-d06" name="JobContract_004" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
-					<column name="Jobid" />
-					<column name="Taskid" />
-					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
-				</query_table>
-			</query_table>
-		</query>
-		<query id="Query-f11" name="JobContract_005" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-				<query_table schema="SmartFab.dbo" name="TaskAssociation" alias="t" x="208" y="48" fk="fk_TaskAssociation_Job Contract" type="Inner Join" >
-					<column name="Jobid" />
-					<column name="Taskid" />
-					<query_table schema="SmartFab.dbo" name="TaskAssignment" alias="t1" x="384" y="48" fk="fk_TaskAssociation_TaskAssignment" type="Inner Join" />
-				</query_table>
-			</query_table>
-		</query>
-		<query id="Query-29" name="JobContract_006" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-			</query_table>
-		</query>
-		<query id="Query-2234" name="JobContract_007" >
-			<query_table schema="SmartFab.dbo" name="JobContract" alias="j" x="48" y="48" >
-				<column name="id" />
-				<column name="ContractName" />
-				<column name="Details" />
-			</query_table>
-		</query>
 		<form name="Report" id="Report-e01" template="Page" css="container-fluid" view="frame" >
 			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2},{-2}}" scroll="n" html="n" />
 		</form>

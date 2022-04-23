@@ -8,6 +8,7 @@ class ContractTaskView(Base):
 
     ContractID = Column(Integer, primary_key=True)
     ContractName = Column(String)
+    Details = Column(String)
     TaskID = Column(Integer)
     WPS_No = Column(Integer)
     FullName = Column(String)

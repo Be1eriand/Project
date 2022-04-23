@@ -24,6 +24,6 @@ urlpatterns = [
     re_path(r'^contracts/(\d+)$', views.ContractView.as_view()), ##Path for Selecting individual contracts and related tasks
     
     #Task URLs
-    re_path(r'^tasks/$', views.TaskAssingmentView.as_view()),
-    re_path(r'^tasks/(\d+)$', views.TaskAssingmentView.as_view()), ##Path for Selecting individual contracts and related tasks
+    re_path(r'^tasks/$', views.TaskAssignmentView.as_view()),
+    re_path(r'^tasks/(\d+)$', views.TaskAssignmentView.as_view()), ##Path for Selecting individual contracts and related tasks
 ]

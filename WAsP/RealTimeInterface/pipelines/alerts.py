@@ -78,6 +78,7 @@ class AlertsPipe(Pipe):
             self.specifications[hash] = self._retrieve_from_database(TaskID, RunNo)
 
         if self.specifications[hash] == {}:
+            print('No Specification was found in the database')
             raise NoSpecificationFound()
 
         return self.specifications[hash]

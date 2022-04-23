@@ -7,10 +7,11 @@ from .models import Base
 class Employees(Base):
     __tablename__ = "Employees"
 
-    id = Column(Integer, primary_key=True)
+    payroll_id = Column(Integer, primary_key=True)
     first_name = Column(String)
     last_name = Column(String)
     employment_status = Column(Boolean)
+    FullName = Column(String)
 
 class Machines(Base):
     __tablename__ = "Machines"
@@ -55,7 +56,7 @@ class TimesheetTask(Base):
     __tablename__ = "TimesheetTask"
 
     task_id = Column(String, primary_key=True)
-    payroll_id = Column(Integer, ForeignKey('Employees.id'))
+    payroll_id = Column(Integer, ForeignKey('Employees.payroll_id'))
     type_id = Column(Integer, ForeignKey('TimesheetTaskType.id'))
     job_id = Column(Integer, ForeignKey('JobTimeTracker.id'))
     machine_id = Column(Integer, ForeignKey('Machines.id'))

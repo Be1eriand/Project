@@ -1,11 +1,14 @@
-from django.http import JsonResponse
-from django.core.serializers.json import DjangoJSONEncoder
+import datetime
+from pprint import pprint
+from django.db import IntegrityError, connection
+from rest_framework.request import Request
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
-from sqlalchemy import text
+from sqlalchemy import text, select
 
 #Serialisers
 from .serializers import *
@@ -17,12 +20,15 @@ from Models.Contract import *
 from Models.Views import *
 
 session = settings.SESSION
+connection = settings.CONNECTION
 
 # Create your views here.
 class DataAPI(APIView): #GET, POST
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request): 
+    def get(self, *args):
+
+        request: Request = args[0] 
 
         try:
             results = session.query(RealTimeData).all()
@@ -31,7 +37,9 @@ class DataAPI(APIView): #GET, POST
         except ValueError as e:
             return Response(e.args[0],status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request):
+    def post(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
 
@@ -44,18 +52,23 @@ class RealtimeView(APIView):
             return Response(status.HTTP_400_BAD_REQUEST)
 
         #return all active data within the last 30 secs
-        results = session.query(RealTimeData).select_from(RunTable).all()
+        last_30secs = datetime.datetime.now() - datetime.timedelta(minutes=0.5)
+        results = session.query(RealTimeDataView).filter(RealTimeDataView.Time > last_30secs).all() #.one_or_none() #RealTimeDataView.Time >= last_60secs
 
-        serialised = RealTimeSerializer(results, many=True)
+        selected = connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_30secs)).fetchall() # Why does this work but not the above
+
+        serialised = RealTimeDataViewSerializer(selected, many=True)
 
         return JsonResponse(serialised.data, safe=False)
 
-    def post(self, request):
+    def post(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
 
 class SpecificationView(APIView): #Follows CRUD
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 
@@ -74,21 +87,71 @@ class SpecificationView(APIView): #Follows CRUD
 
         return JsonResponse(serialised.data, safe=False)
 
-    def post(self, request):
+    def post(self, *args):
+
+        request: Request = args[0]
+        data = request.data
+
+        wps = WPS(
+            WPS_No = data['WPS_No'],
+            Welding_Code = data['Welding_Code'],
+            Joint_type = data['Joint_type'],
+        )
+
+        wps_run = WPS_Run(
+            Run_No = data['Run_No'],
+        )
+
+        specification = Specification(
+            Side = data['Side'],
+            Position = data['Position'],
+            Class = data['Class'],
+            Size = data['Size'],
+            Gas_Flux_Type = data['Gas_Flux_Type'],
+            Current_Min = data['Current_Min'],
+            Current_Max = data['Current_Max'],
+            Voltage_Min = data['Voltage_Min'],
+            Voltage_Max = data['Voltage_Max'],
+            Polarity = data['Polairty'],
+            TravelSpeed_Min = data['TravelSpeed_Min'],
+            TravelSpeed_Max = data['TravelSpeed_Max'],
+            InterpassTemp_Min = data['InterpassTemp_Min'],
+            InterpassTemp_Max = data['InterpassTemp_Max'],
+            HeatInput_Min = data['HeatInput_Min'],
+            HeatInput_Max = data['HeatInput_Max'],
+        )
+
+        wps_run.specifications = specification
+        wps.runs = wps_run
+
+        try:
+            session.add(wps)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            return HttpResponseBadRequest()
+        except Exception as e:
+            session.rollback()
+            pprint(e)
+            return HttpResponseBadRequest()
+
+        return HttpResponse(status.HTTP_200_OK) #return the object?
+    
+    def put(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request):
+    def delete(self, *args):
 
-        return Response(status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request):
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
 
 
 class ContractView(APIView):    #Follows CRUD
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -99,21 +162,57 @@ class ContractView(APIView):    #Follows CRUD
         return JsonResponse(serialised.data, safe=False)
         
 
-    def post(self, request):
+    def post(self, *args):
+
+        request: Request = args[0]
+        data = request.data
+
+        contract: JobContract = JobContract(
+            ContractID = data['ContractID'],
+            ContractName = data['ContractName'],
+            Details = data['Details'],
+        )
+
+        task: TaskAssignment = TaskAssignment(
+            WPSNo = data['WPS_No'],
+            WelderID = data['Welderid'],
+            MachineID = data['Machineid'],
+        )
+        
+        contract_association = TaskAssociation()
+
+        contract_association.task = task
+
+        contract.tasks.append(contract_association)
+
+        try:
+            session.add(contract)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            return HttpResponseBadRequest()
+        except Exception as e:
+            session.rollback()
+            pprint(e)
+            return HttpResponseBadRequest()
+
+        return HttpResponse(status.HTTP_200_OK) #return the object?
+    
+    def put(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
     
-    def put(self, request):
+    def delete(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request):
-
-        return Response(status.HTTP_400_BAD_REQUEST)
 
 
-class TaskAssingmentView(APIView):    #Follows CRUD
-    #permission_classes = (IsAuthenticated,)
+class TaskAssignmentView(APIView):    #Follows CRUD
+    permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -123,14 +222,53 @@ class TaskAssingmentView(APIView):    #Follows CRUD
 
         return JsonResponse(serialised.data, safe=False)
 
-    def post(self, request):
+    def post(self, *args):
 
-        return Response(status.HTTP_400_BAD_REQUEST)
-    
-    def put(self, request):
+        request: Request = args[0]
+        data = request.data
 
-        return Response(status.HTTP_400_BAD_REQUEST)
+        task = TaskAssignment(
+            WPSNo = data['WPS_No'],
+            WelderID = data['Welderid'],
+            MachineID = data['Machineid'],
+        )
+
+        try:
+            session.add(task)
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            return HttpResponseBadRequest()
+        except Exception as e:
+            session.rollback()
+            pprint(e)
+            return HttpResponseBadRequest()
+
+        return HttpResponse(status.HTTP_200_OK)
     
-    def delete(self, request):
+    def put(self, *args):
+
+        request: Request = args[0]
+        data = request.data
+
+        task = TaskAssignment(
+            id = data['TaskID'],
+            WPSNo = data['WPS_No'],
+            WelderID = data['Welderid'],
+            MachineID = data['Machineid'],
+        )
+
+        try:
+            session.query(TaskAssignment).update(task)
+        except IntegrityError:
+            return HttpResponseBadRequest()
+        except Exception as e:
+            pprint(e)
+
+        return HttpResponse(status.HTTP_200_OK)
+    
+    def delete(self, *args):
+
+        request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
