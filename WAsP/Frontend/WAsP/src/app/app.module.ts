@@ -15,11 +15,8 @@ import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
 import { WidgetComponent }  from './realtime';
+import { DashboardComponent} from './realtime';
 
-
-//Components forthe previous project - not implemented and maybe removed at a later date
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ReportsComponent } from './reports/reports.component';
 
 //Angular imports for prettifying the application
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
