@@ -21,9 +21,10 @@ export class RealTimeData { // Is this needed?
 
 export class RealTimeView {
 
+    TaskID: string;
     RunNo: string;
-    Welder_id: string;
-    Machine_id: string;
+    WelderID: string;
+    MachineID: string;
     Time: string;
     Current: string;
     Voltage: string;

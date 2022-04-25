@@ -10,21 +10,7 @@ export class HomeComponent {
 
     constructor(
         private accountService: AccountService,
-        private alertService: AlertService,
-        private dataService: DataService) {
+        private alertService: AlertService) {
         this.user = this.accountService.userValue;
-    }
-
-    data() {
-        this.dataService.post()
-        .pipe()
-        .subscribe({
-            next: () => {
-            },
-            error: error => {
-                this.alertService.error(error);
-            }
-        });
-
     }
 }

@@ -14,16 +14,15 @@ import { AccountService } from './_services'
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
-
-//Components forthe previous project - not implemented and maybe removed at a later date
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ReportsComponent } from './reports/reports.component';
+import { WidgetComponent } from './realtime';
+import { DashboardComponent } from './realtime';
 
 //Angular imports for prettifying the application
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon'
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
     imports: [
@@ -35,14 +34,15 @@ import { MatIconModule } from '@angular/material/icon'
         BrowserAnimationsModule,
         MatProgressSpinnerModule,
         MatButtonModule,
-        MatIconModule
+        MatIconModule,
+        MatCardModule
     ],
     declarations: [
         AppComponent,
-        DashboardComponent,
-        ReportsComponent,
         AlertComponent,
-        HomeComponent
+        HomeComponent,
+        WidgetComponent,
+        DashboardComponent,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

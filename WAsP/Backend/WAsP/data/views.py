@@ -24,15 +24,17 @@ connection = settings.CONNECTION
 
 # Create your views here.
 class DataAPI(APIView): #GET, POST
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 
         request: Request = args[0] 
 
         try:
-            results = session.query(RealTimeData).all()
-            return  JsonResponse(results, safe=False, json_dumps_params={"default": RealTimeData.to_dict})
+            results = session.query(RealTimeDataView).all()
+            serialised = RealTimeDataViewSerializer(results, many=True)
+
+            return  JsonResponse(serialised.data, safe=False)
 
         except ValueError as e:
             return Response(e.args[0],status.HTTP_400_BAD_REQUEST)
@@ -44,20 +46,29 @@ class DataAPI(APIView): #GET, POST
         return Response(status.HTTP_400_BAD_REQUEST)
 
 class RealtimeView(APIView):
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 
-        if len(args) > 1 :
+        if len(args) > 2 :
             return Response(status.HTTP_400_BAD_REQUEST)
 
-        #return all active data within the last 30 secs
-        last_30secs = datetime.datetime.now() - datetime.timedelta(minutes=0.5)
-        results = session.query(RealTimeDataView).filter(RealTimeDataView.Time > last_30secs).all() #.one_or_none() #RealTimeDataView.Time >= last_60secs
+        if len(args) > 1:
+            path: Request = args[0] #TasKID, WelderID, MachineID
+            qType = path.get_full_path().split('/')[-2]
+            id = args[1] #ID number
 
-        selected = connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_30secs)).fetchall() # Why does this work but not the above
+            qText = f'{qType.capitalize()}ID={id}'
 
-        serialised = RealTimeDataViewSerializer(selected, many=True)
+            results = connection.execute(select(RealTimeDataView).where(text(qText))).fetchall()
+            serialised = RealTimeDataViewSerializer(results, many=True)
+
+        else:
+            #return all active data within the last 30 secs
+            last_30secs = datetime.datetime.now() - datetime.timedelta(minutes=0.5)
+            #results = session.query(RealTimeDataView).filter(RealTimeDataView.Time > last_30secs).all() #.one_or_none() #RealTimeDataView.Time >= last_60secs
+            selected = connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_30secs)).fetchall() # Why does this work but not the above
+            serialised = RealTimeDataViewSerializer(selected, many=True)
 
         return JsonResponse(serialised.data, safe=False)
 

@@ -41,9 +41,10 @@ class ContractTaskSerializer(serializers.Serializer):
 
 class RealTimeDataViewSerializer(serializers.Serializer):
     
+    TaskID = serializers.IntegerField()
     RunNo = serializers.IntegerField()
-    Welder_id = serializers.IntegerField()
-    Machine_id = serializers.IntegerField()
+    WelderID = serializers.IntegerField()
+    MachineID = serializers.IntegerField()
     Time = serializers.DateTimeField()
     Current = serializers.FloatField()
     Voltage = serializers.FloatField()

@@ -17,9 +17,10 @@ class ContractTaskView(Base):
 class RealTimeDataView(Base):
     __tablename__ = "RealTimeView"
 
+    TaskID = Column(Integer, primary_key=True)
     RunNo = Column(Integer, primary_key=True)
-    Welder_id = Column(Integer)
-    Machine_id = Column(Integer)
+    WelderID = Column(Integer)
+    MachineID = Column(Integer)
     Time = Column(DateTime)
     Current = Column(Float)
     Voltage = Column(Float)
