@@ -20,6 +20,10 @@
     "@angular/platform-browser": "~13.3.0",
     "@angular/platform-browser-dynamic": "~13.3.0",
     "@angular/router": "~13.3.0",
+<<<<<<< HEAD
+=======
+    "echarts": "^5.3.2",
+>>>>>>> f9dbe20065d5b20fed589604c6ee2a5afe635447
     "ngx-echarts": "^8.0.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",

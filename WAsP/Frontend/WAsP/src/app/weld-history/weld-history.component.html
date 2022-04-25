@@ -1,0 +1,107 @@
+<h1>Weld History</h1>
+<mat-tab-group>
+    <mat-tab label="by Task">
+        
+        <ng-template matTabContent>
+            
+            <button style="border: 1px;" (click)="getSpecificationRun('2', '2')">
+                WPS 2, Run 2
+            </button>
+            <br><br>
+            <button style="border: 1px;" (click)="getRealtime()">
+                Realtime
+            </button>
+            <br><br>
+            <button style="border: 1px;" (click)="getTasks()">
+                Task Data
+            </button>
+
+            <h3>Filter:</h3>
+            <div>
+                <mat-form-field appearance="outline">
+                    <input type="text" formControlName="taskCtrl" placeholder="Task ID" matInput
+                        [matAutocomplete]="auto" required>
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let task of allTasks" [value]="task.TaskID">
+                            {{task.TaskID}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Date Range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+            </div>
+        </ng-template>
+    </mat-tab>
+
+
+    <mat-tab label="by Welder">
+
+        <ng-template matTabContent>
+            <h3>Filter:</h3>
+            <mat-form-field appearance="outline">
+                <input type="text" formControlName="taskCtrl" placeholder="Welder" matInput [matAutocomplete]="auto"
+                    required>
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let task of allTasks" [value]="task.FullName">
+                        {{task.FullName}}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Date Range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+                <input matStartDate placeholder="Start date">
+                <input matEndDate placeholder="End date">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+        </ng-template>
+
+    </mat-tab>
+    <mat-tab label="by Machine"> Machine ID
+
+
+        <ng-template matTabContent>
+            <h3>All Specifiction Data</h3>
+            <button style="border: 1px;" (click)="loadData()">
+                All data test button
+            </button>
+            <h3>Filter:</h3>
+            <div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Machine</mat-label>
+                    <input type="text" formControlName="taskCtrl" placeholder="Machine" matInput
+                        [matAutocomplete]="auto" required>
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let task of allTasks" [value]="task.MachineName">
+                            {{task.MachineName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                    <mat-label>Date Range</mat-label>
+                <mat-date-range-input [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date">
+                    <input matEndDate placeholder="End date">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+            </mat-form-field>
+
+
+            </div>
+            <app-data *ngFor="let spec of allSpec" [specification]="spec"></app-data>
+        </ng-template>
+
+    </mat-tab>
+</mat-tab-group>
