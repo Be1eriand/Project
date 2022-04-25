@@ -6,12 +6,15 @@ import { AuthGuard } from './_helpers';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
 const usersModule = () => import('./users/users.module').then(x => x.UsersModule);
+const weldHistoryModule = () => import('./weld-history/weld-history.module').then(x => x.WeldHistoryModule);
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
     //{ path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
     { path: 'account', loadChildren: accountModule },
     { path: 'users', loadChildren: usersModule },
+
+    { path: 'weld-history', loadChildren: weldHistoryModule },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }
