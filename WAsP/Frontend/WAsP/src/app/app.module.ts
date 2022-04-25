@@ -14,6 +14,7 @@ import { AccountService } from './_services'
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
+import { WidgetComponent }  from './realtime';
 
 
 //Components forthe previous project - not implemented and maybe removed at a later date
@@ -25,6 +26,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
 
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -40,6 +42,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
         MatProgressSpinnerModule,
         MatButtonModule,
         MatIconModule,
+        MatCardModule,
         NgxEchartsModule.forRoot({
             echarts
           }),
@@ -49,6 +52,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
         AlertComponent,
         HomeComponent,
         DashboardComponent,
+        WidgetComponent,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
