@@ -83,12 +83,12 @@ class WPSViewSerializer(serializers.Serializer):
     Voltage_Min = serializers.FloatField()
     Voltage_Max = serializers.FloatField()
     Polarity = serializers.CharField(max_length=100, read_only=True)
-    Travel_Speed_Min = serializers.FloatField()
-    Travel_Speed_Max = serializers.FloatField()
-    Interpass_Temp_Min = serializers.FloatField()
-    Interpass_Temp_Max = serializers.FloatField()
-    Heat_Input_Min = serializers.FloatField()
-    Heat_Input_Max = serializers.FloatField()
+    TravelSpeed_Min = serializers.FloatField()
+    TravelSpeed_Max = serializers.FloatField()
+    InterpassTemp_Min = serializers.FloatField()
+    InterpassTemp_Max = serializers.FloatField()
+    HeatInput_Min = serializers.FloatField()
+    HeatInput_Max = serializers.FloatField()
 
 class TaskViewSerializer(serializers.Serializer):
 

@@ -12,8 +12,8 @@ import { Observable } from 'rxjs';
 export class RealtimeService {
 
   constructor(
-    private router: Router,
-        private http: HttpClient
+      private router: Router,
+      private http: HttpClient
   ) { }
 
   getTaskData(): Observable<TaskView[]>{
@@ -22,6 +22,7 @@ export class RealtimeService {
 
   getAllRT(): Observable<RealTimeView[]> {
     return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime`)
+            .pipe();
   }
 
   getRTTask(task: string): Observable<RealTimeView> {

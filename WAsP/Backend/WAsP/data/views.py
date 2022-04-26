@@ -66,6 +66,7 @@ class RealtimeView(APIView):
         else:
             #return all active data within the last 30 secs
             last_30secs = datetime.datetime.now() - datetime.timedelta(minutes=0.5)
+            print(last_30secs)
             #results = session.query(RealTimeDataView).filter(RealTimeDataView.Time > last_30secs).all() #.one_or_none() #RealTimeDataView.Time >= last_60secs
             selected = connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_30secs)).fetchall() # Why does this work but not the above
             serialised = RealTimeDataViewSerializer(selected, many=True)
