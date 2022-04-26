@@ -11,12 +11,11 @@ const weldHistoryModule = () => import('./weld-history/weld-history.module').the
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-    //{ path: 'users', loadChildren: usersModule, canActivate: [AuthGuard] },
     { path: 'account', loadChildren: accountModule },
-    { path: 'users', loadChildren: usersModule },
-    { path: 'realtime', loadChildren: realtimeModule},
+    { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard]  },
+    { path: 'realtime', loadChildren: realtimeModule, canActivate: [AuthGuard] },
 
-    { path: 'weld-history', loadChildren: weldHistoryModule },
+    { path: 'weld-history', loadChildren: weldHistoryModule, canActivate: [AuthGuard]  },
 
     // otherwise redirect to home
     { path: '**', redirectTo: '' }

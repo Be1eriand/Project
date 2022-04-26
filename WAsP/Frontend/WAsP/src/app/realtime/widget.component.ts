@@ -14,7 +14,7 @@ import { RealTimeView } from '@app/_models';
 })
 
 export class WidgetComponent implements OnInit {
-    @Input() data: Observable<RealTimeView>;
+    @Input() data: RealTimeView;
 
     constructor(
         private http: HttpClient) {
