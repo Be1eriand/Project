@@ -1,20 +1,8 @@
 <div>
-    <div class="container">
-        <div class="row">
-            <div class="col-12" >
-                <button mat-button (click)="load()">Button 1</button>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-12">
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
+    <div class="content">
+        <div fxLayout="row wrap" fxLayoutGap="8px grid">
+            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let Data of RealTimeData | keyvalue">
+                <realtime-card [dataView]="Data.value"></realtime-card>
             </div>
         </div>
     </div>

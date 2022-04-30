@@ -1044,18 +1044,18 @@ FROM SmartFab.dbo.TaskAssignment t
 		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1184" y="304" />
 		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="1024" y="512" />
 		<group name="Django Admin" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="django_content_type" />
 			<entity schema="SmartFab.dbo" name="django_session" />
 			<entity schema="SmartFab.dbo" name="django_migrations" />
 			<entity schema="SmartFab.dbo" name="django_admin_log" />
+			<entity schema="SmartFab.dbo" name="django_content_type" />
 		</group>
 		<group name="Authorisation" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="auth_permission" />
 			<entity schema="SmartFab.dbo" name="auth_user_groups" />
-			<entity schema="SmartFab.dbo" name="auth_user" />
 			<entity schema="SmartFab.dbo" name="auth_group" />
 			<entity schema="SmartFab.dbo" name="auth_user_user_permissions" />
 			<entity schema="SmartFab.dbo" name="auth_group_permissions" />
+			<entity schema="SmartFab.dbo" name="auth_user" />
 		</group>
 		<group name="Procedures" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="WPS_Run" />
@@ -1084,9 +1084,9 @@ FROM SmartFab.dbo.TaskAssignment t
 			<entity schema="SmartFab.dbo" name="Assignment" />
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="JobContract" />
 			<entity schema="SmartFab.dbo" name="TaskAssociation" />
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
+			<entity schema="SmartFab.dbo" name="JobContract" />
 		</group>
 		<group name="WAsP Views" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="TaskView" />
@@ -1601,31 +1601,6 @@ FROM SmartFab.dbo.SpecificationView w;
 
 GO]]></string>
 		</script>
-		<query id="Query-a2c" name="Assignment" >
-			<query_table schema="SmartFab.dbo" name="Assignment" alias="a" x="48" y="48" >
-				<column name="TaskID" />
-				<column name="MachineID" />
-				<column name="WelderID" />
-				<query_table schema="SmartFab.dbo" name="RunTable" alias="r" x="208" y="48" fk="fk_WeldTable" type="Inner Join" >
-					<column name="RunNo" />
-					<query_table schema="SmartFab.dbo" name="WeldingTable" alias="w" x="400" y="48" fk="fk_WeldingTable_WeldTable" type="Inner Join" >
-						<query_table schema="SmartFab.dbo" name="RealTime_Data" alias="rd" x="608" y="48" fk="fk_WeldingTable_RealTime_Data" type="Inner Join" >
-							<column name="Time" />
-							<column name="Temperature" />
-							<column name="Current" />
-							<column name="Voltage" />
-							<column name="Length" />
-							<column name="WireFeedRate" />
-							<column name="GasUsed" />
-							<column name="HeatInput" />
-							<column name="TravelSpeed" />
-							<column name="TimeDelta" />
-							<column name="Power" />
-						</query_table>
-					</query_table>
-				</query_table>
-			</query_table>
-		</query>
 		<form name="Report" id="Report-e01" template="Page" css="container-fluid" view="frame" >
 			<body name="Body" template="Grid" pos="0,0,0,0,f,f" layout="{{-2},{-2}}" scroll="n" html="n" />
 		</form>

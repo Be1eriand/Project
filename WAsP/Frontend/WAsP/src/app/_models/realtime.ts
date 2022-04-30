@@ -5,7 +5,7 @@ export class TaskData { //This is the RealTime Task Data
     RunNo: string;
 }
 
-export class RealTimeData { // Is this needed?
+export class RealTimeData { // Is this needed? Yes it is
     Time: string;
     Current: string;
     Voltage: string;
