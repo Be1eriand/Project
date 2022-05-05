@@ -2,13 +2,15 @@ import datetime
 from pprint import pprint
 from django.db import IntegrityError, connection
 from rest_framework.request import Request
-from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, QueryDict
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
-from sqlalchemy import text, select
+from sqlalchemy import text, select, and_
+
+import logging
 
 #Serialisers
 from .serializers import *
@@ -18,34 +20,23 @@ from Models.Realtime import *
 from Models.WeldProcedures import *
 from Models.Contract import *
 from Models.Views import *
+from Models.Productivity import *
 
 session = settings.SESSION
 connection = settings.CONNECTION
 
-# Create your views here.
-class DataAPI(APIView): #GET, POST
-    #permission_classes = (IsAuthenticated,)
+#Logger to handle the debugging at this stage
+#logger = logging.getLogger()
+#logger.setLevel(logging.INFO)
+#formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s', '%m-%d-%Y %H:%M:%S')
+#
+#file_handler = logging.FileHandler('sql.log')
+#file_handler.setLevel(logging.INFO)
+#file_handler.setFormatter(formatter)
+#
+#logger.addHandler(file_handler)
 
-    def get(self, *args):
-
-        request: Request = args[0] 
-
-        try:
-            results = session.query(RealTimeDataView).all()
-            serialised = RealTimeDataViewSerializer(results, many=True)
-
-            return  JsonResponse(serialised.data, safe=False)
-
-        except ValueError as e:
-            return Response(e.args[0],status.HTTP_400_BAD_REQUEST)
-
-    def post(self, *args):
-
-        request: Request = args[0]
-
-        return Response(status.HTTP_400_BAD_REQUEST)
-
-class RealtimeView(APIView):
+class RealtimeView(APIView): #Read Only -> Get
     permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
@@ -64,20 +55,26 @@ class RealtimeView(APIView):
             serialised = RealTimeDataViewSerializer(results, many=True)
 
         else:
-            #return all active data within the last 30 secs
-            last_30secs = datetime.datetime.now() - datetime.timedelta(minutes=0.5)
-            print(last_30secs)
+            query_params: QueryDict = args[0].query_params
+            #return all active data within the last x secs
+            secs = float(query_params['seconds']) if 'seconds' in query_params else 30.0
+            last_x_secs = datetime.datetime.now() - datetime.timedelta(seconds=secs)
+
+            task = query_params['task'] if 'task' in query_params else ''
+            run = query_params['run'] if 'run' in query_params else ''
+
+            qText = f''
+            if task != '':
+                qText = f'TaskID={task} AND RunNo={run}' if run != '' else f'TaskID={task}'
+
             #results = session.query(RealTimeDataView).filter(RealTimeDataView.Time > last_30secs).all() #.one_or_none() #RealTimeDataView.Time >= last_60secs
-            selected = connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_30secs)).fetchall() # Why does this work but not the above
+            # Why does the below work but not the above
+            selected = connection.execute(select(RealTimeDataView).where(and_(text(qText),RealTimeDataView.Time > last_x_secs))).fetchall() if qText != '' else connection.execute(select(RealTimeDataView).where(RealTimeDataView.Time > last_x_secs)).fetchall()
+            
             serialised = RealTimeDataViewSerializer(selected, many=True)
 
         return JsonResponse(serialised.data, safe=False)
 
-    def post(self, *args):
-
-        request: Request = args[0]
-
-        return Response(status.HTTP_400_BAD_REQUEST)
 
 class SpecificationView(APIView): #Follows CRUD
     permission_classes = (IsAuthenticated,)
@@ -91,10 +88,11 @@ class SpecificationView(APIView): #Follows CRUD
 
         if wps is not None:
             
-            qText = f'WPS_No={wps} and Run_No={run}' if run is not None else f'WPS_No={wps}' 
-            
-        data = session.query(WPSView).filter(text(qText)).all()
-        
+            qText = f'WPS_No={wps} and Run_No={run}' if run is not None else f'WPS_No={wps}'
+
+        #data = session.query(WPSView).filter(text(qText)).all()
+        data = connection.execute(select(WPSView).where(text(qText))).fetchall() #Why does this work but not the above?
+
         serialised = WPSViewSerializer(data, many=True)
 
         return JsonResponse(serialised.data, safe=False)
@@ -284,3 +282,58 @@ class TaskAssignmentView(APIView):    #Follows CRUD
         request: Request = args[0]
 
         return Response(status.HTTP_400_BAD_REQUEST)
+
+class MachineView(APIView):    #Get Only at this point
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, *args):
+        
+        data = session.query(MachinesView).all()
+
+        serialised = MachinesViewSerializer(data, many=True)
+
+        return JsonResponse(serialised.data, safe=False)
+
+class WelderView(APIView):    #Get Only at this point
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, *args):
+        
+        data = session.query(Employees).all()
+
+        serialised = WelderViewSerializer(data, many=True)
+
+        return JsonResponse(serialised.data, safe=False)
+
+class TaskSpecView(APIView):    #Get Only at this point
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, *args):
+        
+        task= args[1] if len(args)>=2 else None 
+        run= args[2] if len(args)>=3 else None
+
+        qText = ''
+
+        if task is not None:
+            
+            qText = f'id={task} and Run_No={run}' if run is not None else f'TaskID={task}'
+
+        data = session.query(SpecTaskView).filter(text(qText)).all()
+        
+        #data = session.query(SpecTaskView).all()
+
+        serialised = SpecTaskViewSerializer(data, many=True)
+        
+        return JsonResponse(serialised.data, safe=False)
+
+class SpecListView(APIView):    #Get Only at this point
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, *args):
+        
+        data = session.query(WPSView).all()
+
+        serialised = SpecViewSerializer(data, many=True)
+
+        return JsonResponse(serialised.data, safe=False)            

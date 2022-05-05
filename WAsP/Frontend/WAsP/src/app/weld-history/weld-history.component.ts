@@ -12,6 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class WeldHistoryComponent implements OnInit {
 
   allSpec: Specification[];
+  specs: Specification[];
   spec: Specification;
 
   allTasks: TaskView[];
@@ -38,7 +39,7 @@ export class WeldHistoryComponent implements OnInit {
   }
 
   getSpecification(id: string){
-    this.specificationService.getSpec(id).subscribe((spec) => this.spec = spec);
+    this.specificationService.getSpec(id).subscribe((spec) => this.specs = spec);
     console.log(this.spec)
   }
 

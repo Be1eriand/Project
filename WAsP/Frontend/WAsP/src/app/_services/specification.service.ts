@@ -20,12 +20,20 @@ export class SpecificationService {
     return this.http.get<Specification[]>(`${environment.apiUrl}/data/specification`)
   }
 
-  getSpec(spec: string): Observable<Specification> {
-    return this.http.get<Specification>(`${environment.apiUrl}/data/specification/${spec}`)
+  getSpec(spec: string): Observable<Specification[]> {
+    return this.http.get<Specification[]>(`${environment.apiUrl}/data/specification/${spec}`)
   }
 
   getSpecRun(spec: string, run: string): Observable<Specification> {
     return this.http.get<Specification>(`${environment.apiUrl}/data/specification/${spec}/${run}`)
+  }
+
+  updateSpec(spec: string, params: any): Observable<Specification>{
+    return this.http.put<Specification>(`${environment.apiUrl}/data/specification/${spec}`, params)
+  }
+
+  updateSpecRun(spec: string, run: string, params: any): Observable<Specification>{
+    return this.http.put<Specification>(`${environment.apiUrl}/data/specification/${spec}/${run}`, params)
   }
 
 }

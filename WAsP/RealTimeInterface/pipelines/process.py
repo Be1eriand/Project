@@ -9,6 +9,7 @@ class ProcessDataPipe(Pipe):
 
     def process_data(self, dict):
 
+        print("Processing Conversion")
         prevtime = dict['prevtime']
         data: SensorData = dict['data']
         processed_data = {}

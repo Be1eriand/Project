@@ -14,6 +14,6 @@
     </mat-card-subtitle> 
   </mat-card-header>
   <mat-card-content> 
-    <div echarts [options]="chartOption" class="realtime-chart"></div>
+    <div echarts [options]="chartOption" (chartInit)="onChartInit($event)" class="realtime-chart"></div>
   </mat-card-content>
 </mat-card>

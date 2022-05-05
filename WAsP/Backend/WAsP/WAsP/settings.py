@@ -199,7 +199,7 @@ from sqlalchemy.exc import IntegrityError
 
 from Models.models import Base
 
-params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;')
+params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;MARS_Connection=yes;')
 ENGINE = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
         
 CONNECTION = ENGINE.connect()

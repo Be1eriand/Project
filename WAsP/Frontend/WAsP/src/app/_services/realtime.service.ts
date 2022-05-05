@@ -17,12 +17,15 @@ export class RealtimeService {
   ) { }
 
   getTaskData(): Observable<TaskView[]>{
-    return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks/`)
+    return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks/`);
   }
 
   getAllRT(): Observable<RealTimeView[]> {
-    return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime`)
-            .pipe();
+    return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime`);
+  }
+
+  getRT(task: string, run: string, seconds: string): Observable<RealTimeView[]> {
+    return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime?seconds=${seconds}&task=${task}&run=${run}`);
   }
 
   getRTTask(task: string): Observable<RealTimeView> {

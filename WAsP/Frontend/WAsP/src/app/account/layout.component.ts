@@ -9,7 +9,6 @@ export class LayoutComponent {
         private accountService: AccountService,
         private route: ActivatedRoute
     ) {
-        console.log(this.route.toString());
         // redirect to home if already logged in
         if (this.accountService.userValue) {
             this.router.navigate(['/']);

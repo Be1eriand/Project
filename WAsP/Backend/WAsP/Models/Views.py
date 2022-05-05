@@ -44,7 +44,7 @@ class AlertView(Base):
     EndTime = Column(DateTime)
 
 class WPSView(Base):
-    __tablename__ = "SpecificationView"
+    __tablename__ = "WPSView"
 
     id = Column(Integer, primary_key=True)
     WPS_No = Column(Integer)
@@ -75,3 +75,30 @@ class TaskView(Base):
     WPS_No = Column(Integer)
     FullName = Column(String)
     MachineName = Column(String)
+
+class SpecTaskView(Base):
+    __tablename__ = "SpecificationView"
+
+    id = Column(Integer, primary_key=True)
+    Welderid = Column(Integer)
+    Machineid = Column(Integer) 
+    WPS_No = Column(Integer)
+    Welding_Code = Column(String)
+    Joint_type = Column(String)
+    Run_No = Column(Integer)
+    Side = Column(String)
+    Position = Column(String)
+    Class = Column(String)
+    Size = Column(Float)
+    Gas_Flux_Type = Column(String)
+    Current_Min = Column(Float)
+    Current_Max = Column(Float)
+    Voltage_Min = Column(Float)
+    Voltage_Max = Column(Float)
+    Polarity = Column(String)
+    TravelSpeed_Min = Column(Float)
+    TravelSpeed_Max = Column(Float)
+    InterpassTemp_Min = Column(Float)
+    InterpassTemp_Max = Column(Float)
+    HeatInput_Min = Column(Float)
+    HeatInput_Max = Column(Float)

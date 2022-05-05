@@ -1,0 +1,48 @@
+<div class="container">
+  <div class="row">
+    <form>
+      <mat-form-field appearance="fill">
+        <mat-label>Welding Procedure Specification</mat-label>
+        <input type="text"
+               placeholder="Select Specification"
+               aria-label="Specification"
+               matInput
+               [formControl]="specFilter"
+               [matAutocomplete]="auto">
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option *ngFor="let Specification of filteredOptions | async" [value]="Specification.WPS_No">
+            {{Specification.WPS_No}}
+            </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="row">
+    <div class="row">
+      <button mat-flat-button class="btn btn-warning text-center" type="button">Add</button>
+      <button mat-flat-button class="btn btn-warning text-center" type="button">Edit</button>
+    </div>
+    <div class="row">
+      <div *ngIf="SpecLoaded">
+          <mat-tab-group dynamicHeight>
+            <div *ngFor="let Specification of Specifications"> 
+            <mat-tab label="Run {{Specification.Run_No}}">
+              <div class="mat-elevation-z4">
+                <form>
+                  <div>
+                    <mat-form-field appearance="fill" *ngFor="let Data of Specification | keyvalue">
+                      <mat-label>{{Data.key}}</mat-label>
+                      <input type="text"
+                        value="{{Data.value}}"
+                        matInput>
+                </mat-form-field>
+                </div>
+                </form> 
+              </div>
+            </mat-tab>
+          </div>
+          </mat-tab-group>
+      </div>
+    </div>
+  </div>
+</div>

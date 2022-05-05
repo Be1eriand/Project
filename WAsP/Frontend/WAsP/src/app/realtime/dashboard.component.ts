@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { DataService, AlertService, AccountService } from '@app/_services';
@@ -9,7 +9,7 @@ import { RealtimeService } from '@app/_services/realtime.service';
 import { TaskData } from '@app/_models';
 
 @Component({ templateUrl: 'dashboard.component.html' })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnChanges {
     loading = false;
     RealTimeData: {};
     interval: any;
@@ -24,17 +24,17 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.load();
-        this.interval = setInterval(() => {
-            if (this.accountservice.userValue) {
-            this.load();} else {
-                clearInterval(this.interval);
-            }
-        }, 1000);
+        if (this.accountservice.userValue) {
+            this.loadRTData();
+        }
     }
 
-    public load() {
-        this.realtimeSerivce.getAllRT()
+    ngOnChanges(changes: SimpleChanges): void {
+
+    }
+
+    public loadRTData() {
+        this.realtimeSerivce.getRT("", "", "30.0")
         .subscribe({
             next: (rt) => {this.RealTimeData = rt.reduce(
                 function (obj , item) {
@@ -62,7 +62,6 @@ export class DashboardComponent implements OnInit {
             },
         error: error => {
             this.alertService.error(error);
-            this.loading = false;
             clearInterval(this.interval);
             }
         });
