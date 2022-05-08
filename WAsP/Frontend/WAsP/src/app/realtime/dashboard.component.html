@@ -1,9 +1,16 @@
 <div>
     <div class="content">
-        <div fxLayout="row wrap" fxLayoutGap="8px grid">
-            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let Data of RealTimeData | keyvalue">
-                <realtime-card [dataView]="Data.value"></realtime-card>
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4">
+                <h1>Real Time Views</h1>
             </div>
+            <div class="col-4"></div>
         </div>
+        <div fxLayout="row wrap" fxLayoutGap="8px grid">
+            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" >
+                <realtime-card [Data]="data.Data" [Spec]="data.Spec" [Task]="data.Task" class="realtime-widget"></realtime-card>
+            </div>
+        </div> 
     </div>
 </div>

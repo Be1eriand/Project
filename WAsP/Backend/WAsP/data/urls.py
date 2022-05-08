@@ -33,4 +33,6 @@ urlpatterns = [
     re_path(r'^specificationview/(\d+)$', views.TaskSpecView.as_view()),
     re_path(r'^specificationview/(\d+)/(\d+)/$', views.TaskSpecView.as_view()),
 
+    #Testing to see if this works URLS
+    re_path(r'^test/$', views.ActiveMachinesView.as_view()),
 ]

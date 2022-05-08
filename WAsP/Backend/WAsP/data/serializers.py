@@ -138,3 +138,10 @@ class SpecTaskViewSerializer(serializers.Serializer):
     InterpassTemp_Max = serializers.FloatField()
     HeatInput_Min = serializers.FloatField()
     HeatInput_Max = serializers.FloatField()
+
+class ActiveViewSerializer(serializers.Serializer):
+
+    TaskID = serializers.IntegerField()
+    RunNo = serializers.IntegerField()
+    WelderID = serializers.IntegerField()
+    MachineID = serializers.IntegerField()

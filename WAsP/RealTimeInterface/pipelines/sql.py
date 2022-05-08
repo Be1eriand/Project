@@ -70,16 +70,16 @@ class SqlWriterPipe(Pipe):
 
             else:
                 assignment=record
-
+                
                 queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
                 record = session.query(RunTable).filter(text(queryText)).one_or_none()
 
-                if (record is None):
-                    weldtable = RunTable(
-                        RunNo=data.runid
-                    )
-                else: 
-                    weldtable = record
+            if (record is None):
+                weldtable = RunTable(
+                    RunNo=data.runid
+                )
+            else: 
+                weldtable = record
             
             weldtable.assignment = assignment
 

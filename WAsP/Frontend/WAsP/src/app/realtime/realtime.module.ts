@@ -8,7 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { RealtimeRoutingModule } from './realtime-routing.module';
 
-import { LayoutComponent } from './layout.component';
 import { DashboardComponent } from './dashboard.component';
 import { WidgetComponent } from './widget.component';
 
@@ -24,7 +23,6 @@ import { WidgetComponent } from './widget.component';
           }),
     ],
     declarations: [
-        LayoutComponent,
         DashboardComponent,
         WidgetComponent,
     ]

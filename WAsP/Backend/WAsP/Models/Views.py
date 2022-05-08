@@ -102,3 +102,11 @@ class SpecTaskView(Base):
     InterpassTemp_Max = Column(Float)
     HeatInput_Min = Column(Float)
     HeatInput_Max = Column(Float)
+
+class ActiveView(Base):
+    __tablename__ = "ActiveView"
+
+    TaskID = Column(Integer, primary_key=True)
+    RunNo = Column(Integer)
+    WelderID = Column(Integer)
+    MachineID = Column(Integer)

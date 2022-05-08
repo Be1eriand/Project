@@ -336,4 +336,39 @@ class SpecListView(APIView):    #Get Only at this point
 
         serialised = SpecViewSerializer(data, many=True)
 
-        return JsonResponse(serialised.data, safe=False)            
+        return JsonResponse(serialised.data, safe=False)
+
+class ActiveMachinesView(APIView):
+    #permission_classes = (IsAuthenticated,)
+
+    def get(self, *args):
+
+        data = {}
+        
+        activeRecords = session.query(ActiveView).all()
+
+        serialised = ActiveViewSerializer(activeRecords, many=True)
+
+
+        data['active'] = serialised.data
+
+        for active in activeRecords:
+            selected = {}
+
+            qText = f'id={active.TaskID} AND Run_No={active.RunNo}'
+
+            #wpsRecords = session.query(SpecTaskView).filter(text(qText)).all()
+            wpsRecords = connection.execute(select(SpecTaskView).where(text(qText))).fetchall()
+            serialised = WPSViewSerializer(wpsRecords, many=True)
+            selected['WPS'] = serialised.data
+
+            qText = f'TaskID={active.TaskID} AND RunNo={active.RunNo}'
+            last_x_secs = datetime.datetime.now() - datetime.timedelta(seconds=30.0)
+            #rtRecords = session.query(RealTimeDataView).filter(and_(text(qText),RealTimeDataView.Time > 30.00)).all()
+            rtRecords = connection.execute(select(RealTimeDataView).where(and_(text(qText),RealTimeDataView.Time > last_x_secs))).fetchall()
+            serialised = RealTimeSerializer(rtRecords, many=True)
+            selected['RT'] = serialised.data
+
+            data[active.TaskID] = selected
+
+        return JsonResponse(data, safe=False)

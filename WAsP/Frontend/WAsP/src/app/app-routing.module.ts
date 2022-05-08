@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { HomeComponent } from './home';
+import { DashboardComponent } from './dashboard/dashboard.component';
 import { AuthGuard } from './_helpers';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
@@ -12,6 +13,7 @@ const weldHistoryModule = () => import('./weld-history/weld-history.module').the
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'dashboard', component: DashboardComponent },
     { path: 'account', loadChildren: accountModule },
     { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard]  },
     { path: 'realtime', loadChildren: realtimeModule, canActivate: [AuthGuard] },

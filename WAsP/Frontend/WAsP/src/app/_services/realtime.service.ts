@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Params, Router } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { RealTimeView } from '@app/_models';
 import { TaskView } from '@app/_models';
 import { environment } from '@environments/environment';
 import { Observable } from 'rxjs';
+
+import { RealTimeView } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
@@ -39,5 +40,4 @@ export class RealtimeService {
   getRTMachine(machine: string): Observable<RealTimeView> {
     return this.http.get<RealTimeView>(`${environment.apiUrl}/data/realtime/machine/${machine}`)
   }
-
 }

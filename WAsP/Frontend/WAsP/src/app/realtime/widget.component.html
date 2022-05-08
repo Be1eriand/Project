@@ -2,15 +2,17 @@
   <mat-card-header>
     <mat-card-title>
       <div class="row">
-      <div>Task ID: {{Task.TaskID}}</div>
-      <div> Run No: {{Task.RunNo}}</div>
-    </div>
-    </mat-card-title> <!--  -->
+        <div class="col-2"></div>
+        <div class="col-8 justify-center">Machine ID: {{Task.MachineID}}</div>
+        <div class="col-2"></div>
+      </div>
+    </mat-card-title>
     <mat-card-subtitle>
       <div class="row">
-        <div>Welder ID: {{Task.WelderID}}</div>
-        <div> Machine ID: {{Task.MachineID}}</div>
-      </div>
+          <div class="col-4 justify-center">Task ID: {{Task.TaskID}}</div>
+          <div class="col-4 justify-center">Welder ID: {{Task.WelderID}}</div>
+          <div class="col-4 justify-center">Run No: {{Task.RunNo}}</div>
+        </div>
     </mat-card-subtitle> 
   </mat-card-header>
   <mat-card-content> 

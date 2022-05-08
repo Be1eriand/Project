@@ -1,9 +1,8 @@
-import { Component, OnInit, OnChanges, Input, SimpleChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { EChartsOption, EChartsType } from 'echarts';
 
-import { RealTimeView, RealTimeData, TaskData, Specification } from '@app/_models';
-import { AlertService, AccountService, DataService, RealtimeService } from '@app/_services';
+import { RealTimeData, TaskData, Specification } from '@app/_models';
+import { DataService, SocketService } from '@app/_services';
 
 @Component({ 
     selector: 'realtime-card',
@@ -11,12 +10,10 @@ import { AlertService, AccountService, DataService, RealtimeService } from '@app
     styleUrls: ['widget.component.sass'],    
 })
 
-export class WidgetComponent implements OnInit, OnChanges {
-    @Input() dataView: RealTimeView[];
-    Task: TaskData = new TaskData();
-    data: RealTimeData[];
-    spec: Specification;
-    interval: any;
+export class WidgetComponent implements OnInit, OnDestroy {
+    @Input() Data: RealTimeData[];
+    @Input() Spec: Specification;
+    @Input() Task: TaskData;
 
     displayList = ['Current', 'Voltage'];
 
@@ -46,98 +43,27 @@ export class WidgetComponent implements OnInit, OnChanges {
       };
 
     constructor(
-        private http: HttpClient,
-        private accountservice: AccountService,
-        private alertService: AlertService,
         private dataService: DataService,
-        private realTimeService: RealtimeService,
+        private socketService: SocketService,
         ) {
     }
 
     ngOnInit(): void {
+        this.updateChart();
+    }
+
+    ngOnDestroy(): void {
     }
 
     onChartInit(ec) {
         this.echartsInstance = ec;
     }
 
-    ngOnChanges(changes: SimpleChanges) {
-
-        this.Task = this.dataView.shift();
-
-        this.data = this.dataView.reduce( function(obj , element) {
-
-            delete element.TaskID;
-            delete element.WelderID;
-            delete element.RunNo;
-            delete element.MachineID;
-
-            var rtd = new RealTimeData();
-
-            for (let key in element) {
-                rtd[key] = element[key];
-            }
-
-            obj.push(rtd);
-
-            return obj;
-        }, []);
-
-        this.loadSpecData(this.Task.TaskID, this.Task.RunNo);
-
-        if (this.accountservice.userValue) {
-            this.loadRTData(this.Task.TaskID, this.Task.RunNo);
-            this.interval = setInterval(() => {
-                if (this.accountservice.userValue) {
-                    this.updateChart();
-                } else {
-                    clearInterval(this.interval);
-                }
-            }, 1000);
-        };
-    }
-    
-    private loadSpecData(task: string, run: string){
-
-        this.dataService.getTaskRun(task, run).subscribe({
-            next: (spec) => { 
-                this.spec = spec[0];
-            }
-        });
-        
-    }
-
-    private loadRTData(Task: string, Run: string) {
-        this.realTimeService.getRT(Task, Run, '30.0').subscribe({
-            next: (rt) => { 
-                if (rt.length == 0) clearInterval(this.interval);
-                
-                this.data = rt.reduce( function(obj , element) {
-
-                    delete element.TaskID;
-                    delete element.WelderID;
-                    delete element.RunNo;
-                    delete element.MachineID;
-        
-                    var rtd = new RealTimeData();
-        
-                    for (let key in element) {
-                        rtd[key] = element[key];
-                    }
-        
-                    obj.push(rtd);
-        
-                    return obj;
-                }, []);
-            }
-        });
-    }
-
     private updateChart() {
 
-        this.loadRTData(this.Task.TaskID, this.Task.RunNo);
+        console.log('Chart is updating');
 
-        let time = getTimeStream(this.data);
+        let time = getTimeStream(this.Data);
 
         let min = time.reduce(function (a, b) { return a < b ? a : b; });
         let max = time.reduce(function (a, b) { return a > b ? a : b; });
@@ -147,14 +73,14 @@ export class WidgetComponent implements OnInit, OnChanges {
 
         this.displayList.forEach((d) => {dataList.push({
             type: 'line',
-            data: getDataPair(this.data, d, 'Time'),
+            data: getDataPair(this.Data, d, 'Time'),
             showSymbol: false ,
             animation: false ,
             yAxisIndex: yAxisIndex++,
             })
         });
 
-        for (const [_, value] of Object.entries(getLimits(this.spec, time, 'Current'))) {
+        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Current'))) {
             dataList.push({
             type: 'line',
             data: value,
@@ -164,7 +90,7 @@ export class WidgetComponent implements OnInit, OnChanges {
             })
         }
 
-        for (const [_, value] of Object.entries(getLimits(this.spec, time, 'Voltage'))) {
+        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Voltage'))) {
             dataList.push({
             type: 'line',
             data: value,
@@ -175,7 +101,6 @@ export class WidgetComponent implements OnInit, OnChanges {
         }
 
         this.chartOption = updateChartOptions(this.chartOption, dataList, min, max, time);
-        this.echartsInstance.setOption(this.chartOption);
     }
       
 }
@@ -201,7 +126,7 @@ function updateChartOptions(chartOption: EChartsOption, list: any[], min: string
 }
 
 function getLimits(spec: Specification, time: any[], limit: string) {
-
+    
     let max = spec[limit + '_Max'];
     let min = spec[limit + '_Min'];
 

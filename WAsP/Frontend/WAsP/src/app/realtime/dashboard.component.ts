@@ -1,69 +1,44 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { DataService, AlertService, AccountService } from '@app/_services';
-import { SpecificationService } from '@app/_services/specification.service';
-import { RealtimeService } from '@app/_services/realtime.service';
-
-
-import { TaskData } from '@app/_models';
+import { AlertService, AccountService,  SocketService } from '@app/_services';
 
 @Component({ templateUrl: 'dashboard.component.html' })
-export class DashboardComponent implements OnInit, OnChanges {
-    loading = false;
-    RealTimeData: {};
-    interval: any;
+export class DashboardComponent implements OnInit, OnDestroy  {
+
+    ActiveTasks: any[];
 
     constructor(
-        private specificationService: SpecificationService,
-        private realtimeSerivce: RealtimeService,
-        private http: HttpClient,
+        private socketService: SocketService,
         private alertService: AlertService,
         private accountservice: AccountService,
-        ) {
-    }
+        ) {}
 
     ngOnInit(): void {
         if (this.accountservice.userValue) {
-            this.loadRTData();
+
+            this.socketService.getActiveMachines2().subscribe({
+                next: (td) => {
+                    let arr = []
+
+                    td['active'].forEach(function (item) {
+                        let t = item.TaskID;
+                        let mappped = {};
+                        mappped['Task'] = item;
+                        mappped['Spec'] = td[t]['WPS'];
+                        mappped['Data'] = td[t]['RT'];
+                        arr.push(mappped);
+                    })
+                    this.ActiveTasks = arr;
+
+                },
+                error: error => {
+                    this.alertService.error(error);
+                }
+            })
         }
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-
-    }
-
-    public loadRTData() {
-        this.realtimeSerivce.getRT("", "", "30.0")
-        .subscribe({
-            next: (rt) => {this.RealTimeData = rt.reduce(
-                function (obj , item) {
-
-                    var key: string = item.TaskID;
-
-                    if (!obj.hasOwnProperty(key)) {
-
-                        let task = new TaskData();
-                        obj[key] = [];
-
-                        task.TaskID = item.TaskID;
-                        task.WelderID = item.WelderID;
-                        task.RunNo = item.RunNo;
-                        task.MachineID = item.MachineID;
-
-                        obj[key].push(task)
-                    }
-
-                    obj[key].push(item); //tsconfig.json -> "noImplicitAny": false -> override the error for implicit any
-                    return obj;
-
-                }, {})
-            
-            },
-        error: error => {
-            this.alertService.error(error);
-            clearInterval(this.interval);
-            }
-        });
+    ngOnDestroy(): void {
+        this.socketService.tdSocketListener.unsubscribe();
     }
 }

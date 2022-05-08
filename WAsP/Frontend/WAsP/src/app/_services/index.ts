@@ -3,3 +3,4 @@ export {AccountService} from './account.service'
 export {DataService} from './data.service'
 export {RealtimeService} from './realtime.service';
 export {SpecificationService} from './specification.service';
+export {SocketService} from './socket.service'
