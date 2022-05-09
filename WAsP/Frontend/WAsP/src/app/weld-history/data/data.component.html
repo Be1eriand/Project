@@ -1,26 +1,6 @@
-<!--Get All Specifications-->
-<h4> WPS No: {{ specification.WPS_No }}</h4>
-<ul>
 
-    <li>Welding Code: {{ specification.Welding_Code}}</li>
-    <li>Joint Type: {{ specification.Joint_type }}</li>
-    <li>Run No: {{ specification.Run_No }}</li>
-    <li> Side: {{ specification.Side }}</li>
-    <li>Position: {{ specification.Position }}</li>
-    <li>Class: {{ specification.Class }}</li>
-    <li>Size: {{ specification.Size }}</li>
-    <li>Gas Flux Type: {{ specification.Gas_Flux_Type }}</li>
-    <li>Current Min: {{ specification.Current_Min }}</li>
-    <li>Current Max: {{ specification.Current_Max }}</li>
-    <li>Voltage Min: {{ specification.Voltage_Min }}</li>
-    <li>Voltage Max: {{ specification.Voltage_Max }}</li>
-    <li>Polarity: {{ specification.Polarity }}</li>
-    <li>Travel Spped Min: {{ specification.Travel_Speed_Min }}</li>
-    <li>Travel Speed Max: {{ specification.Travel_Speed_Max }}</li>
-    <li>Interpass Temp Min: {{ specification.Interpass_Temp_Min }}</li>
-    <li> Interpass Temp Max: {{ specification.Interpass_Temp_Max}}</li>
-    <li>Heat Input Min: {{ specification.Heat_Input_Min }}</li>
-    <li>Heat Input Max: {{ specification.Heat_Input_Max }}</li>
 
-</ul>
-<!--Get Single Spec-->
+<div echarts [options]="chartOptions" class="demo-chart"></div>
+<div echarts [options]="gradientOptions" class="demo-chart"></div>
+
+<h4>{{ realtime  | json}}</h4>

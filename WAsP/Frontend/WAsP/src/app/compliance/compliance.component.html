@@ -1,0 +1,28 @@
+<h1>Compliance Report</h1>
+
+<div>
+    <form class="weld-history-form" [formGroup]="contractForm" (ngSubmit)="contractSubmit()">
+        <mat-label>Select:</mat-label>
+        <mat-form-field appearance="outline">
+            <mat-label>Task ID</mat-label>
+            <input type="text" (keyup)="taskOnKey($event)" formControlName="contractName" matInput [matAutocomplete]="auto"
+                required>
+            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let contract of contracts" [value]="contract">
+                    {{contract}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <button mat-raised-button color="primary" type="submit">Run Report</button>
+
+        <button *ngIf="showTask" mat-stroked-button color="primary" type="submit"
+            >Export To PDF</button>
+
+    </form>
+
+    <div *ngIf="showTask" #pdfWelders>
+        <p>hello</p>
+    </div>
+
+
+</div>
