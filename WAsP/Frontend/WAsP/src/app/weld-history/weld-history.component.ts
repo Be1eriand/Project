@@ -6,7 +6,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { map, Observable, startWith } from 'rxjs';
 
 const pdfMake = require('pdfmake/build/pdfmake.js');
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
 const htmlToPdfmake = require("html-to-pdfmake");
 (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
