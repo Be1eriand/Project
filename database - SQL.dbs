@@ -1147,12 +1147,12 @@ FROM SmartFab.dbo.WPS w
 		<group name="WAsP Views" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="ContractTaskView" />
 			<entity schema="SmartFab.dbo" name="WPSView" />
-			<entity schema="SmartFab.dbo" name="SpecificationView" />
 			<entity schema="SmartFab.dbo" name="AlertView" />
 			<entity schema="SmartFab.dbo" name="MachineView" />
 			<entity schema="SmartFab.dbo" name="ActiveView" />
 			<entity schema="SmartFab.dbo" name="TaskView" />
 			<entity schema="SmartFab.dbo" name="RealTimeView" />
+			<entity schema="SmartFab.dbo" name="SpecificationView" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 

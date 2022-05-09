@@ -36,7 +36,6 @@ export class SpecificationService {
     return this.http.put<Specification>(`${environment.apiUrl}/data/specification/${spec}/${run}`, params)
   }
 
-}
   getAllContracts(): Observable<ContractTaskView[]> {
     return this.http.get<ContractTaskView[]>(`${environment.apiUrl}/data/contracts`);
   }

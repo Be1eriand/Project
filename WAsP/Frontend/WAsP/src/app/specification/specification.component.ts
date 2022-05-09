@@ -42,8 +42,7 @@ export class SpecificationComponent implements OnInit {
       next: (value) => {
         this.SpecLoaded = false;
         if (value !== '') {
-        this.loadSpecification(value);
-        console.log(this.Specifications);
+          this.loadSpecification(value);
         }
       },
       error: error => {

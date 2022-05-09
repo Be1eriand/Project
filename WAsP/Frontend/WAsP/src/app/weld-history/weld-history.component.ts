@@ -17,7 +17,6 @@ const htmlToPdfmake = require("html-to-pdfmake");
   styleUrls: ['./weld-history.component.sass']
 })
 export class WeldHistoryComponent implements OnInit {
-
   taskForm: FormGroup;
   welderForm: FormGroup;
   machineForm: FormGroup;
