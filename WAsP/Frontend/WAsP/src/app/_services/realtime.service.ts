@@ -21,6 +21,10 @@ export class RealtimeService {
     return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks/`);
   }
 
+  getTask(task: string): Observable<TaskView[]>{
+    return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks/${task}`)
+  }
+
   getAllRT(): Observable<RealTimeView[]> {
     return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime`);
   }
@@ -41,3 +45,6 @@ export class RealtimeService {
     return this.http.get<RealTimeView>(`${environment.apiUrl}/data/realtime/machine/${machine}`)
   }
 }
+
+
+    
