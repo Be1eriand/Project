@@ -1,41 +1,75 @@
 <h1>Weld History</h1>
 <mat-tab-group>
     <mat-tab label="by Task">
-        
+
         <ng-template matTabContent>
-            
-            <button style="border: 1px;" (click)="getSpecificationRun('2', '2')">
-                WPS 2, Run 2
+
+            <!--Test API calls-->
+            <button style="border: 1px;" (click)="getSpecificationRun('7', '2')">
+                WPS 7, Run 2
             </button>
             <br><br>
-            <button style="border: 1px;" (click)="getRealtime()">
-                Realtime
+            <button style="border: 1px;" (click)="getSpecification('7')">
+                WPS 7
+            </button>
+            <br><br>
+            <button style="border: 1px;" (click)="getContracts()">
+                Contracts
+            </button>
+            
+            <br><br>
+            <button style="border: 1px;" (click)="getRealtimeWelder('3213')">
+                Realtime Welder 3213
+            </button>
+            <br><br>
+            <button style="border: 1px;" (click)="getRealtimeTask('123')">
+                Realtime Task 123
             </button>
             <br><br>
             <button style="border: 1px;" (click)="getTasks()">
                 Task Data
             </button>
+            <br><br>
+            <button style="border: 1px;" (click)="loadData()">
+                Spec Data
+            </button>
 
-            <h3>Filter:</h3>
             <div>
-                <mat-form-field appearance="outline">
-                    <input type="text" formControlName="taskCtrl" placeholder="Task ID" matInput
-                        [matAutocomplete]="auto" required>
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let task of allTasks" [value]="task.TaskID">
-                            {{task.TaskID}}
-                        </mat-option>
-                    </mat-autocomplete>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                    <mat-label>Date Range</mat-label>
-                <mat-date-range-input [rangePicker]="picker">
-                    <input matStartDate placeholder="Start date">
-                    <input matEndDate placeholder="End date">
-                </mat-date-range-input>
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
+                <form class="weld-history-form" [formGroup]="taskForm" (ngSubmit)="taskSubmit()">
+                    <mat-label>Select:</mat-label>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Task ID</mat-label>
+                        <input type="text" 
+                                (keyup)="taskOnKey($event)"
+                                formControlName="taskID"
+                                matInput 
+                                [matAutocomplete]="auto" 
+                                required>
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                            <mat-option *ngFor="let task of filteredTasks" [value]="task">
+                                {{task}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Date Range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
+                            <input matStartDate placeholder="Start date">
+                            <input matEndDate placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                    <button mat-raised-button color="primary" type="submit">Run Report</button>
+
+                    <button *ngIf="showTask" mat-stroked-button color="primary" type="submit"
+                        (click)="exportPDF('Task - Weld History')">Export To PDF</button>
+
+                </form>
+
+                <div *ngIf="showTask" #pdfWelders>
+                    <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
+                </div>
             </div>
         </ng-template>
     </mat-tab>
@@ -44,63 +78,93 @@
     <mat-tab label="by Welder">
 
         <ng-template matTabContent>
-            <h3>Filter:</h3>
-            <mat-form-field appearance="outline">
-                <input type="text" formControlName="taskCtrl" placeholder="Welder" matInput [matAutocomplete]="auto"
-                    required>
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let task of allTasks" [value]="task.FullName">
-                        {{task.FullName}}
-                    </mat-option>
-                </mat-autocomplete>
-            </mat-form-field>
-
-            <mat-form-field appearance="outline">
-                <mat-label>Date Range</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-                <input matStartDate placeholder="Start date">
-                <input matEndDate placeholder="End date">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-        </ng-template>
-
-    </mat-tab>
-    <mat-tab label="by Machine"> Machine ID
-
-
-        <ng-template matTabContent>
-            <h3>All Specifiction Data</h3>
-            <button style="border: 1px;" (click)="loadData()">
-                All data test button
-            </button>
-            <h3>Filter:</h3>
-            <div>
+            <form class="weld-history-form" [formGroup]="welderForm" (ngSubmit)="welderSubmit()">
+                <mat-label>Select:</mat-label>
                 <mat-form-field appearance="outline">
-                    <mat-label>Machine</mat-label>
-                    <input type="text" formControlName="taskCtrl" placeholder="Machine" matInput
-                        [matAutocomplete]="auto" required>
+                    <mat-label>Welder Name</mat-label>
+                    <input type="text" 
+                            matInput 
+                            (keyup)="welderOnKey($event)"
+                            formControlName="welderID"
+                            [matAutocomplete]="auto" required>
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let task of allTasks" [value]="task.MachineName">
-                            {{task.MachineName}}
+                        <mat-option *ngFor="let welder of filteredWelders" [value]="welder">
+                            {{welder}}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
 
-            <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline">
                     <mat-label>Date Range</mat-label>
-                <mat-date-range-input [rangePicker]="picker">
-                    <input matStartDate placeholder="Start date">
-                    <input matEndDate placeholder="End date">
-                </mat-date-range-input>
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
+                    <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
+                        <input matStartDate placeholder="Start date">
+                        <input matEndDate placeholder="End date">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit">Run Report</button>
 
+                <button *ngIf="showWelder" mat-stroked-button color="primary" type="submit"
+                    (click)="exportPDF('Welder - Weld History')">Export To PDF</button>
 
+            </form>
+
+            <div *ngIf="showWelder" #pdfWelders>
+                <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
             </div>
-            <app-data *ngFor="let spec of allSpec" [specification]="spec"></app-data>
+
+        </ng-template>
+
+    </mat-tab>
+
+
+    <mat-tab label="by Machine"> Machine ID
+
+
+        <ng-template matTabContent>
+            <form class="weld-history-form" [formGroup]="machineForm" (ngSubmit)="machineSubmit()"> 
+                <mat-label>Select:</mat-label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Machine</mat-label>
+                    <input type="text" 
+                            (keyup)="machineOnKey($event)"
+                            formControlName="machineID"
+                            name="machineID"
+                            matInput 
+                            [matAutocomplete]="auto" 
+                            required>
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let machine of filteredMachines" [value]="machine">
+                            {{machine}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Date Range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker" [max]="maxDate">
+                        <input matStartDate 
+                                placeholder="Start date" 
+                                formControlName="dateStart">
+                        <input matEndDate 
+                                placeholder="End date" 
+                                formControlName="dateEnd">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+                <button mat-raised-button color="primary" type="submit">Run Report</button>
+
+                <button *ngIf="showMachine" mat-stroked-button color="primary" type="submit"
+                    (click)="exportPDF('Machine - Weld History')">Export To PDF</button>
+
+            </form>
+
+            <div *ngIf="showMachine" #pdfWelders>
+                
+                <app-machine-history *ngFor="let rt of realtime" [realtime]="rt"></app-machine-history>
+            </div>           
         </ng-template>
 
     </mat-tab>
