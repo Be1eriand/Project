@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl} from '@angular/forms';
+import {FormControl, FormGroup} from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
@@ -13,15 +13,41 @@ import { SpecificationService } from '@app/_services/specification.service';
   styleUrls: ['./specification.component.sass']
 })
 export class SpecificationComponent implements OnInit {
+
+  forms: FormGroup[] = [];
+
   specFilter = new FormControl();
   filteredOptions: Observable<Spec[]>;
 
   SpecLoaded = false;
+  Editing = false;
 
   Machines: Machine[];
   Welders: Welder[] = [];
   SpecList: Spec[] = [];
   Specifications: Specification[] = [];
+
+  SortedSpecList = [
+    'WPS_No',
+    'Welding_Code',
+    'Joint_type', 
+    'Side',
+    'Position',
+    'Class',
+    'Size',
+    'Gas_Flux_Type',
+    'Current_Min',
+    'Current_Max',
+    'Voltage_Min',
+    'Voltage_Max',
+    'Polarity',
+    'TravelSpeed_Min',
+    'TravelSpeed_Max',
+    'InterpassTemp_Min',
+    'InterpassTemp_Max',
+    'HeatInput_Min',
+    'HeatInput_Max',
+  ]
 
   constructor(
     private dataService: DataService,
@@ -98,7 +124,7 @@ export class SpecificationComponent implements OnInit {
   }
 
 
-  public loadSpecification(specID: string) {
+  loadSpecification(specID: string) {
 
     this.specificationService.getSpec(specID).subscribe({
       next: (specifications) => { 
@@ -114,5 +140,29 @@ export class SpecificationComponent implements OnInit {
         this.SpecLoaded = false;
         }
     });
+  }
+
+  onSubmit(data){
+    console.log('This Triggered!');
+    console.log(data);
+    data.forEach(element => {
+      console.log(element.Run_No);
+      console.log(this.getFormGroup(element.Run_No));
+    });
+  }
+
+  createFormGroup(RunNo){
+    let group: any = {}
+
+    group['Run No'] = new FormControl(RunNo)
+
+    let newForm = new FormGroup(group)
+    this.forms.push(newForm);
+
+    return newForm
+  }
+
+  getFormGroup(RunNo) {
+    return this.forms[RunNo];
   }
 }
