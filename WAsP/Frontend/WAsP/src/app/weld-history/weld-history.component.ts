@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { RealTimeView, Specification, TaskView } from '@app/_models';
+import { ContractTaskView, RealTimeView, Specification, TaskView } from '@app/_models';
 import { SpecificationService } from '@app/_services/specification.service';
 import { RealtimeService } from '@app/_services/realtime.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -47,13 +47,15 @@ export class WeldHistoryComponent implements OnInit {
   // needed?
   allSpec: Specification[];
   spec: Specification;
+  specs: Specification[];
+  contract: ContractTaskView[];
 
-  
+  temp: RealTimeView[];
  
   allRT: RealTimeView[];
   RTtask: RealTimeView;
   RTwelder: RealTimeView;
-  RTmachine: RealTimeView;
+  realtime: any=[];
 
   @ViewChild('pdfWelders')
   pdfWelders!: ElementRef;
@@ -169,8 +171,9 @@ export class WeldHistoryComponent implements OnInit {
 
     this.taskID = this.taskForm.value.taskID;
     this.dateStart = this.taskForm.value.dateStart;
-    this.dateEnd = this.machineForm.value.dateEnd;
+    this.dateEnd = this.taskForm.value.dateEnd;
     console.log(this.taskID, this.dateStart, this.dateEnd);
+    this.showTask = true;
   }
 
   welderSubmit() {
@@ -185,6 +188,7 @@ export class WeldHistoryComponent implements OnInit {
     this.dateStart = this.welderForm.value.dateStart;
     this.dateEnd = this.welderForm.value.dateEnd;
     console.log(this.welderID, this.dateStart, this.dateEnd);
+    this.showWelder = true;
   }
 
   machineSubmit() {
@@ -196,29 +200,16 @@ export class WeldHistoryComponent implements OnInit {
     }
 
     var re = /[a-zA-Z]+\s/; // all letters and trailling space
-    this.machineID = this.machineForm.value.machineID.replace(re, "");
     this.dateStart = this.machineForm.value.dateStart;
     this.dateEnd = this.machineForm.value.dateEnd;
-    console.log(this.machineID, this.dateStart, this.dateEnd);
+    this.getRealtimeMachine(this.machineForm.value.machineID.replace(re, ""))
+    this.showMachine = true;
   }
-
-  // Toggle div and pdf button for each tab
-  showWelderReport(): void {
-    this.showWelder = !this.showWelder;
-  }
-
-  showTaskReport(): void {
-    this.showTask = !this.showTask;
-  }
-
-  showMachineReport(): void {
-    this.showMachine = !this.showMachine;
-  }
-
 
   exportPDF(header: string) {
     const pdfWelders = this.pdfWelders.nativeElement;
     var html = htmlToPdfmake(pdfWelders.innerHTML);
+    console.log(html);
     const documentDefinition = {pageOrientation: 'landscape',
                                 content: [
                                   {text: header, style: 'header'}, 
@@ -227,8 +218,12 @@ export class WeldHistoryComponent implements OnInit {
                                 styles: {
                                   header: {
                                     fontSize: 18,
+                                    color: '#374785',
                                     bold: true,
-                                  }
+                                  },
+                                  'html-td': {
+                                    fontSize: 9,
+                                  },
                                 }
                               };
     pdfMake.createPdf(documentDefinition).download("Smart Fabrication Weld Report.pdf");
@@ -249,7 +244,7 @@ export class WeldHistoryComponent implements OnInit {
   }
 
   getSpecification(id: string){
-    this.specificationService.getSpec(id).subscribe((spec) => this.spec = spec);
+    this.specificationService.getSpec(id).subscribe((spec) => this.specs = spec);
     console.log(this.spec)
   }
 
@@ -274,8 +269,11 @@ export class WeldHistoryComponent implements OnInit {
   }
 
   getRealtimeMachine(id: string){
-    this.realtimeSerivce.getRTMachine(id).subscribe((rt) => this.RTmachine = rt);
-    console.log(this.RTmachine)
+    let machine: RealTimeView[] = [];
+    this.realtimeSerivce.getRTMachine(id).subscribe((rt) => {machine.push(rt);
+    this.realtime = machine;
+    });
+    
   }
 
   getTasks(){
@@ -283,10 +281,10 @@ export class WeldHistoryComponent implements OnInit {
     console.log(this.allTasks)
   }
 
+  getContracts(){
+    this.specificationService.getAllContracts().subscribe((rt) => this.contract = rt);
+    console.log(this.contract)
+  }
 
-}
 
-function getWelders(data: TaskView[]) {
-
-  return data.map((d) => { return  d['FullName'];});
 }

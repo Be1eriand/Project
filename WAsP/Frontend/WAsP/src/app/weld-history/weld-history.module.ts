@@ -10,8 +10,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatExpansionModule } from '@angular/material/expansion';
+
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
+
+import * as echarts from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 import { WeldHistoryRoutingModule } from './weld-history-routing.module';
 import { WeldHistoryComponent } from './weld-history.component';
@@ -40,8 +46,12 @@ import { TaskHistoryComponent } from './data/task-history/task-history.component
     MatDatepickerModule,
     MatNativeDateModule,
     MatButtonModule,
+    MatExpansionModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgxEchartsModule.forRoot({
+      echarts
+    }),
     
   ]
 })

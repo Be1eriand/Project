@@ -9,9 +9,14 @@
                 WPS 7, Run 2
             </button>
             <br><br>
-            <button style="border: 1px;" (click)="getRealtimeMachine('1')">
-                Realtime Machine 1
+            <button style="border: 1px;" (click)="getSpecification('7')">
+                WPS 7
             </button>
+            <br><br>
+            <button style="border: 1px;" (click)="getContracts()">
+                Contracts
+            </button>
+            
             <br><br>
             <button style="border: 1px;" (click)="getRealtimeWelder('3213')">
                 Realtime Welder 3213
@@ -24,10 +29,14 @@
             <button style="border: 1px;" (click)="getTasks()">
                 Task Data
             </button>
+            <br><br>
+            <button style="border: 1px;" (click)="loadData()">
+                Spec Data
+            </button>
 
             <div>
                 <form class="weld-history-form" [formGroup]="taskForm" (ngSubmit)="taskSubmit()">
-                    <mat-label>Filter:</mat-label>
+                    <mat-label>Select:</mat-label>
                     <mat-form-field appearance="outline">
                         <mat-label>Task ID</mat-label>
                         <input type="text" 
@@ -53,17 +62,12 @@
                     </mat-form-field>
                     <button mat-raised-button color="primary" type="submit">Run Report</button>
 
-                    <button *ngIf="showWelder" mat-stroked-button color="primary" type="submit"
-                        (click)="exportPDF('Welder - Weld History')">Export To PDF</button>
+                    <button *ngIf="showTask" mat-stroked-button color="primary" type="submit"
+                        (click)="exportPDF('Task - Weld History')">Export To PDF</button>
 
                 </form>
 
-
-                <button style="border: 1px;" (click)="showWelderReport()">
-                    Temp Toggle
-                </button>
-
-                <div *ngIf="showWelder" #pdfWelders>
+                <div *ngIf="showTask" #pdfWelders>
                     <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
                 </div>
             </div>
@@ -75,7 +79,7 @@
 
         <ng-template matTabContent>
             <form class="weld-history-form" [formGroup]="welderForm" (ngSubmit)="welderSubmit()">
-                <mat-label>Filter:</mat-label>
+                <mat-label>Select:</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-label>Welder Name</mat-label>
                     <input type="text" 
@@ -102,14 +106,9 @@
                 <button mat-raised-button color="primary" type="submit">Run Report</button>
 
                 <button *ngIf="showWelder" mat-stroked-button color="primary" type="submit"
-                    (click)="exportPDF('Task ID - Weld History')">Export To PDF</button>
+                    (click)="exportPDF('Welder - Weld History')">Export To PDF</button>
 
             </form>
-
-
-            <button style="border: 1px;" (click)="showWelderReport()">
-                Temp Toggle
-            </button>
 
             <div *ngIf="showWelder" #pdfWelders>
                 <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
@@ -125,7 +124,7 @@
 
         <ng-template matTabContent>
             <form class="weld-history-form" [formGroup]="machineForm" (ngSubmit)="machineSubmit()"> 
-                <mat-label>Filter:</mat-label>
+                <mat-label>Select:</mat-label>
                 <mat-form-field appearance="outline">
                     <mat-label>Machine</mat-label>
                     <input type="text" 
@@ -162,13 +161,9 @@
 
             </form>
 
-
-            <button style="border: 1px;" (click)="showMachineReport()">
-                Temp Toggle
-            </button>
-
             <div *ngIf="showMachine" #pdfWelders>
-                <app-data *ngFor="let spec of allSpec" [specification]="spec"></app-data>
+                
+                <app-machine-history *ngFor="let rt of realtime" [realtime]="rt"></app-machine-history>
             </div>           
         </ng-template>
 
