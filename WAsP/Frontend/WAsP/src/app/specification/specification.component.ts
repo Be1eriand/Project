@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import { Observable } from 'rxjs';
+import {FormControl, FormGroup, FormArray, FormBuilder} from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
 import { AlertService, DataService } from '@app/_services';
@@ -15,12 +15,14 @@ import { SpecificationService } from '@app/_services/specification.service';
 export class SpecificationComponent implements OnInit {
 
   forms: FormGroup[] = [];
+  formSubs: Subscription[] = [];
 
   specFilter = new FormControl();
   filteredOptions: Observable<Spec[]>;
 
   SpecLoaded = false;
   Editing = false;
+  formLoaded = false;
 
   Machines: Machine[];
   Welders: Welder[] = [];
@@ -50,6 +52,7 @@ export class SpecificationComponent implements OnInit {
   ]
 
   constructor(
+    private fb: FormBuilder,
     private dataService: DataService,
     private alertService: AlertService,
     private specificationService: SpecificationService,
@@ -67,8 +70,15 @@ export class SpecificationComponent implements OnInit {
     this.specFilter.valueChanges.subscribe({
       next: (value) => {
         this.SpecLoaded = false;
+        this.Editing = false;
         if (value !== '') {
           this.loadSpecification(value);
+        
+          this.Specifications.forEach( spec => {
+            this.createFormGroup(spec);
+          });
+          
+          this.formLoaded = true;
         }
       },
       error: error => {
@@ -133,36 +143,89 @@ export class SpecificationComponent implements OnInit {
           arr.push(spec);
           return arr;
         }, [])
+
         this.SpecLoaded = true;
       },
       error: error => {
         this.alertService.error(error);
+        this.Editing = false;
         this.SpecLoaded = false;
         }
     });
   }
 
-  onSubmit(data){
-    console.log('This Triggered!');
-    console.log(data);
-    data.forEach(element => {
-      console.log(element.Run_No);
-      console.log(this.getFormGroup(element.Run_No));
-    });
+  onSubmit(){
+    this.Editing = !this.Editing;
+
+    while (this.forms.length) {
+      let popped = this.forms.pop();
+      console.log(popped.value);
+      console.log(popped);
+      let spec = popped.value['WPS_No'];
+      let run = popped.value['WPS_No'];
+      this.specificationService.updateSpecRun(spec, run, popped.value).subscribe({
+        next: () =>{
+          this.alertService.success('Succesfully Saved!');
+        },
+
+        error: error => {
+          this.alertService.error(error);
+          this.SpecLoaded = false;
+          }
+      })
+    }
+
   }
 
-  createFormGroup(RunNo){
-    let group: any = {}
+  createFormGroup(Spec: Specification){
 
-    group['Run No'] = new FormControl(RunNo)
+    let form = this.getFormGroup(Spec.Run_No);
 
-    let newForm = new FormGroup(group)
-    this.forms.push(newForm);
+    if (form === undefined){
 
-    return newForm
+      form = new FormGroup({
+        Run_No: new FormControl(Spec.Run_No),
+        WPS_No: new FormControl(Spec.WPS_No),
+        Welding_Code: new FormControl(Spec.Welding_Code),
+        Joint_type: new FormControl(Spec.Joint_type), 
+        Side: new FormControl(Spec.Side),
+        Position: new FormControl(Spec.Position),
+        Class: new FormControl(Spec.Class),
+        Size: new FormControl(Spec.Size),
+        Gas_Flux_Type: new FormControl(Spec.Gas_Flux_Type),
+        Current_Min: new FormControl(Spec.Current_Min),
+        Current_Max: new FormControl(Spec.Current_Max),
+        Voltage_Min: new FormControl(Spec.Voltage_Min),
+        Voltage_Max: new FormControl(Spec.Voltage_Max),
+        Polarity: new FormControl(Spec.Polarity),
+        TravelSpeed_Min: new FormControl(Spec.TravelSpeed_Min),
+        TravelSpeed_Max: new FormControl(Spec.TravelSpeed_Max),
+        InterpassTemp_Min: new FormControl(Spec.InterpassTemp_Min),
+        InterpassTemp_Max: new FormControl(Spec.InterpassTemp_Max),
+        HeatInput_Min: new FormControl(Spec.HeatInput_Min),
+        HeatInput_Max: new FormControl(Spec.HeatInput_Max),
+        });
+
+      if (this.forms.length < this.Specifications.length){
+        this.forms.push(form);
+        this.formSubs.push(form.valueChanges.subscribe( x => {
+            console.log('This works unbelievably')
+          })
+        );
+      
+      }
+    }
+
+    return form;
   }
 
-  getFormGroup(RunNo) {
-    return this.forms[RunNo];
+  getFormGroup(RunNo: string) {
+    return this.forms.length != 0 ? this.forms.find(form => form.value.Run_No === RunNo) : undefined;
+  }
+
+  editMode() {
+    if (!this.Editing) {
+      this.Editing = !this.Editing
+    }
   }
 }

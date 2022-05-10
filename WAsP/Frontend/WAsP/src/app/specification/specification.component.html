@@ -27,28 +27,29 @@
   <div class="row">
     <div class="row">
       <button mat-flat-button class="btn btn-warning text-center" type="button">Add</button>
-      <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="!Editing">Edit</button>
-      <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="!Editing" (click)="onSubmit(Specifications)">Save</button>
+      <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="!Editing && SpecLoaded" (click)="editMode()">Edit</button>
+      <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="Editing" (click)="onSubmit()">Save</button>
     </div>
     <div class="row">
-      <div *ngIf="SpecLoaded">
+      <div *ngIf="SpecLoaded && formLoaded">
         <mat-tab-group dynamicHeight>
-          <div *ngFor="let Specification of Specifications"> 
-            <mat-tab label="Run {{Specification.Run_No}}">
-              <div class="mat-elevation-z4">
-                <div>
-                  <form [formGroup] = createFormGroup(Specification.Run_No)>
+          <div *ngFor="let Specification of Specifications">
+            <form [formGroup] = createFormGroup(Specification)>
+              <mat-tab label="Run {{Specification.Run_No}}">
+                <div class="mat-elevation-z4">
+                  <div>
                     <mat-form-field appearance="fill" *ngFor="let specName of SortedSpecList ">
                       <mat-label>{{specName}}</mat-label>
                       <input id="input_{{specName}}_{{Specification.Run_No}}"
                         type="text"
                         value="{{Specification[specName]}}"
+                        formControlName = "{{specName}}"
                         matInput>
                     </mat-form-field>
-                  </form> 
+                  </div>
                 </div>
-              </div>
-            </mat-tab>
+              </mat-tab>
+            </form> 
           </div>
         </mat-tab-group>
       </div>
