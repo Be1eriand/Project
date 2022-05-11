@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 //eCharts import to allow the data to be charted easily
 import * as echarts from 'echarts';
@@ -38,6 +39,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
         MatButtonModule,
         MatIconModule,
         MatCardModule,
+        MatSidenavModule,
         NgxEchartsModule.forRoot({
             echarts
           }),
