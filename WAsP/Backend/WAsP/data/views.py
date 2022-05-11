@@ -1,6 +1,6 @@
 import datetime
 from pprint import pprint
-from django.db import IntegrityError, connection
+from django.db import IntegrityError
 from rest_framework.request import Request
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, QueryDict
 from rest_framework import status
@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
-from sqlalchemy import text, select, and_
+from sqlalchemy import text, select, and_, join
 
 import logging
 
@@ -150,8 +150,47 @@ class SpecificationView(APIView): #Follows CRUD
     def put(self, *args):
 
         request: Request = args[0]
+        data = request.data
 
-        return Response(status.HTTP_400_BAD_REQUEST)
+        result = session.query(WPS, WPS_Run, Specification).join(WPS.runs).join(WPS_Run.specifications).filter(and_(WPS.WPS_No == data['WPS_No'], WPS_Run.Run_No == data['Run_No'])).one()
+
+        wps = result[0]
+        wps_run = result[1]
+        specification = result[2]
+        wps.WPS_No = data['WPS_No']
+        wps.Welding_Code = data['Welding_Code']
+        wps.Joint_type = data['Joint_type']
+
+        wps_run.Run_No = data['Run_No']
+
+        specification.Side = data['Side']
+        specification.Position = data['Position']
+        specification.Class = data['Class']
+        specification.Size = data['Size']
+        specification.Gas_Flux_Type = data['Gas_Flux_Type']
+        specification.Current_Min = data['Current_Min']
+        specification.Current_Max = data['Current_Max']
+        specification.Voltage_Min = data['Voltage_Min']
+        specification.Voltage_Max = data['Voltage_Max']
+        specification.Polarity = data['Polarity']
+        specification.TravelSpeed_Min = data['TravelSpeed_Min']
+        specification.TravelSpeed_Max = data['TravelSpeed_Max']
+        specification.InterpassTemp_Min = data['InterpassTemp_Min']
+        specification.InterpassTemp_Max = data['InterpassTemp_Max']
+        specification.HeatInput_Min = data['HeatInput_Min']
+        specification.HeatInput_Max = data['HeatInput_Max']
+
+        try:
+            session.commit()
+        except IntegrityError:
+            session.rollback()
+            return HttpResponseBadRequest()
+        except Exception as e:
+            session.rollback()
+            pprint(e)
+            return HttpResponseBadRequest()
+
+        return HttpResponse(status.HTTP_200_OK)
     
     def delete(self, *args):
 
