@@ -1,11 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { DataService, AlertService } from '@app/_services';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { EChartsOption, EChartsType } from 'echarts';
 
-import { environment } from '@environments/environment';
-import { RealTimeView } from '@app/_models';
+import { RealTimeData, TaskData, Specification } from '@app/_models';
+import { DataService, SocketService } from '@app/_services';
 
 @Component({ 
     selector: 'realtime-card',
@@ -13,14 +10,135 @@ import { RealTimeView } from '@app/_models';
     styleUrls: ['widget.component.sass'],    
 })
 
-export class WidgetComponent implements OnInit {
-    @Input() data: RealTimeView;
+export class WidgetComponent implements OnInit, OnDestroy {
+    @Input() Data: RealTimeData[];
+    @Input() Spec: Specification;
+    @Input() Task: TaskData;
+
+    displayList = ['Current', 'Voltage'];
+
+    echartsInstance: EChartsType;
+    chartOption: EChartsOption = {
+        xAxis: {
+            id: 0,
+            type: 'time',               
+            axisLabel: {
+                rotate: 90 ,
+            },
+            minInterval: 5,
+          },
+          yAxis: [{
+            id: 0,
+            type: 'value',
+            scale: true ,
+            alignTicks: true ,
+          },
+          {
+            id: 1,
+            type: 'value',
+            scale: true ,
+            alignTicks: true ,
+          },
+        ],
+      };
 
     constructor(
-        private http: HttpClient) {
+        private dataService: DataService,
+        private socketService: SocketService,
+        ) {
     }
 
     ngOnInit(): void {
-        
+        this.updateChart();
     }
+
+    ngOnDestroy(): void {
+    }
+
+    onChartInit(ec) {
+        this.echartsInstance = ec;
+    }
+
+    private updateChart() {
+
+        console.log('Chart is updating');
+
+        let time = getTimeStream(this.Data);
+
+        let min = time.reduce(function (a, b) { return a < b ? a : b; });
+        let max = time.reduce(function (a, b) { return a > b ? a : b; });
+
+        let dataList = [];
+        let yAxisIndex = 0;
+
+        this.displayList.forEach((d) => {dataList.push({
+            type: 'line',
+            data: getDataPair(this.Data, d, 'Time'),
+            showSymbol: false ,
+            animation: false ,
+            yAxisIndex: yAxisIndex++,
+            })
+        });
+
+        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Current'))) {
+            dataList.push({
+            type: 'line',
+            data: value,
+            showSymbol: false ,
+            animation: false ,
+            yAxisIndex: 0,
+            })
+        }
+
+        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Voltage'))) {
+            dataList.push({
+            type: 'line',
+            data: value,
+            showSymbol: false ,
+            animation: false ,
+            yAxisIndex: 1,
+            })
+        }
+
+        this.chartOption = updateChartOptions(this.chartOption, dataList, min, max, time);
+    }
+      
+}
+
+function getTimeStream(data: RealTimeData[]) {
+
+    return data.map((d) => { return d['Time'] ;} );
+}
+
+function getDataPair(data: RealTimeData[], x: string, y: string) {
+
+    return data.map((d) => { return [ d[y], parseFloat(d[x])]});
+}
+
+function updateChartOptions(chartOption: EChartsOption, list: any[], min: string, max: string, time: any[]): EChartsOption {
+
+    chartOption.series = list;
+    chartOption.xAxis['min'] = min;
+    chartOption.xAxis['max'] = max;
+    chartOption.xAxis['data'] = time;
+
+    return chartOption;
+}
+
+function getLimits(spec: Specification, time: any[], limit: string) {
+    
+    let max = spec[limit + '_Max'];
+    let min = spec[limit + '_Min'];
+
+    let data = {};
+
+    data['max'] = time.map((t) => {
+        return [t, parseFloat(max)];
+    });
+
+    data['min'] = time.map((t) => {
+        return [t, parseFloat(min)];
+    });
+
+    return data;
 }

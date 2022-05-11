@@ -8,6 +8,7 @@ class DisplayDataPipe(Pipe):
 
     def process_data(self, dict):
 
+        print("Processing Display")
         data = dict['data']
 
         #Insert Try/Except for invalid data type

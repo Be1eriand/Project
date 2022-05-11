@@ -1,4 +1,5 @@
 #Writing the data to the SQL database
+from pprint import pprint
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 from core.utils import convert_to_dateTime
@@ -12,6 +13,7 @@ class SqlWriterPipe(Pipe):
 
     def process_data(self, dict):
 
+        print("Processing SQL")
         prevtime = dict['prevtime']
         data = dict['data']
         session = dict['session']
@@ -56,26 +58,30 @@ class SqlWriterPipe(Pipe):
             )
             
             queryText = f'TaskID={data.taskid} and WelderID={data.welderid} and MachineID={data.machineid}'
-            records = session.query(Assignment).filter(text(queryText)).all()
+            record = session.query(Assignment).filter(text(queryText)).one_or_none()
 
-            if (records is None) or len(records) == 0:
+            if (record is None):
                 
-                weldtable = RunTable(
-                    RunNo=data.runid
-                )
-
-                weldtable.assignment = Assignment(
+                assignment = Assignment(
                     WelderID=data.welderid,
                     MachineID=data.machineid,
                     TaskID=data.taskid
                 )
+
             else:
-                assignment=records[0]
-
+                assignment=record
+                
                 queryText = f'RunNo={data.runid} and Assignment_id={assignment.id}'
-                records = session.query(RunTable).filter(text(queryText)).all()
+                record = session.query(RunTable).filter(text(queryText)).one_or_none()
 
-                weldtable = records[0]
+            if (record is None):
+                weldtable = RunTable(
+                    RunNo=data.runid
+                )
+            else: 
+                weldtable = record
+            
+            weldtable.assignment = assignment
 
             weldingTable.weldtable = weldtable
 

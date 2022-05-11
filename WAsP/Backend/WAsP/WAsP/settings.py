@@ -85,18 +85,19 @@ MIDDLEWARE = [
 ]
 
 # Channels settings
-ASGI_APPLICATION = "WAsP.asgi.application" 
-CHANNEL_REDIS_HOST = ("localhost", 8000) #IP address and port for the WAsP channel
+ASGI_APPLICATION = "WAsP.routing.application" 
+
+WSGI_APPLICATION = "WAsP.wsgi.application"
+
+#CHANNEL_REDIS_HOST = ("127.0.0.1", 3000) #IP address and port for the WAsP channel if using a Redis server which we are not
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [CHANNEL_REDIS_HOST],
-            "routing": 'WAsP.routing.websocket_routing',
-        },
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
     },
 }
+
+ASGI_THREADS = 1000
 
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -117,9 +118,6 @@ TEMPLATES = [
         },
     },
 ]
-
-#WSGI_APPLICATION = 'WAsP.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -199,7 +197,7 @@ from sqlalchemy.exc import IntegrityError
 
 from Models.models import Base
 
-params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;')
+params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;MARS_Connection=yes;')
 ENGINE = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
         
 CONNECTION = ENGINE.connect()

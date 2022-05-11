@@ -19,6 +19,8 @@ from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from accounts.views import WAsPTokenObtainPairView
 
+from websocket.realtime import RealTimeConsumer 
+
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
     path('', include('layout.urls')), #probably will need to change this
@@ -31,7 +33,7 @@ urlpatterns = [
     re_path(r'^accounts/', include('accounts.urls')),
     path('', include("django.contrib.auth.urls")),
     #path('settings', include("layout.urls")),
-    re_path(r'^data/', include('data.urls'))
+    re_path(r'^data/', include('data.urls')),
 ]
 
 

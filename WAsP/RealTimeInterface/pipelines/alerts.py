@@ -60,6 +60,8 @@ class AlertsPipe(Pipe):
 
     def process_data(self, dict: Dict) -> Dict:
 
+        print("Processing Alerts")
+        
         TaskID = dict['processed']['TaskID']
         RunNo = dict['processed']['RunNo']
         spec = self._get_specification(TaskID,RunNo)

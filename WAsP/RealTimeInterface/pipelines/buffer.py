@@ -13,6 +13,7 @@ class DataBufferPipe(Pipe):
 
     def process_data(self, dict):
 
+        print("Processing Buffer")
         data = dict['data']
 
         if data.machineid not in self.time_list.keys():

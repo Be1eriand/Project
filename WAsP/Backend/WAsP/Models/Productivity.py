@@ -7,7 +7,7 @@ from .models import Base
 class Employees(Base):
     __tablename__ = "Employees"
 
-    payroll_id = Column(Integer, primary_key=True)
+    payroll_id = Column(Integer, primary_key=True, autoincrement="auto")
     first_name = Column(String)
     last_name = Column(String)
     employment_status = Column(Boolean)
@@ -66,3 +66,10 @@ class TimesheetTask(Base):
     job = relationship("JobTimeTracker", backref="TimesheetTask")
     task = relationship("TimesheetTaskType", backref="TimesheetTask")
     machine = relationship("Machines", backref="TimesheetTask")
+
+class MachinesView(Base):
+    __tablename__ = "Machineview"
+
+    id = Column(Integer, primary_key=True, autoincrement="auto")
+    Description = Column(String)
+    Location = Column(String)

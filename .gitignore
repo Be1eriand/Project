@@ -4,3 +4,4 @@ WAsP/Database/*.*
 WAsP/Database/SensorDataDB_log.ldf
 WAsP/Database/SensorDataDB.mdf
 WAsP/Database/SmartFab_log.ldf
+*.mdf

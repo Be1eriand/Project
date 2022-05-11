@@ -11,6 +11,8 @@ class RealTimePipe(Pipe):
 
     def process_data(self, dict):
 
+        print("Processing RealTime")
+
         dict['data'] = SensorData(KaitaiStream(BytesIO(dict['raw'])))
 
         return dict

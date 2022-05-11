@@ -1,21 +1,16 @@
 <div>
-    <div class="container">
+    <div class="content">
         <div class="row">
-            <div class="col-12" >
-                <button mat-button (click)="load()">Button 1</button>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
+            <div class="col-4"></div>
+            <div class="col-4">
+                <h1>Real Time Views</h1>
             </div>
+            <div class="col-4"></div>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
-                <realtime-card></realtime-card>
+        <div fxLayout="row wrap" fxLayoutGap="8px grid">
+            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" >
+                <realtime-card [Data]="data.Data" [Spec]="data.Spec" [Task]="data.Task" class="realtime-widget"></realtime-card>
             </div>
-        </div>
+        </div> 
     </div>
 </div>

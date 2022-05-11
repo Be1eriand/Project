@@ -13,10 +13,10 @@ export class Specification{
     Voltage_Min: string;
     Voltage_Max: string;
     Polarity: string;
-    Travel_Speed_Min: string;
-    Travel_Speed_Max: string;
-    Interpass_Temp_Min: string;
-    Interpass_Temp_Max: string;
-    Heat_Input_Min: string;
-    Heat_Input_Max: string;
+    TravelSpeed_Min: string;
+    TravelSpeed_Max: string;
+    InterpassTemp_Min: string;
+    InterpassTemp_Max: string;
+    HeatInput_Min: string;
+    HeatInput_Max: string;
 }

@@ -1,38 +1,44 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { DataService, AlertService } from '@app/_services';
-import { SpecificationService } from '@app/_services/specification.service';
-import { RealtimeService } from '@app/_services/realtime.service';
-
-
-import { RealTimeView } from '@app/_models';
+import { AlertService, AccountService,  SocketService } from '@app/_services';
 
 @Component({ templateUrl: 'dashboard.component.html' })
-export class DashboardComponent {
-    loading = false;
-    allRT: RealTimeView[];
+export class DashboardComponent implements OnInit, OnDestroy  {
+
+    ActiveTasks: any[];
 
     constructor(
-        private specificationService: SpecificationService,
-        private realtimeSerivce: RealtimeService,
-        private http: HttpClient,
-        private alertService: AlertService
-        ) {
+        private socketService: SocketService,
+        private alertService: AlertService,
+        private accountservice: AccountService,
+        ) {}
+
+    ngOnInit(): void {
+        if (this.accountservice.userValue) {
+
+            this.socketService.getActiveMachines2().subscribe({
+                next: (td) => {
+                    let arr = []
+
+                    td['active'].forEach(function (item) {
+                        let t = item.TaskID;
+                        let mappped = {};
+                        mappped['Task'] = item;
+                        mappped['Spec'] = td[t]['WPS'];
+                        mappped['Data'] = td[t]['RT'];
+                        arr.push(mappped);
+                    })
+                    this.ActiveTasks = arr;
+
+                },
+                error: error => {
+                    this.alertService.error(error);
+                }
+            })
+        }
     }
 
-    public load() {
-        this.realtimeSerivce.getAllRT()
-        .subscribe({
-            next: (rt) => {this.allRT = rt},
-        error: error => {
-            this.alertService.error(error);
-            this.loading = false;
-            }
-        });
-
-        console.log(this.allRT);
+    ngOnDestroy(): void {
+        this.socketService.tdSocketListener.unsubscribe();
     }
 }

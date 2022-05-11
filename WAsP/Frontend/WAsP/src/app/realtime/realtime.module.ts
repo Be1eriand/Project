@@ -2,10 +2,12 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import * as echarts from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { RealtimeRoutingModule } from './realtime-routing.module';
 
-import { LayoutComponent } from './layout.component';
 import { DashboardComponent } from './dashboard.component';
 import { WidgetComponent } from './widget.component';
 
@@ -15,9 +17,12 @@ import { WidgetComponent } from './widget.component';
         ReactiveFormsModule,
         RealtimeRoutingModule,
         MatCardModule,
+        FlexLayoutModule,
+        NgxEchartsModule.forRoot({
+            echarts
+          }),
     ],
     declarations: [
-        LayoutComponent,
         DashboardComponent,
         WidgetComponent,
     ]
