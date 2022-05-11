@@ -1,434 +1,227 @@
-/* You can add global styles to this file, and also import other style files */
-canvas#line-chart 
-    background-color: white
-
-canvas#line-chart2 
-    background-color: white
-
-
-.dashboard-box 
-    width: 350px
-    height: 260px
-    background-color: red
-
-.chart 
-    z-index:1
-
-tr.clickable-row 
-    cursor: pointer
-
-tr.clickable-row:hover 
-    background-color: #cce5ff !important
-
-
-.inactive-machine 
-    color: darkgray
-    background-color: lightgrey
-    border: 1px solid rgb(151, 151, 151)k
-
-
-/* Dashboard Page CSS */
-
-.db-period 
-    font-size: 1.2em
-
-
-.db-period a:hover 
-    text-decoration: underline
-
-
-.filter-dropdown 
-    min-width: 250px !important
-    max-height: 300px !important
-    overflow-y: auto
-
-
-input[type=search]::-webkit-search-cancel-button 
-    -webkit-appearance: searchfield-cancel-button
-
-
-.alert-main-table 
-    height: 100%
-
-
-.alert-main-filters 
-    width: 100%
-
-
-.filter-form 
-    min-width: 11em
-
-.info-header 
-    display: flex
-    align-items: baseline
-    font-variant: small-caps
-
-
-.db-info-card 
-    min-width: 100px !important
-    min-height: 100px !important
-
-
-
-
-/** Base CSS **/
-.title h1 
-    font-size: 2.2rem
-
-
-
-.nav-link 
-    padding: 0.5rem !important
-
-
-.btn-filter 
-    min-width: 14em
-    margin: 3px
-
-
-
-.box-header 
-    color: #374785
-    font-variant: small-caps
-
-
-
-.title, .info 
-    position: absolute
-    width: 100%
-    text-align: center
-    z-index: 2
-
-
-.worker-name 
-    font-weight: bold
-
-
-.machine-name 
-    font-size: 32px
-    font-weight: bold
-
-
-.info p 
-    margin: 0 !important
-    padding: 0
-    color: black
-
-
-#homeWrapper 
-    min-width: 400px
-    max-width: 1200px
-    margin: 0 auto
-
-
-#homeWrapper 
-    margin-top: 10px
-    padding: 15px
-    border: 1px solid #374785
-    border-radius: 20px
-    -moz-box-shadow: 0 0 3px #374785
-    -webkit-box-shadow: 0 0 3px #374785
-    box-shadow: 0 0 30px #374785
-    background-color: #A8D0E6
-    text-align: center
-    font-size: 1.5em
-
-
-.navicons 
-    margin-bottom: 30px
-
-
-.navicons img 
-    height: 250px
-    width: auto
-
-
-.navicons img:hover 
-    cursor: pointer
-    filter: drop-shadow(0 0 50px #F76C6C)
-
-
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700"
-body 
-    font-family: 'Poppins', sans-serif
-    background: #ffffff
-    background-image: url('./assets/smartfab_logo_gs.png')
-
-
-p 
-    font-family: 'Poppins', sans-serif
-    font-size: 1.1em
-    font-weight: 300
-    line-height: 1.7em
-    color: #999
-
-a,
-a:hover,
-a:focus 
-    color: inherit
-    text-decoration: none
-    transition: all 0.3s
-
-
-.navbar 
-    padding: 15px 10px
-    background: #fff
-    border: none
-    border-radius: 0
-    margin-bottom: 40px
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1)
-
-
-.navbar-btn 
-    box-shadow: none
-    outline: none !important
-    border: none
-
-
-.line 
-    width: 100%
-    height: 1px
-    border-bottom: 1px dashed #ddd
-    margin: 40px 0
-
-
-/* ---------------------------------------------------*/
-/*    SIDEBAR STYLE                                   */
-/*----------------------------------------------------*/
-
-#sidebar 
-    width: 250px
-    position: fixed
-    top: 0
-    left: -250px
-    height: 100vh
-    z-index: 999
-    background: #374785
-    color: #fff
-    transition: all 0.3s
-    overflow-y: scroll
-    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2)
-
-
-#sidebar.active 
-    left: 0
-
-
-#dismiss 
-    width: 35px
-    height: 35px
-    line-height: 35px
-    text-align: center
-    background: #374785
-    position: absolute
-    top: 10px
-    right: 10px
-    cursor: pointer
-    -webkit-transition: all 0.3s
-    -o-transition: all 0.3s
-    transition: all 0.3s
-
-
-
-.overlay 
-    display: none
-    position: fixed
-    width: 100vw
-    height: 100vh
-    background: rgba(0, 0, 0, 0.7)
-    z-index: 998
-    opacity: 0
-    transition: all 0.5s ease-in-out
-
-.overlay.active 
-    display: block
-    opacity: 1
-
-
-#sidebar .sidebar-header 
-    padding: 20px
-    background: #374785
-
-
-#sidebar ul.components 
-    padding: 20px 0
-    border-bottom: 1px solid #47748b
-
-
-#sidebar ul p 
-    color: #fff
-    padding: 10px
-
-
-#sidebar ul li a 
-    padding: 10px
-    font-size: 1.1em
-    display: block
-
-
-#sidebar ul li a:hover 
-    color: #7386D5
-    background: #fff
-
-
-#sidebar ul li.active>a,
-a[aria-expanded="true"] 
-    color: #fff
-    background: #374785
-
-
-a[data-toggle="collapse"] 
-    position: relative
-
-
-.dropdown-toggle::after 
-    display: block
-    position: absolute
-    top: 50%
-    right: 20px
-    transform: translateY(-50%)
-
-
-ul ul a 
-    font-size: 0.9em !important
-    padding-left: 30px !important
-    background: #374785
-
-
-ul.CTAs 
-    padding: 20px
-
-
-ul.CTAs a 
-    text-align: center
-    font-size: 0.9em !important
-    display: block
-    border-radius: 5px
-    margin-bottom: 5px
-
-
-a.download 
-    background: #fff
-    color: #397485
-
-
-a.article,
-a.article:hover 
-    background: #374785 !important
-    color: #fff !important
-
-
-/* ---------------------------------------------------*/
-/*    CONTENT STYLE                                   */
-/*----------------------------------------------------*/
-
-#content 
-    width: 100%
-    padding-left: 20px
-    padding-right: 20px
-    min-height: 100vh
-    transition: all 0.3s
-    position: absolute
-    top: 0
-    right: 0
-
-
-.report-form p 
-    color: black
-    text-align: left
-    margin-bottom: 0
-    margin-top: 1rem
-
-
-.report-form .btn-primary 
-    margin-top: 1rem
-
-
-.back-button 
-    margin: 5px 5px
-    width: 150px
-
-
-.report-menu h1 
-    display: inline
-
-
-.report-buttons 
-    padding: 1.25rem
-
-
-.btn-primary, btn-primary.active, .btn-primary:active, .btn-primary:visited 
-    background-color: #374785 !important
-
-
-.btn-outline-primary, btn-outline-primary.active, .btn-outline-primary:active, .btn-outline-primary:visited 
-    border-color: #374785 !important
-    color: #374785 !important
-
-.btn-outline-primary:not(:disabled):not(.disabled).active 
-    background-color: #374785 !important
-    color: #FFFFFF !important
-
-.btn-primary:hover 
-    background-color: #5364a8 !important
-
-.btn-outline-primary:hover 
-    background-color: #5364a8 !important
-    color: white !important
-
-
-.text-shadow 
-    text-shadow: 2px 0 0 #374785, -1px 0 0 #374785, 0 1px 0 #374785, 0 -1px 0 #374785, 1px 1px #374785, -1px -1px 0 #374785, 1px -1px 0 #374785, -1px 1px 0 #374785
-
-/** Loading DIV **/
-
-#loading 
-  position: fixed
-  display: flex
-  justify-content: center
-  align-items: center
-  width: 100%
+// variables
+
+$bgKhakiDark: #625b33
+$bgKhakiLight: #888159
+$waspButtYellow: #fff34c
+$waspWingCream: #edc49c
+$waspDeepGreen: #484412
+$waspHeadGrey: #929191
+$grey: #c9c6c6
+$waspHeadBlack: #2b2a29
+$waspLetterOrange: #ff6028
+$waspLetterCream: #f9ecd3
+$waspBoarderWhite: #eae8de
+$standUpBgSlideTen: #41342F
+$shadows: #161616
+// OLD Colours 
+$OLDboxHeader: #374785
+//feautered colours 
+$SidebarBlue: #4b4276
+$SideBarBodyBackgroundcolor: #f3f5f9
+$SideBarHover: #594f8d
+$SideBarA: #fff
+
+body
   height: 100%
-  top: 0
-  left: 0
-  opacity: 0.7
-  background-color: #fff
-  z-index: 99
 
+.home-container
+  display: grid
+  height: 100vh
+  grid-template-columns: 0.5fr 1fr 1fr 1fr
+  grid-template-rows: 60px 180px 180px 180px 30px
+  //grid-auto-rows: minmax(100px, auto)
+  grid-template-areas: "sidebar nav nav nav" "sidebar card-container card-container card-container" "sidebar card-container card-container card-container" "sidebar card-container card-container card-container" "sidebar footer footer footer"
+  grid-gap: 0.2rem
+  padding: 0.2rem
+  background-color: $bgKhakiLight
+  width: 100%
 
-#loading-image 
-  z-index: 100
+main
+  background-color: $waspHeadGrey
+  grid-area: main
 
+.sidebar
+  background-color: $SidebarBlue
+  color: $waspLetterCream
+  grid-area: sidebar
+  // padding: 30px 0px // changes to opx cards move over the top of side bar??
+  //text-align: center
+  grid-row-start: 1
+  grid-column-start: 1
+  grid-column-end: 2
+  bottom: 0px
+  left: 0px
+  min-height: 100%
+  position: fixed
 
+  h2
+    color: $waspBoarderWhite
+    text-transform: uppercase
+    text-align: center
+    margin-bottom: 20px
+  ul li
+    padding: 20px
+    border-bottom: 1px solid $waspLetterCream
+    border-bottom: 1px solid $waspHeadBlack
+    border-top: 1px solid $waspHeadBlack
 
-.settings-section, .register-box 
-    border:2px black solid
-    margin: 10px 0
-    min-height: 150px
-    padding: 15px
+    a
+      color: $waspLetterCream
+      display: block
 
+      .fas
+        width: 25px
 
-.settings h3 
-    margin-top: 50px
+      &:hover
+        //background-color: $waspButtYellow
+        background-color: $bgKhakiDark
+        //$SideBarHover
 
+        a
+          color: $SideBarA
 
-.report-2 p, .report-1 p
-    text-align: left !important
+.card-container
+  background-color: $bgKhakiLight
+  color: $waspLetterCream
+  grid-area: card-container
+  display: grid
+  height: 100%
+  //width: 100%
+  //grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
+  grid-template-columns: repeat(3, 1fr)
+  grid-auto-columns: minmax(1fr, atuo)
+  grid-auto-rows: minmax(100px, auto)
+  grid-template-areas: "card-1 card-2 card-3"
+  grid-gap: 2em
+  //0.1rem
+  //padding: 0.2rem
+  //padding-left: 75px
+  justify-content: space-around
 
+.card
+  //background-color: $waspLetterOrange // bit too bright 
+  //background-color: $bgKhakiDark // best one so far 
+  //background-color: $waspHeadGrey // Nope
+  background-color: $standUpBgSlideTen // Nice need to change footer and hearder to better suit
+  //background-color: $bgKhakiDark // Nice need to change footer and hearder h1 colour to better suit 
+  //background-color: $bgKhakiLight// Nope
+  // background-color:$waspButtYellow// Nope
+  //background-color: $waspWingCream // not sure maybe to bright 
+  //background-color: $waspDeepGreen // Nope
+  //background-color: $waspHeadGrey //not sure need to change footer and hearder h1 colour to better suit 
+  //background-color: $grey//not sure need to change content/text colour to better suit 
+  //background-color: $waspHeadBlack // looks cool but will need to change pics/ icons 
+  // background-color: $waspLetterCream // useable need to change content/text colour to better suit 
+  //background-color: $waspBoarderWhite// useable need to change content/text colour to better suit 
+  //background-color: $shadows // Nice but might be too dark need to change footer and hearder to better suit 
+  //position: relative
+  //left: 75px
+  //padding: 2em
+  border-radius: .1em
+  box-shadow: 20px 10px 30px $shadows
 
-.report-headers 
-    margin-top: 25px
+  h2
+    color: $waspLetterOrange
+    text-transform: uppercase
+    text-align: center
+    margin-bottom: 5px
+    //$waspBoarderWhite
+    //$waspLetterOrange
 
+    // &:hover
+    //   background-color: $waspHeadGrey
+    //   color: $shadows
+  p
+    text-align: center
 
+  &:hover
+    background-color: $bgKhakiDark
+    color: $waspBoarderWhite
+    //$shadows
 
-.generated-data 
-    font-size: 0.7em
+.cards
+  background-color: $waspLetterOrange
+  color: $waspLetterCream
+  grid-area: cards
+  border: $waspLetterCream
 
+.card-1
+  background-color: $waspLetterOrange
+  border: $waspLetterCream
+  grid-area: card-1
 
-.narrow-select 
-    width: 5em
+.card-2
+  background-color: $waspDeepGreen
+  border: $waspLetterCream
+  grid-area: card-2
 
+.card-3
+  background-color: $waspButtYellow
+  border: $waspLetterCream
+  grid-area: card-3
+  color: black
 
+nav
+  background-color: $SidebarBlue
+    // $bgKhakiDark
+  //$waspHeadBlack
+  //
+  grid-area: nav
+  top: 0px
+  left: 0px
+  //width: 100%
 
-table, tr, td, th, tbody, thead, tfoot 
-    page-break-inside: avoid !important
+  //position: relative
+  a
+    color: $waspLetterCream
+  h1
+    color: $waspLetterCream
+      // $waspLetterOrange
+    //text-transform: uppercase
+    text-align: center
+    margin-bottom: 8px
+
+  ul
+    color: $waspHeadGrey
+    li
+      display: inline
+      padding-left: 45px
+
+footer
+  background-color: $waspHeadBlack
+  //$waspHeadGrey
+  color: $waspLetterCream
+  grid-area: footer
+  justify-content: space-around
+  text-align: center
+  bottom: 0px
+  left: 205px
+  right: 0px
+  position: fixed
+  bottom: 0
+  //width: 100%
+  grid-row-start: 5
+  grid-row-end: 6
+  grid-column-start: 2
+
+@media only screen and (max-width:650px)
+  .card-container
+    grid-template-columns: 1fr
+    grid-auto-rows: 1fr
+    grid-template-areas: "nav" "sidebar" "card-container" "card-container" "card-container" "footer"
+
+.img-top-logo
+  max-width: 11rem
+  margin-bottom: 20px
+
+  //top: 100px
+  //left: 2px
+  //padding-top: 10px
+
+.img-pos
+  padding-top: 100px // image still stuck in top corner 11:50 10/5
+
+.image-cards
+  //max-width: 1rem
+  height: 4rem
+  margin-bottom: 8px

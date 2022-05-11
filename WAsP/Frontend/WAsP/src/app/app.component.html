@@ -1,40 +1,140 @@
-<!-- Page Content  -->
-<div id="content">
-  <div class="row justify-content-start" style="background-color: #374785; color: #A8D0E6; border-bottom: 3px solid #dd0029;">
-    <div class="col p-2">
-      <div class="container-fluid">
-        <button mat-fab type="button" id="sidebarCollapse" class="btn btn-warning m-2" color="yellow">
-          <mat-icon>home</mat-icon>
-        </button>
-      </div>
+<!--TO FIX NOTES 
++ 10/5 the header still not fixed to the page need to fix
++ workout to center nav bar contents 
++ responsive image in nav bar
++ move menu contents down below logo 
++ workout padding on car-container to be relative to sidebar 
+
+-->
+
+<div class="home-container">
+  <nav>
+    <h1>Smart Fabrication | Weld Assurance Program</h1>
+    <!--<ul>
+      <li>
+        <a href="#">Home</a>
+      </li>
+      <li>
+        <a href="#">Profile</a>
+      </li>
+      <li>
+        <a href="#">Weld Assurance</a>
+      </li>
+      <li>
+        <a href="#">Prodcutivity</a>
+      </li>
+    </ul>-->
+  </nav>
+
+  <div class="sidebar">
+    <div class="img-pos">
+      <img class="img-top-logo" src="assets/WAsP design 6.png" />
     </div>
-    <div class="col-9 p-2 text-center">
-        <span class="h1" style="color:#FFFFFF;">Smart Fabrication Dashboards</span>
+    <h2>Menu</h2>
+    <ul>
+      <li>
+        <a href="#"><i class="fas fa-home"></i> Home</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-user"></i> Profile</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-address-card"></i> Weld Assurance</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-project-diagram"></i> Prodcutivity</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-blog"></i> Admin Access</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-address-book"></i> Contact</a>
+      </li>
+      <li>
+        <a href="#"><i class="fas fa-map-pin"></i> Map</a>
+      </li>
+    </ul>
+  </div>
+
+  <!--Center Content with Cards -->
+  <div class="card-container">
+    <div class="card">
+      <h2>Live Welds</h2>
+      <p><img class="image-cards" src="assets/welderpic.png" /></p>
+      <p>Monitor live welds with job ID, employee, machine…</p>
     </div>
-    <div class="col p-2 text-right" *ngIf="user">
-      <div class="dropdown show m-2">
-        <button mat-flat-button class="btn btn-warning text-center" type="button" id="dropdownUserButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="bi bi-person-circle"></i>
-          <span style="font-weight: bold">{{user.username}}</span>
-        </button>
-        <div class="dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center" aria-labelledby="dropdownUserButton">
-            <div class="bg-dark rounded text-white"><small>Account Type: <span class="font-weight-bold">Account Type</span></small></div>
-            <a class="dropdown-item" href="/settings">Settings</a>
-            <a class="dropdown-item" (click)="logout()">Logout</a>
-        </div>
-      </div>
+    <div class="card">
+      <h2>Weld History</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\weld histroy WAsPcolor.png -->
+      <p><img class="image-cards" src="assets/weld histroy WAsPcolor.png" /></p>
+      <p>View work history with job ID, employee, machine…</p>
+    </div>
+    <div class="card">
+      <h2>Compliance</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\compliance iconWAsPcolo.jpg-->
+      <p>
+        <img class="image-cards" src="assets/compliance iconWAsPcolo.jpg" />
+      </p>
+      <p>View compliance guidelines for job ID, machine…</p>
+    </div>
+    <div class="card">
+      <h2>Live Productivity</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\productivityWAsPcolo.jpg -->
+      <p><img class="image-cards" src="assets/productivityWAsPcolo.jpg" /></p>
+      <p>View productive live for projects, tasks, work orders….</p>
+    </div>
+    <div class="card">
+      <h2>Task Tracking</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\monitoringWAsPcolo.jpg -->
+      <p><img class="image-cards" src="assets/monitoringWAsPcolo.jpg" /></p>
+      <p>Monitor projects, work orders and tasks…</p>
+    </div>
+    <div class="card">
+      <h2>WAsP Reporting</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\reportingWAsPcolor2.png
+        C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\reportingWAsPcolo.png
+      C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\reportingWAsPcolo3.png-->
+      <p><img class="image-cards" src="assets/reportingWAsPcolo3.png" /></p>
+      <p>Weld assurance reports, compliance reports for tasks…</p>
+    </div>
+    <div class="card">
+      <h2>Register</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\register iconWAsPcolo.png-->
+      <p><img class="image-cards" src="assets/register iconWAsPcolo.png" /></p>
+      <p>Add and register Users, Machines work orders, task …</p>
+    </div>
+    <div class="card">
+      <h2>Communications</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\communicationWAsPcolo.jpg-->
+      <p><img class="image-cards" src="assets/communicationWAsPcolo.jpg" /></p>
+      <p>
+        Viewable Data, Org chart, Contact details for *External and *Internal…
+      </p>
+    </div>
+    <div class="card">
+      <h2>Documents</h2>
+      <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\doc icon.png-->
+      <p><img class="image-cards" src="assets/doc icon.png" /></p>
+      <p>WAsP Standard Operations Procedures …</p>
     </div>
   </div>
 
-  <!-- main app container -->
-  <div class="app-container" [ngClass]="{ 'bg-light': user }">
-    <alert></alert>
-    <router-outlet>
-      <mat-progress-spinner>
-      </mat-progress-spinner>
-    </router-outlet>
-  </div>
-
+  <!--end of class card-container-->
   <footer>
-    
+    <p>
+      Copyright © 2022 Smart Fabrication Pty Ltd | ABN: 70 089 359 366 | ACN:
+      089 359 366
+      <!-- <script>
+        document.write(new Date().getFullYear());
+      </script>-->
+    </p>
   </footer>
+</div>
+<!--end of class container-->
+
+<!--
+<script>
+   const date = new Date();
+   const jsYear = document.getElementByID("js-year");
+  js-year.innerHTML = date.getFullYear();
+</script>-->

@@ -157,7 +157,7 @@ input[type=search]::-webkit-search-cancel-button {
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Poppins', sans-serif, Arial, Helvetica;
     background: #ffffff;
     background-image: url('/static/images/smartfab_logo_gs.png');
 }
@@ -441,3 +441,4 @@ a.article:hover {
 table, tr, td, th, tbody, thead, tfoot {
     page-break-inside: avoid !important;
 }
+
