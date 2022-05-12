@@ -4,35 +4,6 @@
 
         <ng-template matTabContent>
 
-            <!--Test API calls-->
-            <button style="border: 1px;" (click)="getSpecificationRun('7', '2')">
-                WPS 7, Run 2
-            </button>
-            <br><br>
-            <button style="border: 1px;" (click)="getSpecification('7')">
-                WPS 7
-            </button>
-            <br><br>
-            <button style="border: 1px;" (click)="getContracts()">
-                Contracts
-            </button>
-            
-            <br><br>
-            <button style="border: 1px;" (click)="getRealtimeWelder('3213')">
-                Realtime Welder 3213
-            </button>
-            <br><br>
-            <button style="border: 1px;" (click)="getRealtimeTask('123')">
-                Realtime Task 123
-            </button>
-            <br><br>
-            <button style="border: 1px;" (click)="getTasks()">
-                Task Data
-            </button>
-            <br><br>
-            <button style="border: 1px;" (click)="loadData()">
-                Spec Data
-            </button>
 
             <div>
                 <form class="weld-history-form" [formGroup]="taskForm" (ngSubmit)="taskSubmit()">
