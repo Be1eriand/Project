@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import datetime
 import os
+import mimetypes
+
+mimetypes.add_type("text/javascript", ".js", True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,10 +37,11 @@ ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     #WAsP Applications
-    'layout.apps.LayoutConfig',
-    'dashboard.apps.DashboardConfig',
-    'report.apps.ReportConfig',
-    'accounts.apps.AccountsConfig',
+    #'layout.apps.LayoutConfig',
+    #'dashboard.apps.DashboardConfig',
+    #'report.apps.ReportConfig',
+    #'accounts.apps.AccountsConfig',
+    'index.apps.IndexConfig',
 
     #Django apps
     'django.contrib.admin',
@@ -103,10 +107,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'WAsP.urls'
 
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['./index/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -167,12 +172,14 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
-STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+STATIC_URL = 'static/'
  
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, 'static'),
+    os.path.join(STATIC_ROOT, 'js'),
+    os.path.join(STATIC_ROOT, 'css'),
+    os.path.join(STATIC_ROOT, 'images'),
 )
 
 # Default primary key field type
@@ -185,7 +192,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = "/login"
 
-CRISPY_TEMPLATE_PACK="bootstrap4"
+#CRISPY_TEMPLATE_PACK="bootstrap4"
 
 #MS SQL Setting
 
