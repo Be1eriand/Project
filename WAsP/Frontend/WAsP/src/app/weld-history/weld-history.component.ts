@@ -271,6 +271,7 @@ export class WeldHistoryComponent implements OnInit {
     let machine: RealTimeView[] = [];
     this.realtimeSerivce.getRTMachine(id).subscribe((rt) => {machine.push(rt);
     this.realtime = machine;
+    console.log(machine);
     });
     
   }
