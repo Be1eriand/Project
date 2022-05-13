@@ -13,6 +13,7 @@ export class MachineHistoryComponent implements OnInit {
 
   @Input() realtime: RealTimeView[];
 
+  allRealtime: RealTimeView[][];
 
   taskIDs: string[];
   validTaskID: any[];
