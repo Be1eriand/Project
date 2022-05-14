@@ -19,22 +19,19 @@ from django.urls import path, include, re_path
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 from accounts.views import WAsPTokenObtainPairView
 
-from websocket.realtime import RealTimeConsumer 
-
 urlpatterns = [
     re_path(r'^admin/', admin.site.urls),
-    path('', include('layout.urls')), #probably will need to change this
+    path('', include('index.urls')),
     re_path(r'^auth_api/', WAsPTokenObtainPairView.as_view(), name='token_obtain_pair'),
     re_path(r'^auth_api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     re_path(r'^auth_api/verify/', TokenVerifyView.as_view(), name='token_verify'),
-    path('dashboard/', include('dashboard.urls')),
-    path('report/', include('report.urls')),
+    #path('dashboard/', include('dashboard.urls')),
+    #path('report/', include('report.urls')),
     #path("register/", views.register , name="register"),
-    re_path(r'^accounts/', include('accounts.urls')),
+    #re_path(r'^accounts/', include('accounts.urls')),
     path('', include("django.contrib.auth.urls")),
     #path('settings', include("layout.urls")),
     re_path(r'^data/', include('data.urls')),
 ]
 
-
-handler404 = 'layout.views.page_not_found_view'
+handler404 = 'index.views.page_not_found_view'

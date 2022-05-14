@@ -7,28 +7,28 @@
 
 -->
 
-<div class="container">
-  <nav>
-    <h1>Smart Fabrication | Weld Assurance Program</h1>
-    <!--<ul>
-      <li>
-        <a href="#">Home</a>
-      </li>
-      <li>
-        <a href="#">Profile</a>
-      </li>
-      <li>
-        <a href="#">Weld Assurance</a>
-      </li>
-      <li>
-        <a href="#">Prodcutivity</a>
-      </li>
-    </ul>-->
-  </nav>
+<mat-drawer-container autosize>
+  <div class="nav">
+    <div class="row col-12">
+      <div class="d-flex justify-content-start col-1">
+        <button type="button" mat-button (click)="drawer.toggle()">
+          Toggle sidenav
+        </button>
+      </div>
+      <div class="d-flex justify-content-center col-10">
+        <h1>Smart Fabrication | Weld Assurance Program</h1>
+      </div>
+      <div class="d-flex justify-content-end col-1">
+        <button type="button" mat-button >
+          Button Goes Here
+        </button>
+      </div>
+    </div>
+  </div>
 
-  <div class="sidebar">
+  <mat-drawer #drawer class="sidebar" mode="side">
     <div class="img-pos">
-      <img class="img-top-logo" src="assets/WAsP design 6.png" />
+      <img class="img-top-logo" src="{{environment.static}}WAsP design 6.png" />
     </div>
     <h2>Menu</h2>
     <ul>
@@ -54,20 +54,20 @@
         <a href="#"><i class="fas fa-map-pin"></i> Map</a>
       </li>
     </ul>
-  </div>
-  <div>
+  </mat-drawer>
+  <div class="app-container">
     <router-outlet></router-outlet>
   </div>
-  <footer>
-    <p>
-      Copyright © 2022 Smart Fabrication Pty Ltd | ABN: 70 089 359 366 | ACN:
-      089 359 366
-      <!-- <script>
-        document.write(new Date().getFullYear());
-      </script>-->
-    </p>
-  </footer>
-</div>
+</mat-drawer-container>
+<footer class="app-footer">
+  <p>
+    Copyright © 2022 Smart Fabrication Pty Ltd | ABN: 70 089 359 366 | ACN:
+    089 359 366
+    <!-- <script>
+      document.write(new Date().getFullYear());
+    </script>-->
+  </p>
+</footer>
 <!--end of class container-->
 
 <!--

@@ -1,7 +1,7 @@
 @echo OFF
 
 @echo Building the pages for the Back End
-cmd /C ng build
+cmd /C ng build --output-hashing none --configuration production --base-href "/" --deploy-url "static/"
 
 SETLOCAL
 
@@ -17,6 +17,11 @@ copy .\dist\was-p\favicon.ico %BackendPath%static\
 :: Copy CSS files
 copy .\dist\was-p\*.css %BackendPath%static\css\
 
+:: Copy image files
+copy .\dist\was-p\assets\*.png %BackendPath%static\images\
+copy .\dist\was-p\assets\*.jpg %BackendPath%static\images\
+copy .\dist\was-p\assets\*.gif %BackendPath%static\images\
+
 ::Copy HTML files
-copy  .\dist\was-p\*.html ..\..\Backend\WAsP\layout\templates\
+copy  .\dist\was-p\*.html ..\..\Backend\WAsP\index\templates\
 ENDLOCAL
