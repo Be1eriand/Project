@@ -106,14 +106,13 @@ class AlertsPipe(Pipe):
     def _check_within_spec(self, data, spec_variable, spec):
 
         #Wish Python had switch cases, but oh well
-        #Right Here
-        #dict = data.rtdata.__dict__
+
         variable_to_check = data[spec_variable.lower()]
 
         if variable_to_check is None:
             Alert = 'Missing'
         elif variable_to_check == 0 :
-            Alert = 'Zero'
+            Alert = 'Zero' if data['timedelta'] != 0.00 else 'None'
         elif variable_to_check < 0 :
             Alert = 'Invalid'
         elif variable_to_check > spec[spec_variable +'_Max']: #Is the Variable exceeding the Maximum
@@ -127,9 +126,13 @@ class AlertsPipe(Pipe):
 
     def _create_alert(self, data, spec_variable, alert_type):
 
+        if alert_type=='Zero':
+            pprint(data)
+
         try:
             alert = AlertsTable(
                 TaskID=data['TaskID'],
+                RunNo=data['RunNo'],
                 StartTime= data['time'],
                 AlertType=self.rAlertTypes[alert_type],
                 SpecType=self.rSpecTypes[spec_variable]
@@ -165,12 +168,13 @@ class AlertsPipe(Pipe):
                     if alert_type != alert['AlertType']: #AlertType is not the same as the current AlertType
                         self._close_alert(alert)
                         self._create_alert(data, spec_variable, alert_type)
-        except Exception:
+        except Exception as e:
             print("The Error is in Check Alert!")
             pprint(data)
             pprint(spec_variable)
             pprint(alert_type)
             pprint(alert)
+            pprint(e)
 
     def _close_alert(self, alert):
         

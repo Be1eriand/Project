@@ -38,6 +38,7 @@ class AlertView(Base):
 
     id=Column(Integer, primary_key=True)
     TaskID = Column(Integer)
+    RunNo = Column(Integer)
     AlertType = Column(String)
     SpecType = Column(String)
     StartTime = Column(DateTime)

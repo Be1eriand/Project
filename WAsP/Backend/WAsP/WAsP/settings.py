@@ -15,7 +15,7 @@ import datetime
 import os
 import mimetypes
 
-mimetypes.add_type("text/javascript", ".js", True)
+#mimetypes.add_type("text/javascript", ".js", True)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,13 +127,29 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+"""
 
+DATABASES = {
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "SmartFab",
+        #"USER": "USER_NAME",
+        #"PASSWORD": "PASSWORD",
+        "HOST": "127.0.0.1", #Change to server address if not on local host
+        "PORT": "1433",
+        "OPTIONS": {"driver": "SQL Server Native Client 11.0",
+        "Trusted_Connection" : "yes",
+        "MARS_Connection": "yes,"
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

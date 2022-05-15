@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 import { MatCardModule } from '@angular/material/card';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatSelectModule } from '@angular/material/select';
+
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { RealtimeRoutingModule } from './realtime-routing.module';
 
@@ -17,6 +22,9 @@ import { WidgetComponent } from './widget.component';
         ReactiveFormsModule,
         RealtimeRoutingModule,
         MatCardModule,
+        MatBadgeModule,
+        MatSelectModule,
+        ColorPickerModule,
         FlexLayoutModule,
         NgxEchartsModule.forRoot({
             echarts
@@ -28,3 +36,14 @@ import { WidgetComponent } from './widget.component';
     ]
 })
 export class RealtimeModule { }
+
+
+export class lineColour {
+    colour: string;
+    line: string;
+}
+
+export class specDetails {
+    name: string;
+    units: string;
+}

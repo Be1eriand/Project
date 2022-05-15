@@ -1,16 +1,48 @@
-<div>
-    <div class="content">
-        <div class="row">
-            <div class="col-4"></div>
-            <div class="col-4">
-                <h1>Real Time Views</h1>
-            </div>
-            <div class="col-4"></div>
+<div class="dashboard">
+    <div class="row">
+        <div class="d-flex justify-content-start col-1"></div>
+        <div class="d-flex justify-content-center col-10">
+            <h1 class="dashboard-heading">Real Time Views</h1>
         </div>
-        <div fxLayout="row wrap" fxLayoutGap="8px grid">
-            <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" >
-                <realtime-card [Data]="data.Data" [Spec]="data.Spec" [Task]="data.Task" class="realtime-widget"></realtime-card>
+        <div class="d-flex justify-content-end col-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <mat-card>
+                <mat-card>
+                    <mat-card-title>Configuration</mat-card-title>
+                    <mat-form-field appearance="fill" *ngFor="let s of selected; let i = index">
+                        <mat-label>Variable</mat-label>
+                        <mat-select [(value)]="selected[i]">
+                            <mat-option></mat-option>
+                            <mat-option [value]="option.name" *ngFor="let option of specList">{{ option.name }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </mat-card>
+                <mat-card>
+                    <mat-card-title>Legend</mat-card-title>
+                    <mat-card-content>
+                        <div *ngFor="let line of lines">
+                            <input  [(colorPicker)]="line.colour" 
+                                    [style.background]="line.colour"
+                            />
+                        </div>
+                    </mat-card-content>
+                </mat-card>      
+
+            </mat-card>
+        </div>
+        <div class="col-9">
+            <div fxLayout="row wrap" fxLayoutGap="8px grid">
+                <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" >
+                    <realtime-card [Data]="data.Data" 
+                    [Spec]="data.Spec" 
+                    [Task]="data.Task" 
+                    [LineColours]="lines"
+                    [List]="selected"
+                    class="realtime-widget"></realtime-card>
+                </div>
             </div>
-        </div> 
+        </div>
     </div>
 </div>

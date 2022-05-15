@@ -9,6 +9,7 @@ class AlertsTable(Base):
 
     id=Column(Integer, primary_key=True, autoincrement="auto")
     TaskID = Column(Integer)
+    RunNo = Column(Integer)
     AlertType = Column(Integer, ForeignKey("AlertTypes.id"))
     SpecType = Column(Integer, ForeignKey("SpecTypes.id"))
     StartTime = Column(DateTime)

@@ -3,6 +3,7 @@ import { EChartsOption, EChartsType } from 'echarts';
 
 import { RealTimeData, TaskData, Specification } from '@app/_models';
 import { DataService, SocketService } from '@app/_services';
+import { lineColour, specDetails } from './realtime.module';
 
 @Component({ 
     selector: 'realtime-card',
@@ -14,6 +15,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
     @Input() Data: RealTimeData[];
     @Input() Spec: Specification;
     @Input() Task: TaskData;
+    @Input() LineColours: lineColour[];
+    @Input() List: string[];
 
     displayList = ['Current', 'Voltage'];
 
@@ -49,6 +52,19 @@ export class WidgetComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
+        if ((this.List === undefined) || (this.List.length == 0))
+            this.List = this.displayList;
+
+        this.List = this.List.reduce((arr, l) => {
+            if (l !== undefined){
+                let v = l.replace(' ', '');
+                if (v !== '') 
+                    arr.push(v);
+            }
+            return arr;
+        }, [])
+            
         this.updateChart();
     }
 
@@ -61,8 +77,6 @@ export class WidgetComponent implements OnInit, OnDestroy {
 
     private updateChart() {
 
-        console.log('Chart is updating');
-
         let time = getTimeStream(this.Data);
 
         let min = time.reduce(function (a, b) { return a < b ? a : b; });
@@ -71,34 +85,29 @@ export class WidgetComponent implements OnInit, OnDestroy {
         let dataList = [];
         let yAxisIndex = 0;
 
-        this.displayList.forEach((d) => {dataList.push({
+        this.List.forEach((d) => {dataList.push({
             type: 'line',
+            color: this.LineColours[yAxisIndex*3].colour,
             data: getDataPair(this.Data, d, 'Time'),
             showSymbol: false ,
             animation: false ,
-            yAxisIndex: yAxisIndex++,
+            yAxisIndex: yAxisIndex,
             })
+
+            let i = 1;
+            for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, d))) {
+                dataList.push({
+                type: 'line',
+                color: this.LineColours[yAxisIndex*3 + i].colour,
+                data: value,
+                showSymbol: false ,
+                animation: false ,
+                yAxisIndex: yAxisIndex,
+                })
+                i++;
+            }
+            yAxisIndex++;
         });
-
-        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Current'))) {
-            dataList.push({
-            type: 'line',
-            data: value,
-            showSymbol: false ,
-            animation: false ,
-            yAxisIndex: 0,
-            })
-        }
-
-        for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, 'Voltage'))) {
-            dataList.push({
-            type: 'line',
-            data: value,
-            showSymbol: false ,
-            animation: false ,
-            yAxisIndex: 1,
-            })
-        }
 
         this.chartOption = updateChartOptions(this.chartOption, dataList, min, max, time);
     }
