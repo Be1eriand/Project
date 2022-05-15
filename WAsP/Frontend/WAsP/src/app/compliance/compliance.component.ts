@@ -1,8 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ContractTaskView, RealTimeView, Specification, TaskView } from '@app/_models';
 import { RealtimeService } from '@app/_services/realtime.service';
 import { SpecificationService } from '@app/_services/specification.service';
+
+const pdfMake = require('pdfmake/build/pdfmake.js');
+import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
+const htmlToPdfmake = require("html-to-pdfmake");
+(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-compliance',
@@ -14,32 +19,27 @@ export class ComplianceComponent implements OnInit {
   contractForm: FormGroup;
 
   tasks: string[];
-  RTtask: RealTimeView;
   allTasks: TaskView[];
-  filteredTasks: string[];
+  filteredContracts: string[];
+
   contractID: string[];
   
   
-  maxDate: Date;
   showTask: boolean = false;
 
   
   allContracts: ContractTaskView[];
   contracts: string[];
-  wps: Specification[][];
+
+
+  @ViewChild('pdf')
+  pdf!: ElementRef;
 
   constructor(private specificationService: SpecificationService,
     private realtimeSerivce: RealtimeService,
-    ) { 
-      this.maxDate = new Date();
-    }
+    ) {}
 
   ngOnInit(): void {
-    this.realtimeSerivce.getTaskData().subscribe(t => {
-      this.allTasks = t;
-      this.loadTasks();
-    }); 
-
     this.specificationService.getAllContracts().subscribe(c => {
       this.allContracts = c;
       this.loadContracts();
@@ -58,16 +58,27 @@ export class ComplianceComponent implements OnInit {
     }
     let uniqueContracts = [...new Set(contracts)];
     this.contracts = uniqueContracts.sort();
+
+    this.filteredContracts = this.contracts;
+  }
+  contractOnKey(e: Event) {
+    const target = e.target as HTMLTextAreaElement;
+    this.filteredContracts = this.contractSearch(target.value);
+  }
+  contractSearch(value: string) {
+    let filter = value.toLocaleLowerCase();
+    return this.contracts.filter(option => option.toLocaleLowerCase().includes(filter));
   }
 
-  contractSubmit() {
 
+  contractSubmit() {
     console.log(this.contractForm);
     if (!this.contractForm.value.contractName) {
       alert('Please select a contract');
       return;
     }
 
+    // A contract can have many tasks assigned
     let contracts = []
     for(var i in this.allContracts) {
       if (this.allContracts[i].ContractName === this.contractForm.value.contractName){
@@ -75,8 +86,9 @@ export class ComplianceComponent implements OnInit {
       }
     }
     console.log(contracts);
+    this.contracts = contracts;
 
-    // Get WPS data
+    /* Get WPS data
     if (contracts.length > 0) {
       let wps: Specification[][] = [];
       for (var j in contracts) {
@@ -99,7 +111,7 @@ export class ComplianceComponent implements OnInit {
       console.log(test);
       console.log(realtime);
 
-    }
+    } */
 
     //this.realtimeSerivce.getRTTask(id).subscribe((rt) => this.RTtask = rt);
 
@@ -108,43 +120,30 @@ export class ComplianceComponent implements OnInit {
     //this.showTask = true;
     //console.log(this.RTtask);
 
-    
-  }
-
-
-  loadTasks(): void {
-    let tasks = []
-    for (let i = 0; i < this.allTasks.length; i++){
-      tasks.push(String(this.allTasks[i].TaskID));
-    }
-    let uniqueTasks = [...new Set(tasks)];
-    this.tasks = uniqueTasks.sort();
-
-    this.filteredTasks = this.tasks;
-  }
-  taskOnKey(e: Event) {
-    const target = e.target as HTMLTextAreaElement;
-    this.filteredTasks = this.taskSearch(target.value);
-  }
-  taskSearch(value: string) {
-    let filter = value.toLocaleLowerCase();
-    return this.tasks.filter(option => option.toLocaleLowerCase().includes(filter));
-  }
-  taskSubmit() {
-
-    console.log(this.contractForm);
-    if (!this.contractForm.value.taskID) {
-      alert('Please select a task ID');
-      return;
-    }
-    this.getRealtimeTask(this.contractForm.value.taskID);
     this.showTask = true;
-    console.log(this.RTtask);
-    
   }
 
-  getRealtimeTask(id: string){
-    this.realtimeSerivce.getRTTask(id).subscribe((rt) => this.RTtask = rt);
-    console.log(this.RTtask)
+  exportPDF(header: string) {
+    const pdf = this.pdf.nativeElement;
+    var html = htmlToPdfmake(pdf.innerHTML);
+    console.log(html);
+    const documentDefinition = {pageOrientation: 'landscape',
+                                content: [
+                                  {text: header, style: 'header'}, 
+                                  html
+                                ],
+                                styles: {
+                                  header: {
+                                    fontSize: 18,
+                                    color: '#374785',
+                                    bold: true,
+                                  },
+                                  'html-td': {
+                                    fontSize: 9,
+                                  },
+                                }
+                              };
+    pdfMake.createPdf(documentDefinition).download("Smart Fabrication Weld Compliance Report.pdf");
   }
+
 }
