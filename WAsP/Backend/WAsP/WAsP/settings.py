@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     #'report.apps.ReportConfig',
     #'accounts.apps.AccountsConfig',
     'index.apps.IndexConfig',
+    'websocket.apps.WebSocketConfig',
 
     #Django apps
     'django.contrib.admin',
@@ -93,11 +94,14 @@ ASGI_APPLICATION = "WAsP.routing.application"
 
 WSGI_APPLICATION = "WAsP.wsgi.application"
 
-#CHANNEL_REDIS_HOST = ("127.0.0.1", 3000) #IP address and port for the WAsP channel if using a Redis server which we are not
+#CHANNEL_REDIS_HOST = ("127.0.0.1", 6379) 
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
     },
 }
 
@@ -207,6 +211,12 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = "/login"
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Australia/South Australia"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = 'redis://localhost:6379'
 
 #CRISPY_TEMPLATE_PACK="bootstrap4"
 

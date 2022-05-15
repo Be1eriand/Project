@@ -4,6 +4,7 @@ import { EChartsOption, EChartsType } from 'echarts';
 import { RealTimeData, TaskData, Specification } from '@app/_models';
 import { DataService, SocketService } from '@app/_services';
 import { lineColour, specDetails } from './realtime.module';
+import { Subscription } from 'rxjs';
 
 @Component({ 
     selector: 'realtime-card',
@@ -19,6 +20,8 @@ export class WidgetComponent implements OnInit, OnDestroy {
     @Input() List: string[];
 
     displayList = ['Current', 'Voltage'];
+
+    AlertSubscription: Subscription;
 
     echartsInstance: EChartsType;
     chartOption: EChartsOption = {
@@ -66,9 +69,15 @@ export class WidgetComponent implements OnInit, OnDestroy {
         }, [])
             
         this.updateChart();
+        this.AlertSubscription = this.socketService.getRealTimeAlert(this.Task.TaskID, this.Task.RunNo).subscribe({
+            next: (alert) => {
+                console.log(alert);
+            }
+        });
     }
 
     ngOnDestroy(): void {
+        this.AlertSubscription.unsubscribe();
     }
 
     onChartInit(ec) {
