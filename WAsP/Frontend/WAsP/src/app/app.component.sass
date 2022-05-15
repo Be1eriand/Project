@@ -6,32 +6,34 @@
 // right:0;
 // bottom:0;
 // }
-    
+
 // .container.mat-drawer{
 // padding-left: 20px;
 // padding-left: 20px;
 // min-width: 200px    
-      
+
 //         }
 
 .app-container
   display: flexbox
   height: 90vh
+  // why 90 and 100? - 
+    // PUTTING A FLEX box to hold the grid has changed all formating* 
+    // need to check all features from home page- and permant scoll bar and double scroll when on different screens 
   padding: 0.2rem
-  background-color: $bgKhakiLight
+  //background-color: $bgKhakiLight
   width: 100%
-
+  //position: relative
 
 .nav
-  background-color: $SidebarBlue
-    // $bgKhakiDark
-  //$waspHeadBlack
-  //
+
+  background-color: $OLDboxHeader
+  justify-content: space-around
+  text-align: center
   top: 0px
-  left: 0px
+  left: opx
   width: 100%
 
-  //position: relative
   a
     color: $waspLetterCream
   h1
@@ -40,18 +42,95 @@
     //text-transform: uppercase
     text-align: center
     margin-bottom: 8px
+    margin-right: 10px
+    margin-left: 10px
+    font-weight: $medium-weight
 
   ul
     color: $waspHeadGrey
     li
       display: inline
-      padding-left: 45px
+      padding-left: 35px
+
+.home-logo
+  color: $waspLetterCream
+  text-align: center
+  margin-bottom: 8px
+  margin-left: 80px
+
+.home-text-1
+  text-align: center
+  margin-top: 18px
+  margin-left: 80px
+  margin-right: 50px
+  justify-content: space-around
+
+  span
+    color: $waspLetterOrange
+    font-weight: $xbold-weight
+    margin: 0.15rem
+    //justify-content: space-evenly
+
+.home-text-2
+ //text-align: center
+ // margin-top: 20px
+  justify-content: space-around
+  margin-left: 100px
+  margin-right: 50px
+
+.profile
+  color: $waspLetterCream
+  //margin-bottom: 8px
+  margin-top: 50px
+  margin-left: 150px
+  // margin-right: 50px
+
+.btn-user
+  background-color: $waspLetterCream
+  color: $OLDboxHeader
+  //$bgKhakiDark
+  //$waspLetterOrange
+  margin-top: 10px
+  &:hover
+    background-color: $waspLetterOrange
+    //background-color: $bgKhakiDark
+    //$SideBarHover
+
+.btn-home
+  background-color: $waspLetterCream
+  &:hover
+    background-color: $waspLetterOrange
+    //background-color: $bgKhakiDark
+    //$SideBarHover
+
+.btn-filter
+  min-width: 14em
+  //margin: 3px
 
 .app-footer
-  background-color: $waspHeadBlack
-  //$waspHeadGrey
-  color: $waspLetterCream
+  background-color: $waspLetterCream
+  padding-top: 0.4rem
+  color: $OLDboxHeader
+  font-weight: $bold-weight
   justify-content: space-around
   text-align: center
+  bottom: 0px
   position: fixed
   width: 100%
+  font-size: 0.7rem
+  .span
+    margin-left: 0.5em
+    margin-right: 0.5em
+  .org
+    margin-left: 0.1em
+    margin-right: 0.1em
+    color: $waspLetterOrange
+
+  img
+    margin-left: 20px
+
+@media screen and (max-width: 550px)
+  .column
+    width: 100%
+    display: block
+    margin-bottom: 20px

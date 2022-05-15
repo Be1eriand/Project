@@ -1,4 +1,16 @@
 // variables
+// Test weights 
+$hairline-weight: 100
+$thin-weight: 200
+$light-weight: 300
+$normal-weight: 400
+$medium-weight: 500
+$semibold-weight: 600
+$bold-weight: 700
+$xbold-weight: 800
+$black-weight: 900
+
+// Colours 
 
 $bgKhakiDark: #625b33
 $bgKhakiLight: #888159
@@ -15,49 +27,49 @@ $standUpBgSlideTen: #41342F
 $shadows: #161616
 // OLD Colours 
 $OLDboxHeader: #374785
+$OLDBlue: #5364A8
 //feautered colours 
 $SidebarBlue: #4b4276
 $SideBarBodyBackgroundcolor: #f3f5f9
 $SideBarHover: #594f8d
 $SideBarA: #fff
 
-body
-  height: 100%
+// body
+//   height: 100%
 
-.home-container
-  display: grid
-  //height: 80vh
-  grid-template-columns: 1fr 1fr 1fr
-  grid-template-rows:180px 180px 180px
-  //grid-auto-rows: minmax(100px, auto)
-  grid-template-areas: "card-container card-container card-container" "card-container card-container card-container" "card-container card-container card-container"
-  grid-gap: 0.2rem
-  padding: 0.2rem
-  background-color: $bgKhakiLight
-  width: 100%
-
-main
-  background-color: $waspHeadGrey
-  grid-area: main
+// .home-container
+//   display: grid
+//   //height: 80vh
+//   grid-template-columns: 1fr 1fr 1fr
+//   grid-template-rows: 180px 180px 180px
+//   //grid-auto-rows: minmax(100px, auto)
+//   grid-template-areas: "card-container card-container card-container" "card-container card-container card-container" "card-container card-container card-container"
+//   grid-gap: 0.2rem
+//   padding: 0.2rem
+//   background-color: $bgKhakiLight
+//   width: 100%
 
 .sidebar
-  background-color: $SidebarBlue
+  background-color: $OLDboxHeader
   color: $waspLetterCream
+  top: 0px
   bottom: 0px
   left: 0px
-  min-height: 100%
-  position: fixed
+  height: 100vh
+  font-size: 1rem
 
   h2
     color: $waspBoarderWhite
     text-transform: uppercase
     text-align: center
     margin-bottom: 20px
+
   ul li
     padding: 20px
-    border-bottom: 1px solid $waspLetterCream
+    //border-bottom: 1px solid $waspLetterCream
     border-bottom: 1px solid $waspHeadBlack
     border-top: 1px solid $waspHeadBlack
+    list-style: none
 
     a
       color: $waspLetterCream
@@ -68,29 +80,35 @@ main
 
       &:hover
         //background-color: $waspButtYellow
-        background-color: $bgKhakiDark
+        background-color: $waspLetterOrange
+        //$bgKhakiDark
         //$SideBarHover
+        color: $waspHeadBlack
+        font-weight: $semibold-weight
 
         a
           color: $SideBarA
 
 .card-container
-  background-color: $bgKhakiLight
+  //background-color: $waspBoarderWhite
+  //background-color: $bgKhakiLight
+  //position: relative
   color: $waspLetterCream
-  grid-area: card-container
+  //grid-area: card-container
   display: grid
-  height: 100%
+  height: 85vh
   //width: 100%
   //grid-template-columns: repeat(auto-fit, minmax(200px, 1fr))
-  grid-template-columns: repeat(3, 1fr)
+  grid-template-columns: repeat(3, 0.8fr)
   grid-auto-columns: minmax(1fr, atuo)
-  grid-auto-rows: minmax(100px, auto)
-  grid-template-areas: "card-1 card-2 card-3"
-  grid-gap: 2em
+  grid-auto-rows: minmax(1fr, auto)
+  grid-template-areas: "card card card"
+  grid-gap: 1.2rem
   //0.1rem
-  //padding: 0.2rem
-  //padding-left: 75px
-  justify-content: space-around
+  padding: 0.2rem
+  padding-bottom: 35px
+  padding-right: 15px
+    //justify-content: space-around
 
 .card
   //background-color: $waspLetterOrange // bit too bright 
@@ -112,7 +130,7 @@ main
   //left: 75px
   //padding: 2em
   border-radius: .1em
-  box-shadow: 20px 10px 30px $shadows
+  box-shadow: 10px 10px 10px $shadows
 
   h2
     color: $waspLetterOrange
@@ -133,44 +151,31 @@ main
     color: $waspBoarderWhite
     //$shadows
 
-.cards
-  background-color: $waspLetterOrange
-  color: $waspLetterCream
-  grid-area: cards
-  border: $waspLetterCream
-
-.card-1
-  background-color: $waspLetterOrange
-  border: $waspLetterCream
-  grid-area: card-1
-
-.card-2
-  background-color: $waspDeepGreen
-  border: $waspLetterCream
-  grid-area: card-2
-
-.card-3
-  background-color: $waspButtYellow
-  border: $waspLetterCream
-  grid-area: card-3
-  color: black
-
 @media only screen and (max-width:650px)
   .card-container
     grid-template-columns: 1fr
     grid-auto-rows: 1fr
     grid-template-areas: "card-container" "card-container" "card-container"
 
-.img-top-logo
+@media only screen and (max-width:450px)
+  .card-container
+    grid-template-columns: repeat(2, 0.8fr)
+    grid-auto-rows: repeat(3, 0.8fr)
+    grid-template-areas: "card-container" "card-container" "card-container"
+
+// images and logos 
+
+.side-img-top-logo
   max-width: 11rem
   margin-bottom: 20px
+  margin-left: 5px
 
-  //top: 100px
-  //left: 2px
-  //padding-top: 10px
+.footer-img-logo
+  height: 2em
+  //margin-bottom: 1px
 
 .img-pos
-  padding-top: 100px // image still stuck in top corner 11:50 10/5
+  padding-top: 20px // image still stuck in top corner 11:50 10/5
 
 .image-cards
   //max-width: 1rem

@@ -4,72 +4,113 @@
 + responsive image in nav bar
 + move menu contents down below logo 
 + workout padding on car-container to be relative to sidebar 
+C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\smartfab_logo.png
 
 -->
-
-<mat-drawer-container autosize>
-  <div class="nav">
-    <div class="row col-12">
-      <div class="d-flex justify-content-start col-1">
-        <button type="button" mat-button (click)="drawer.toggle()">
-          Toggle sidenav
-        </button>
-      </div>
-      <div class="d-flex justify-content-center col-10">
-        <h1>Smart Fabrication | Weld Assurance Program</h1>
-      </div>
-      <div class="d-flex justify-content-end col-1">
-        <button type="button" mat-button >
-          Button Goes Here
-        </button>
+<div class="app-container">
+  <mat-drawer-container autosize>
+    <div class="nav">
+      <div class="row col-12">
+        <div class="home-logo d-flex justify-content-start">
+          <button
+            mat-fab
+            type="button"
+            mat-button
+            (click)="drawer.toggle()"
+            class="btn-home btn-warning m-2"
+            color="#FCFBFB"
+          >
+            <!--the above colour when removed changes the styling ?? -->
+            <mat-icon>home</mat-icon>
+          </button>
+        </div>
+        <div class="home-text-1 justify-content-center">
+          <h1><span>W</span>eld <span>A</span>ssurance <span>P</span>rogram</h1>
+        </div>
+        <div class="home-text-1 justify-content-center">
+          <h1>Smart Fabrication</h1>
+        </div>
+        <!-- User button  -->
+        <div class="profile" *ngIf="user"></div>
+        <div class="dropdown show m-2">
+          <button
+            mat-raised-button
+            class="btn-user btn-warning text-center"
+            type="button"
+            id="dropdownUserButton"
+            data-toggle="dropdown"
+            aria-haspopup="true"
+            aria-expanded="false"
+          >
+            <i class="bi bi-person-circle"></i>
+            <span style="font-weight: bold"> {{ user.username }}</span>
+          </button>
+          <div
+            class="dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center"
+            aria-labelledby="dropdownUserButton"
+          >
+            <div class="bg-dark rounded text-white">
+              <small> <span class="font-weight-bold">Your Account</span></small>
+            </div>
+            <a class="dropdown-item" href="/settings">Settings</a>
+            <a class="dropdown-item" (click)="logout()">Logout</a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
+    <mat-drawer #drawer class="sidebar" mode="side">
+      <div class="img-pos">
+        <img
+          class="side-img-top-logo"
+          src="{{ environment.static }}WAsP design 6.png"
+        />
+      </div>
+      <h2>Menu</h2>
+      <ul>
+        <li>
+          <a href="#"><i class="fas fa-home"></i> Home</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-user"></i> Profile</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-address-card"></i> Weld Assurance</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-project-diagram"></i> Prodcutivity</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-blog"></i> Admin Access</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-address-book"></i> Contact</a>
+        </li>
+        <li>
+          <a href="#"><i class="fas fa-map-pin"></i> Map</a>
+        </li>
+      </ul>
+    </mat-drawer>
 
-  <mat-drawer #drawer class="sidebar" mode="side">
-    <div class="img-pos">
-      <img class="img-top-logo" src="{{environment.static}}WAsP design 6.png" />
-    </div>
-    <h2>Menu</h2>
-    <ul>
-      <li>
-        <a href="#"><i class="fas fa-home"></i> Home</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-user"></i> Profile</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-address-card"></i> Weld Assurance</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-project-diagram"></i> Prodcutivity</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-blog"></i> Admin Access</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-address-book"></i> Contact</a>
-      </li>
-      <li>
-        <a href="#"><i class="fas fa-map-pin"></i> Map</a>
-      </li>
-    </ul>
-  </mat-drawer>
-  <div class="app-container">
     <router-outlet></router-outlet>
-  </div>
-</mat-drawer-container>
-<footer class="app-footer">
-  <p>
-    Copyright © 2022 Smart Fabrication Pty Ltd | ABN: 70 089 359 366 | ACN:
-    089 359 366
-    <!-- <script>
+    <footer class="app-footer">
+      <p>
+        <span class="org">W</span>eld <span class="org">A</span>ssurance
+        <span class="org">P</span>rogram
+        <span> Copyright © 2022</span>
+        <span> Smart Fabrication Pty Ltd </span>
+        <span>| ABN: 70 089 359 366 |</span>
+        <span> ACN: 089 359 366</span>
+        <img
+          class="footer-img-logo"
+          src="{{ environment.static }}smartfab_logo.png"
+        />
+      </p>
+      <!-- <script>
       document.write(new Date().getFullYear());
     </script>-->
-  </p>
-</footer>
-<!--end of class container-->
-
+    </footer>
+  </mat-drawer-container>
+</div>
 <!--
 <script>
    const date = new Date();
