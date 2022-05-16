@@ -59,12 +59,13 @@ class RealTimeDataViewSerializer(serializers.Serializer):
 
 class AlertViewSerializer(serializers.Serializer):
 
-    AlertID = serializers.IntegerField()
-    Jobid = serializers.IntegerField()
+    id = serializers.IntegerField()
+    TaskID = serializers.IntegerField()
+    RunNo = serializers.IntegerField()
     AlertType = serializers.CharField(max_length=100, read_only=True)
     SpecType = serializers.CharField(max_length=100, read_only=True)
     StartTime = serializers.DateTimeField()
-    EndTime = serializers.DateTimeField()
+    FinishTime = serializers.DateTimeField()
 
 class WPSViewSerializer(serializers.Serializer):
 

@@ -42,7 +42,7 @@ class AlertView(Base):
     AlertType = Column(String)
     SpecType = Column(String)
     StartTime = Column(DateTime)
-    EndTime = Column(DateTime)
+    FinishTime = Column(DateTime)
 
 class WPSView(Base):
     __tablename__ = "WPSView"

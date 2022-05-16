@@ -5,3 +5,7 @@ WAsP/Database/SensorDataDB_log.ldf
 WAsP/Database/SensorDataDB.mdf
 WAsP/Database/SmartFab_log.ldf
 *.mdf
+WAsP/Backend/WAsP/celerybeat-schedule.dat
+WAsP/Backend/WAsP/celerybeat-schedule.dir
+WAsP/Database/SensorDataDB_log.ldf
+WAsP/Database/SmartFab_log.ldf

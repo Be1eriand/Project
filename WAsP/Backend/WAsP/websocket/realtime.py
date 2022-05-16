@@ -1,4 +1,3 @@
-from pprint import pprint
 import threading
 from channels.generic.websocket import JsonWebsocketConsumer
 import datetime

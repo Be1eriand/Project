@@ -1,9 +1,9 @@
 export class RTAlert {
-    AlertID: string;
-    Jobid: string;
+    id: string;
+    TaskID: string;
     RunNo: string;
     AlertType: string;
     SpecType: string;
     StartTime: string;
-    EndTime: string;
+    FinishTime: string;
 }

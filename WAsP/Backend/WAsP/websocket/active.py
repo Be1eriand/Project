@@ -1,6 +1,5 @@
-from pprint import pprint
-import threading
-from channels.generic.websocket import JsonWebsocketConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.db import database_sync_to_async
 import datetime
 
 from django.conf import settings
@@ -12,53 +11,30 @@ from Models.Views import ActiveView, RealTimeDataView, SpecTaskView
 session = settings.SESSION
 connection = settings.CONNECTION
 
-def setInterval(interval):
-    def decorator(function):
-        def wrapper(*args, **kwargs):
-            stopped = threading.Event()
-
-            def loop(): # executed in another thread
-                while not stopped.wait(interval): # until stopped
-                    function(*args, **kwargs)
-
-            t = threading.Thread(target=loop)
-            t.daemon = True # stop if the program exits
-            t.start()
-            return stopped
-        return wrapper
-    return decorator
-
-
-class ActiveConsumer(JsonWebsocketConsumer):
+class ActiveConsumer(AsyncJsonWebsocketConsumer):
 
     schedulerActive = False
     count = 0
 
-    def connect(self):
+    async def connect(self):
 
         self.connected = True
-        self.accept()
 
-        if not self.schedulerActive:
-            self.thread = self.send_updates()
-            self.schedulerActive = True
+        await self.channel_layer.group_add("active_machines", self.channel_name)
 
+        await self.accept()
 
-    def disconnect(self, event):
+    async def disconnect(self, event):
 
+        await self.channel_layer.group_discard("active_machines", self.channel_name)
         super().disconnect(event)
 
-    def receive(self, text_data=None, bytes_data=None):
+    async def receive(self, text_data=None, bytes_data=None):
 
         pass
     
-    #@database_sync_to_async
+    @database_sync_to_async
     def get_active_machines(self):
-
-        #selected = session.query(ActiveView).all()
-        #serialised = ActiveViewSerializer(selected, many=True)
-
-        #return serialised.data
 
         data = {}
         
@@ -90,11 +66,8 @@ class ActiveConsumer(JsonWebsocketConsumer):
 
         return data
 
-    @setInterval(5.0)
-    def send_updates(self):
+    async def send_active(self, event):
 
-        data = self.get_active_machines()
+        data = await self.get_active_machines()
 
-        #if len(data) != self.count:
-        #    self.count = len(data)
-        self.send_json(data)
+        await self.send_json(data)

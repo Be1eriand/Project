@@ -69,15 +69,10 @@ export class WidgetComponent implements OnInit, OnDestroy {
         }, [])
             
         this.updateChart();
-        this.AlertSubscription = this.socketService.getRealTimeAlert(this.Task.TaskID, this.Task.RunNo).subscribe({
-            next: (alert) => {
-                console.log(alert);
-            }
-        });
     }
 
     ngOnDestroy(): void {
-        this.AlertSubscription.unsubscribe();
+        //this.AlertSubscription.unsubscribe();
     }
 
     onChartInit(ec) {

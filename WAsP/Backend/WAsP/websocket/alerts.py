@@ -1,6 +1,15 @@
 from pprint import pprint
-from asgiref.sync import async_to_sync
+from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
+
+from django.conf import settings
+from sqlalchemy import select, text
+
+from data.serializers import AlertViewSerializer
+from Models.Views import AlertView
+
+session = settings.SESSION
+connection = settings.CONNECTION
 
 class AlertConsumer(AsyncJsonWebsocketConsumer):
 
@@ -26,6 +35,17 @@ class AlertConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_alerts(self, event):
 
-        text = event['data']
+        data = await self.get_alerts()
 
-        pprint(text)
+        await self.send_json(data)
+
+    @database_sync_to_async
+    def get_alerts(self):
+
+        qText = f'TaskID={self.TaskID} AND RunNo={self.RunNo}'
+
+        selected = connection.execute(select(AlertView).where(text(qText))).fetchall()
+        
+        serialised = AlertViewSerializer(selected, many=True)
+
+        return serialised.data

@@ -37,12 +37,7 @@ ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     #WAsP Applications
-    #'layout.apps.LayoutConfig',
-    #'dashboard.apps.DashboardConfig',
-    #'report.apps.ReportConfig',
-    #'accounts.apps.AccountsConfig',
     'index.apps.IndexConfig',
-    'websocket.apps.WebSocketConfig',
 
     #Django apps
     'django.contrib.admin',
@@ -101,6 +96,8 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         "CONFIG": {
             "hosts": [("127.0.0.1", 6379)],
+            "capacity": 1500,  # default 100
+            "expiry": 30, 
         },
     },
 }
@@ -179,7 +176,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC' #probably change this to ACST
+TIME_ZONE = 'Australia/Adelaide' #probably change this to ACST
 
 USE_I18N = True
 
@@ -213,10 +210,10 @@ LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/login"
 
 # Celery Configuration Options
-CELERY_TIMEZONE = "Australia/South Australia"
+CELERY_TIMEZONE = "Australia/Adelaide"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
 #CRISPY_TEMPLATE_PACK="bootstrap4"
 

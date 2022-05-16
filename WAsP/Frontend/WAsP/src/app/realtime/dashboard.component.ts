@@ -1,7 +1,9 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { AlertService, AccountService,  SocketService } from '@app/_services';
 import { lineColour, specDetails } from './realtime.module';
+import { RTAlert } from '@app/_models'
 
 @Component({ templateUrl: 'dashboard.component.html',
              styleUrls: ['dashboard.component.sass'], 
@@ -21,6 +23,9 @@ export class DashboardComponent implements OnInit, OnDestroy  {
          "units": 'mm/min'},
     ]
 
+    Alerts: RTAlert[] = [];
+
+    AlertSubscription: Subscription;
     ActiveTasks: any[];
     lines: lineColour[] = [
         {"colour": "#0e09f8",
@@ -45,6 +50,18 @@ export class DashboardComponent implements OnInit, OnDestroy  {
             this.selected.push(this.specList[0].name);
             this.selected.push(this.specList[1].name);
             this.numSelect = this.selected.length;
+            this.AlertSubscription = this.socketService.getRealTimeAlert('1', '1').subscribe({
+                next: (alert) => {
+                    console.log(alert);
+
+                    let count = alert.length;
+                    this.Alerts = alert.reduce((arr, v) => {
+                        return arr;
+                    }, []);
+
+                    console.log(count);
+                }
+            });
         }
 
     ngOnInit(): void {
@@ -69,10 +86,12 @@ export class DashboardComponent implements OnInit, OnDestroy  {
                     this.alertService.error(error);
                 }
             })
+
         }
     }
 
     ngOnDestroy(): void {
         this.socketService.tdSocketListener.unsubscribe();
+        this.AlertSubscription.unsubscribe();
     }
 }
