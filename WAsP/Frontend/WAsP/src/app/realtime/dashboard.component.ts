@@ -1,15 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { AlertService, AccountService,  SocketService } from '@app/_services';
+import { AlertService, AccountService,  SocketService, DataService } from '@app/_services';
 import { lineColour, specDetails } from './realtime.module';
-import { RTAlert } from '@app/_models'
+import { RTAlert, Machine } from '@app/_models'
 
 @Component({ templateUrl: 'dashboard.component.html',
              styleUrls: ['dashboard.component.sass'], 
  })
 export class DashboardComponent implements OnInit, OnDestroy  {
 
+    machineList: Machine[] = [];
     selected: string[] = [];
     numSelect = 0;
     specList: specDetails[] = [
@@ -46,52 +47,30 @@ export class DashboardComponent implements OnInit, OnDestroy  {
         private socketService: SocketService,
         private alertService: AlertService,
         private accountservice: AccountService,
+        private dataService: DataService,
         ) {
             this.selected.push(this.specList[0].name);
             this.selected.push(this.specList[1].name);
             this.numSelect = this.selected.length;
-            this.AlertSubscription = this.socketService.getRealTimeAlert('1', '1').subscribe({
-                next: (alert) => {
-                    console.log(alert);
 
-                    let count = alert.length;
-                    this.Alerts = alert.reduce((arr, v) => {
-                        return arr;
-                    }, []);
-
-                    console.log(count);
-                }
-            });
-        }
-
-    ngOnInit(): void {
-        if (this.accountservice.userValue) {
-
-            this.socketService.getActiveMachines2().subscribe({
-                next: (td) => {
-                    let arr = []
-
-                    td['active'].forEach(function (item) {
-                        let t = item.TaskID;
-                        let mappped = {};
-                        mappped['Task'] = item;
-                        mappped['Spec'] = td[t]['WPS'];
-                        mappped['Data'] = td[t]['RT'];
-                        arr.push(mappped);
-                    })
-                    this.ActiveTasks = arr;
-
+            this.dataService.getMachines().subscribe({
+                next: (m) => {
+                    this.machineList = m;
                 },
                 error: error => {
                     this.alertService.error(error);
                 }
             })
+        }
+
+    ngOnInit(): void {
+        if (this.accountservice.userValue) {
 
         }
     }
 
     ngOnDestroy(): void {
-        this.socketService.tdSocketListener.unsubscribe();
-        this.AlertSubscription.unsubscribe();
+        //this.socketService.tdSocketListener.unsubscribe();
+        //this.AlertSubscription.unsubscribe();
     }
 }

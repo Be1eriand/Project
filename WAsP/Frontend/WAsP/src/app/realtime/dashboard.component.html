@@ -8,10 +8,10 @@
     </div>
     <div class="row">
         <div class="col-3">
-            <mat-card>
+            <div class="display-box">
                 <mat-card>
-                    <mat-card-title>Configuration</mat-card-title>
-                    <mat-form-field appearance="fill" *ngFor="let s of selected; let i = index">
+                    <mat-card-title>Line Selection</mat-card-title>
+                    <mat-form-field appearance="fill" *ngFor="let s of selected; let i = index" class="Variable-Dropdown">
                         <mat-label>Variable</mat-label>
                         <mat-select [(value)]="selected[i]">
                             <mat-option></mat-option>
@@ -23,21 +23,23 @@
                     <mat-card-title>Legend</mat-card-title>
                     <mat-card-content>
                         <div *ngFor="let line of lines">
+                            <label class="label-line-colour">{{line.line}}</label>
                             <input  [(colorPicker)]="line.colour" 
                                     [style.background]="line.colour"
+                                    class="input-colour"
                             />
                         </div>
                     </mat-card-content>
                 </mat-card>      
 
-            </mat-card>
+            </div>
         </div>
         <div class="col-9">
             <div fxLayout="row wrap" fxLayoutGap="8px grid">
-                <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" >
-                    <realtime-card [Data]="data.Data" 
-                    [Spec]="data.Spec" 
-                    [Task]="data.Task" 
+                <!-- <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of ActiveTasks" > -->
+                    <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let machine of machineList">
+                    <realtime-card 
+                    [Machine]="machine.id"
                     [LineColours]="lines"
                     [List]="selected"
                     class="realtime-widget"></realtime-card>

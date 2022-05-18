@@ -22,10 +22,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks()
 
 app.conf.beat_schedule = {
-    'update-alerts': {
-        'task': 'WAsP.celery.send_alerts',
-        'schedule': 1,
-    },
+
     'update-machines': {
         'task': 'WAsP.celery.send_active_machines',
         'schedule': 1,
@@ -33,17 +30,6 @@ app.conf.beat_schedule = {
 }
 
 app.conf.timezone = 'Australia/Adelaide'
-
-
-@shared_task
-def send_alerts():
-
-    message = {'type': 'send_alerts',
-               'data': json.dumps('Alerts') }
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)('alerts', message)
-
-    return message
 
 @shared_task
 def send_active_machines():

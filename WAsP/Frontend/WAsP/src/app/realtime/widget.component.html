@@ -1,18 +1,18 @@
-<mat-card class="realtime-widget" matBadge="1" matBadgeSize="large">
+<mat-card class="realtime-widget" matBadge="{{numAlerts}}" matBadgeSize="medium">
   <mat-card-header>
     <mat-card-title>
       <div class="row">
         <div class="col-2"></div>
-        <div class="col-8 justify-center">Machine ID: {{Task.MachineID}}</div>
+        <div class="col-8 justify-center">Machine ID: {{Machine}}</div>
         <div class="col-2"></div>
       </div>
     </mat-card-title>
     <mat-card-subtitle>
-      <div class="row">
+      <div class="row" *ngIf="Task">
           <div class="col-4 justify-center">Task ID: {{Task.TaskID}}</div>
           <div class="col-4 justify-center">Welder ID: {{Task.WelderID}}</div>
           <div class="col-4 justify-center">Run No: {{Task.RunNo}}</div>
-        </div>
+      </div>
     </mat-card-subtitle> 
   </mat-card-header>
   <mat-card-content> 

@@ -20,8 +20,8 @@ export class SocketService {
         this.amSocketListener = webSocket<any[]>(`${environment.socketUrl}/socket/active/`)
     }
     
-   getRTstream(task: string, run: string) : Observable<RealTimeView[]> {
-      return webSocket<RealTimeView[]>(`${environment.socketUrl}/socket/realtime/${task}/${run}`).asObservable();
+    getRTstream(machine: string) : Observable<RealTimeView[]> {
+      return webSocket<RealTimeView[]>(`${environment.socketUrl}/socket/realtime/${machine}`).asObservable();
     }
 
     getActiveMachines(): Observable<TaskData[]> {
@@ -32,7 +32,7 @@ export class SocketService {
       return this.amSocketListener.asObservable();
     }
 
-    getRealTimeAlert(task: string, run: string): Observable<RTAlert[]> {
-      return webSocket<RTAlert[]>(`${environment.socketUrl}/socket/alert/${task}/${run}`).asObservable();
+    getRealTimeAlert(machine: string): Observable<RTAlert> {
+      return webSocket<RTAlert>(`${environment.socketUrl}/socket/alert/${machine}`).asObservable();
     }
 }

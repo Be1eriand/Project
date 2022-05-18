@@ -14,9 +14,9 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'WAsP.settings')
 django_asgi_app = get_asgi_application()
 
 websocket_routing = [
-    re_path(r'socket/realtime/(\d+)/(\d+)$', RealTimeConsumer.as_asgi()),
+    re_path(r'socket/realtime/(\d+)$', RealTimeConsumer.as_asgi()),
     re_path(r'socket/active/$', ActiveConsumer.as_asgi()),
-    re_path(r'socket/alert/(\d+)/(\d+)$', AlertConsumer.as_asgi()),
+    re_path(r'socket/alert/(\d+)$', AlertConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({

@@ -2,7 +2,6 @@
 from pprint import pprint
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
-from core.utils import convert_to_dateTime
 from pipelines.pipe import Pipe
 from models.models import Assignment, RealTimeData, RunTable, WeldingTable
 
@@ -14,40 +13,37 @@ class SqlWriterPipe(Pipe):
     def process_data(self, dict):
 
         print("Processing SQL")
-        prevtime = dict['prevtime']
         data = dict['processed']
         session = dict['session']    
-
-
 
         try:
             #create the welding table details
             weldingTable = WeldingTable(
                 Machine_id = data["MachineID"],
-                Welder_id = data['WelderId'],
+                Welder_id = data['WelderID'],
             )
 
             weldingTable.realtime = RealTimeData(
-                Current=data["current"],
-                Voltage=data["voltage"],
-                Temperature=data["temperature"],
-                GasUsed=data["gasUsed"],
-                WireFeedrate=data["wireFeedrate"],
-                Time=data["time"],
-                Timedelta=data["timedelta"],
-                Length=data["length"],
-                Power=data["power"],
-                HeatInput=data["heatinput"],
-                TravelSpeed=data["travelspeed"],
+                Current=data["Current"],
+                Voltage=data["Voltage"],
+                Temperature=data["Temperature"],
+                GasUsed=data["GasUsed"],
+                WireFeedrate=data["WireFeedrate"],
+                Time=data["Time"],
+                Timedelta=data["Timedelta"],
+                Length=data["Length"],
+                Power=data["Power"],
+                HeatInput=data["HeatInput"],
+                TravelSpeed=data["TravelSpeed"],
             )
             
-            queryText = f'TaskID={data["TaskID"]} and WelderID={data["WelderId"]} and MachineID={data["MachineID"]}'
+            queryText = f'TaskID={data["TaskID"]} and WelderID={data["WelderID"]} and MachineID={data["MachineID"]}'
             record = session.query(Assignment).filter(text(queryText)).one_or_none()
 
             if (record is None):
                 
                 assignment = Assignment(
-                    WelderID=data['WelderId'],
+                    WelderID=data['WelderID'],
                     MachineID=data['MachineID'],
                     TaskID=data['TaskID']
                 )

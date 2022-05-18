@@ -1,5 +1,12 @@
 #Definition for the Alerts Pipeline
 #This is where some of the Magic will happen with the Real Time Alerts
+import os
+from re import A
+import sys
+from pathlib import Path
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+
 from datetime import datetime
 from pprint import pprint
 from typing import Dict, List
@@ -14,6 +21,11 @@ from pipelines.pipe import Pipe
 
 from models.models import AlertTypes, SpecTypes, AlertView, AlertsTable
 from models.models import WPSView
+
+WAsPdir = os.path.join(Path.cwd(), 'Backend', 'WAsP')
+sys.path.append(WAsPdir)
+
+os.environ['DJANGO_SETTINGS_MODULE'] =  'WAsP.settings'
 
 
 class AlertsPipe(Pipe):
@@ -64,6 +76,7 @@ class AlertsPipe(Pipe):
         
         TaskID = dict['processed']['TaskID']
         RunNo = dict['processed']['RunNo']
+        
         spec = self._get_specification(TaskID,RunNo)
 
         self._validate_data(dict['processed'], spec)
@@ -95,7 +108,7 @@ class AlertsPipe(Pipe):
         
         return record.__dict__ if record is not None else {}
     
-    def _validate_data(self, data: SensorData, spec: Dict):
+    def _validate_data(self, data, spec: Dict):
 
         for spec_variable in self.alert_list:
             
@@ -107,12 +120,12 @@ class AlertsPipe(Pipe):
 
         #Wish Python had switch cases, but oh well
 
-        variable_to_check = data[spec_variable.lower()]
+        variable_to_check = data[spec_variable]
 
         if variable_to_check is None:
             Alert = 'Missing'
         elif variable_to_check == 0 :
-            Alert = 'Zero' if data['timedelta'] != 0.00 else 'None'
+            Alert = 'Zero' if data['Timedelta'] != 0.00 else 'None'
         elif variable_to_check < 0 :
             Alert = 'Invalid'
         elif variable_to_check > spec[spec_variable +'_Max']: #Is the Variable exceeding the Maximum
@@ -133,7 +146,7 @@ class AlertsPipe(Pipe):
             alert = AlertsTable(
                 TaskID=data['TaskID'],
                 RunNo=data['RunNo'],
-                StartTime= data['time'],
+                StartTime= data['Time'],
                 AlertType=self.rAlertTypes[alert_type],
                 SpecType=self.rSpecTypes[spec_variable]
             )
@@ -141,14 +154,21 @@ class AlertsPipe(Pipe):
             self.session.commit()
 
             hash = hash_numbers(alert.TaskID, alert.SpecType)
-            self.alertsTable[hash] = alert.__dict__
-            self.alertsTable[hash]['SpecType'] = self.specTypes[alert.SpecType]
-            self.alertsTable[hash]['AlertType'] = self.alertTypes[alert.AlertType]
+
+            alertDict = {} #Hack to overcome whatever the hell is going on
+            alertDict['SpecType'] = self.specTypes[alert.SpecType]
+            alertDict['AlertType'] = self.alertTypes[alert.AlertType]
+            alertDict['TaskID'] = alert.TaskID
+            alertDict['RunNo'] = alert.RunNo
+            alertDict['id'] = alert.id
+
+            self.alertsTable[hash] = alertDict
 
         except IntegrityError:
             pprint("Integrity Error. Unable to create an alert")
             self.session.rollback()
 
+        self._send_alert(data['MachineID'], alert)
         pprint("Alert has been created")
 
     def _check_alert(self, data, spec_variable, alert_type):
@@ -182,12 +202,13 @@ class AlertsPipe(Pipe):
             #remove the alert for the AlertsTable
             SpecID = self.rSpecTypes[alert['SpecType']]
             hash = hash_numbers(alert['TaskID'], SpecID)
-            del self.alertsTable[hash] #This is the fucking cause
+            del self.alertsTable[hash] 
 
             #Close the Alert and place a End Time for the Alert
             self.session.query(AlertView).filter(AlertView.id==alert["id"]).update({"FinishTime": datetime.now()})
-        except Exception:
+        except Exception as e:
             print("The error occured in Close Alert")
+            pprint(e)
 
     def _get_alert(self, TaskID, spec_variable):
         
@@ -195,3 +216,21 @@ class AlertsPipe(Pipe):
         hash = hash_numbers(TaskID, SpecID)
         
         return self.alertsTable[hash] if hash in self.alertsTable else None
+
+    def _send_alert(self, MachineID, alert: AlertsTable):
+
+        data = {}
+
+        data['id'] = alert.id
+        data['TaskID'] = alert.TaskID
+        data['RunNo'] = alert.RunNo
+        data['AlertType'] = self.alertTypes[alert.AlertType]
+        data['SpecType'] = self.specTypes[alert.SpecType]
+        data['StartTime'] = alert.StartTime.strftime("%Y/%m/%d %H:%M:%S.%f") if alert.StartTime is not None else ""
+        data['FinishTime'] = alert.FinishTime.strftime("%Y/%m/%d %H:%M:%S.%f") if alert.FinishTime is not None else ""
+
+        message = { 'type': 'send_alert',
+                    'data': data }
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(f'alerts_{MachineID}', message)
+        
