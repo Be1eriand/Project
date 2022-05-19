@@ -14,7 +14,7 @@ const complianceModule = () => import('./compliance/compliance.module').then(x =
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-    { path: 'dashboard', component: DashboardComponent },
+    //{ path: 'dashboard', component: DashboardComponent },
     { path: 'account', loadChildren: accountModule },
     { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard]  },
     { path: 'realtime', loadChildren: realtimeModule, canActivate: [AuthGuard] },
