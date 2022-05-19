@@ -1,0 +1,412 @@
+{% extends "base.html"%} 
+{% load static %}
+{% load mathfilters %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+{%block css%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-TQQ3J4WkE/rwojNFo6OJdyu6G8Xe9z8rMrlF9y7xpFbQfW5g8aSWcygCQ4vqRiJqFsDsE1T6MoAOMJkFXlrI9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{%endblock%} {%block content%}
+
+    <h1 class="display-4 box-header">Jobs Tracking Dashboard <button type="button" id="back_btn" class="btn btn-info mb-2" onclick="window.history.go(-1);"><i class="bi bi-backspace-fill"></i> Back</button></h1>
+
+    <div class="alert alert-primary">
+        <div class="row">
+            <div class="col-12">
+                <div class="btn-group">
+                    <!-- Jobs -->
+                    <div class="dropdown show">
+                        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {%if j %}Job {{j.job_id}}
+                        {% else %}All Jobs
+                        {% endif %}
+                        </button>
+                        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+                            <input class="form-control" id="jobSearch" type="text" placeholder="Search..">
+                            <span id="jobsList">
+                                {% if j %}
+                                <a class="dropdown-item text-center text-primary font-weight-bold" href="../../../../{{j.job_id}}">
+                                    {{j.job_id}}
+                                </a>
+                                <a class="dropdown-item text-center font-italic" href="../../../../{{w_url}}/{{m_url}}/0/{{fd_url}}/{{td_url}}">All</a>
+                                {% endif %}
+                                {% for job in jobs %}
+                                    {% if j.job_id != job.0 %}
+                                        {% if home %}
+                                        <a class="dropdown-item text-center" href="{{job.0}}">{{job.0}}</a>
+                                        {% else %}
+                                        <a class="dropdown-item text-center" href="../../../{{job.0}}">{{job.0}}</a>                                    
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <button type="button" id="filter_job_active" class="btn btn-outline-primary {%if filtered_type == 1 or home %}active{%endif%} mb-2">Active Jobs</button>
+                    <button type="button" id="filter_job_completed" class="btn btn-outline-primary {%if filtered_type == 2%}active{%endif%} mb-2">Completed Jobs</button>
+                    <button type="button" id="filter_job_both" class="btn btn-outline-primary {%if filtered_type == 0%}active{%endif%} mb-2">Both</button>
+                </div>
+                <div class="float-right">
+                    <span class="box-header h3 font-weight-bold">Sort By</span>
+                    <div class="btn-group">
+                        <button type="button" id="sort_job_workedHrs" class="btn btn-outline-primary {%if sort_type == "worked"%}active{%endif%} mb-2">Worked Hrs {%if sort_type == "worked"%}{% if order == "d" %}<i class="bi bi-arrow-down-short"></i>{% else %}<i class="bi bi-arrow-up-short"></i>{%endif%}{%endif%}</button>
+                        <button type="button" id="sort_job_remainingHrsN" class="btn btn-outline-primary {%if sort_type == "remainingN"%}active{%endif%} mb-2">Num Hrs Remaining {%if sort_type == "remainingN"%}{% if order == "d" %}<i class="bi bi-arrow-down-short"></i>{% else %}<i class="bi bi-arrow-up-short"></i>{%endif%}{%endif%}</button>
+                        <button type="button" id="sort_job_remainingHrsP" class="btn btn-outline-primary {%if sort_type == "remainingP"%}active{%endif%} mb-2">% Hrs Remaining {%if sort_type == "remainingP"%}{% if order == "d" %}<i class="bi bi-arrow-down-short"></i>{% else %}<i class="bi bi-arrow-up-short"></i>{%endif%}{%endif%}</button>
+                        <button type="button" id="sort_job_number" class="btn btn-outline-primary {%if sort_type == "job"%}active{%endif%} mb-2">Job # {%if sort_type == "job"%}{% if order == "d" %}<i class="bi bi-arrow-down-short"></i>{% else %}<i class="bi bi-arrow-up-short"></i>{%endif%}{%endif%}</button>
+                        <button type="button" id="sort_job_startdate" class="btn btn-outline-primary {%if sort_type == "date"%}active{%endif%} mb-2">Start Date {%if sort_type == "date"%}{% if order == "d" %}<i class="bi bi-arrow-down-short"></i>{% else %}<i class="bi bi-arrow-up-short"></i>{%endif%}{%endif%}</button>
+                    </div>
+                </div>                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Overall Jobs Completed</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="box-header text-center h4 ">{{inactive_jobs.count}} of {{jobs.count}} Completed</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="display-1 text-shadow
+                            {%if jobs_ratio >= 0.55%}text-success
+                            {%elif jobs_ratio <= 0.54 and jobs_ratio >= 0.35%}text-warning
+                            {%else%}text-danger
+                            {%endif%}">{{jobs_ratio|mul:100|floatformat:"0"}}<span class="display-4">%</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <canvas height="50" id="barChartJobsOverall" class="barchart align-middle" cur="{{inactive_jobs.count}}" exp="{{jobs.count}}" cur_label="Completed" exp_label="Remaining"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Overall Hours Worked</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="box-header text-center h4 ">Worked: {{total_accum_hrs|floatformat:"0"}}Hrs</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="display-1 text-shadow
+                            {%if hours_ratio >= 0.55%}text-success
+                            {%elif hours_ratio <= 0.54 and hours_ratio >= 0.35%}text-warning
+                            {%else%}text-danger
+                            {%endif%}">{{hours_ratio|mul:100|floatformat:"0"}}<span class="display-4">%</span></span>                
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <canvas height="50" id="barChartJobsHrs" class="barchart align-middle" cur="{{total_accum_hrs}}" exp="{{total_hrs}}" cur_label="Worked Hours" exp_label="Remainder Expected Hours"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Num of Jobs Overworked</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="box-header text-center h4 ">{{overworked_jobs}} of {{inactive_jobs.count}} Jobs</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <span class="display-1 text-shadow
+                            {%if hours_ratio >= 0.55%}text-danger
+                            {%elif hours_ratio <= 0.54 and hours_ratio >= 0.35%}text-warning
+                            {%else%}text-success
+                            {%endif%}">{{overworked_jobs|div:inactive_jobs.count|mul:100|floatformat:"0"}}<span class="display-4">%</span></span>                
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8">
+                    <canvas height="50" id="barChartJobs" class="barchart align-middle" cur="{{overworked_jobs}}" exp="{{inactive_jobs.count}}" rev="1" exp="{{overworked_jobs_hrs}}" cur_label="Number of Overworked Jobs" exp_label="Total of Jobs"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Num of Active Jobs</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <span class="display-1 box-header">{{active_jobs.count}}</span>           
+                </div>
+            </div>
+        </div>
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Jobs Completed Last 30 Days</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <span class="display-1 box-header">{{completed_jobs}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col text-align-center">
+                    <h4 class="box-header h3 align-text-bottom text-center font-weight-bold">Num of Hrs Overworked</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col text-center">
+                    <span class="display-1 box-header">{{overworked_hrs|floatformat:"0"}}<span class="display-4">Hrs</span></span>
+                </div>
+            </div>
+        </div>
+
+    </div>    
+
+    {% if filtered_type != 2 or home == True %}
+    <div class="row">
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col">
+                    <span class="box-header h3 float-left font-weight-bold">Active Jobs
+                        <span class="h5 font-weight-bold">(Sorted By:
+                        {%if sort_type == "worked"%}Job Worked Hours
+                        {%elif sort_type == "remainingN"%}Job Remaining Hours (Count)
+                        {%elif sort_type == "remainingP"%}Job Remaining Hours (%)
+                        {%elif sort_type == "job"%}Job Number
+                        {%elif sort_type == "date"%}Job Start Date
+                        {%endif%}                      
+                        {%if o_url == 'd'%}Descending{%else%}Ascending{%endif%})
+                    </span></span>
+                </div>
+            </div>
+            <div class="row">
+                {% for job in active_jobs %}
+                <div class="col-sm-6 col-md-4 col-lg-3 m-0 bg-light border shadow" style="width: 250px; height: 315px;" id="jobChartCanvas{{forloop.counter}}">
+                    <div class="p-2">
+                        <div class="row justify-content-center">
+                            <div class="box-header h1 ">
+                                <span class="text-center">{{job.0}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col p-3">                        
+                                {%if job.4 != None %}
+                                <canvas id="jobChart{{forloop.counter}}" width="225" height="125" class="gaugechart" cur="{{job.4}}" exp="{{job.5}}" jid="{{job.0}}"></canvas>
+                                {%endif%}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="info">
+                                <h3>Worked: {{job.4|floatformat:"2"}}/{{job.5|floatformat:"2"}}</h3>
+                                <p class="">Start Date: {{job.2|date:"d/m/Y"}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {%endif%}
+    {% if filtered_type == 2 or filtered_type == 0%}
+    <div class="row">
+        <div class="col bg-light border m-1 shadow rounded">
+            <div class="row">
+                <div class="col">
+                    <span class="box-header h3 float-left font-weight-bold">Completed Jobs
+                        <span class="h5 font-weight-bold">(Sorted By:
+                        {%if sort_type == "worked"%}Job Worked Hours
+                        {%elif sort_type == "remaining"%}Job Remaining Hours
+                        {%elif sort_type == "job"%}Job Number
+                        {%elif sort_type == "date"%}Job Start Date
+                        {%endif%}                      
+                        {%if o_url == 'd'%}Descending{%else%}Ascending{%endif%})
+                    </span></span>
+                </div>
+            </div>
+            <div class="row d-flex justify-content-center">
+                {% for job in inactive_jobs %}
+                <div class="col-sm-6 col-md-4 col-lg-3 m-0 bg-light border shadow" style="width: 250px; height: 315px;" id="jobChartCanvas{{forloop.counter}}">
+                    <div class="p-2">
+                        <div class="row justify-content-center">
+                            <div class="box-header h1 ">
+                                <span class="text-center">{{job.0}}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col p-3">
+                                {%if job.4 != None %}
+                                <canvas id="jobChart{{forloop.counter}}" width="225" height="125" class="gaugechart" cur="{{job.4}}" exp="{{job.5}}" jid="{{job.0}}"></canvas>
+                                {%endif%}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="info">
+                                <h3>Worked: {{job.4|floatformat:"2"}}/{{job.5|floatformat:"2"}}</h3>
+                                <p class="">Start Date: {{job.2|date:"d/m/Y"}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {%endif%}
+
+{%endblock content%}
+
+{%block js%}
+
+
+<script>
+  $(document).ready(function(){
+    $("#welderSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#weldersList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+    $("#machineSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#machinesList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+        $("#jobSearch").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#jobsList a").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $('#from_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1
+    });
+
+    $('#to_date_picker').datepicker({
+    format: 'yyyy-mm-dd',
+    startDate: '-{{days_since_first}}d',
+    endDate: '-{{days_since_last}}d',
+    autoclose: true,
+    weekStart: 1,
+    });
+
+    $("#filter_dates_btn").on("click",function(e){
+        from_date = $('#from_date_picker').children('input').val();
+        to_date = $('#to_date_picker').children('input').val();
+        e.preventDefault();
+        {%if home %}
+        location.href='0/0/0/'+from_date+'/'+to_date;
+        {%else %}
+        location.href='../../../../{{w_url}}/{{m_url}}/{{j_url}}/'+from_date+'/'+to_date;
+        {% endif %}
+   });
+});
+$('#filter_job_active').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/worked/d';
+    {% else %}
+    location.href='../../../{{j_url}}/1/{{s_url}}/{{o_url}}';
+    {%endif%}
+});
+
+$('#filter_job_completed').on('click', function(event) {
+    {%if home %}
+    location.href='0/2/worked/d';
+    {% else %}
+    location.href='../../../{{j_url}}/2/{{s_url}}/{{o_url}}';
+    {%endif%}
+});
+
+$('#filter_job_both').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/worked/d';
+    {% else %}
+    location.href='../../../{{j_url}}/0/{{s_url}}/{{o_url}}';
+    {%endif%}
+});
+
+$('#sort_job_workedHrs').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/worked/{%if order == "d"%}a{%else%}d{%endif%}';
+    {% else %}
+    location.href='../../../{{j_url}}/{{f_url}}/worked/{%if order == "d"%}a{%else%}d{%endif%}';
+    {%endif%}
+});
+
+$('#sort_job_remainingHrsN').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/remainingN/{%if order == "d"%}a{%else%}d{%endif%}';
+    {% else %}
+    location.href='../../../{{j_url}}/{{f_url}}/remainingN/{%if order == "d"%}a{%else%}d{%endif%}';
+    {%endif%}
+});
+
+$('#sort_job_remainingHrsP').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/remainingP/{%if order == "d"%}a{%else%}d{%endif%}';
+    {% else %}
+    location.href='../../../{{j_url}}/{{f_url}}/remainingP/{%if order == "d"%}a{%else%}d{%endif%}';
+    {%endif%}
+});
+
+$('#sort_job_number').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/job/{%if order == "d"%}a{%else%}d{%endif%}';
+    {% else %}
+    location.href='../../../{{j_url}}/{{f_url}}/job/{%if order == "d"%}a{%else%}d{%endif%}';
+    {%endif%}
+});
+
+$('#sort_job_startdate').on('click', function(event) {
+    {%if home %}
+    location.href='0/1/date/{%if order == "d"%}a{%else%}d{%endif%}';
+    {% else %}
+    location.href='../../../{{j_url}}/{{f_url}}/date/{%if order == "d"%}a{%else%}d{%endif%}';
+    {%endif%}
+});
+
+gauge_url = {%if home %}''{%else%}'../../../'{%endif%}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="{% static 'js/job-gauge-chart-creator.js' %}"></script>
+<script src="{% static 'js/barchart-creator.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{% endblock js %}

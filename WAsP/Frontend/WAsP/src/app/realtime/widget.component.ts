@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, OnDestroy, Output, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { EChartsOption, EChartsType } from 'echarts';
 
 import { RealTimeData, TaskData, Specification, RealTimeView, RTAlert } from '@app/_models';
 import { AlertService, DataService, SocketService } from '@app/_services';
-import { lineColour, specDetails } from './realtime.module';
+import { lineColour, specList, ActiveMachine } from './realtime.module';
 import { Subscription } from 'rxjs';
 
 @Component({ 
@@ -17,7 +17,7 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
     @Input() Machine: string;
     @Input() LineColours: lineColour[];
     @Input() List: string[];
-    @Output() nAlerts: number;
+    @Output() machineUpdateEvent = new EventEmitter<ActiveMachine>();
 
     displayList = ['Current', 'Voltage'];
 
@@ -68,14 +68,7 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
         if ((this.List === undefined) || (this.List.length == 0))
             this.List = this.displayList;
 
-        this.List = this.List.reduce((arr, l) => {
-            if (l !== undefined){
-                let v = l.replace(' ', '');
-                if (v !== '') 
-                    arr.push(v);
-            }
-            return arr;
-        }, [])
+        this.List = this.List.reduce(formatList, []);
             
         this.RealTimeSubscription = this.socketService.getRTstream(this.Machine).subscribe({
             next: data => {
@@ -85,6 +78,13 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
                 let rtData = this.getRTdata(data);
                 this.Data.push(rtData);
                 if (this.Data.length > 30) this.Data.shift()
+
+                let m: ActiveMachine = new ActiveMachine();
+                m.MachineID = this.Machine;
+                m.active = true;
+                m.nAlerts = this.numAlerts
+
+                this.machineUpdateEvent.emit(m);
 
                 this.updateChart();
             },
@@ -97,8 +97,6 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
             next: (alert) => {
                 this.Alerts.push(alert)
                 this.numAlerts = this.Alerts.length;
-                console.log(this.numAlerts);
-                console.log(this.Alerts);
             }
         });
 
@@ -114,10 +112,6 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        
-        for( const propName in changes) {
-            console.log(propName);
-        }
     }
 
     private updateChart() {
@@ -149,7 +143,11 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
             return;
         }
 
-        this.List.forEach((d) => {
+        let variables = this.List.reduce(formatList, []);
+
+        console.log(specList["Voltage"]);
+
+        variables.forEach((d) => {
             dataList.push({
             type: 'line',
             color: this.LineColours[yAxisIndex*3].colour,
@@ -227,6 +225,8 @@ function updateChartOptions(chartOption: EChartsOption, list: any[], min: string
     chartOption.xAxis['max'] = max;
     chartOption.xAxis['data'] = time;
 
+    console.log(chartOption);
+    
     return chartOption;
 }
 
@@ -248,3 +248,11 @@ function getLimits(spec: Specification, time: any[], limit: string) {
     return data;
 }
 
+function formatList(arr, l) {
+    if (l !== undefined){
+        let v = l.replace(' ', '');
+        if (v !== '') 
+            arr.push(v);
+    }
+    return arr;
+}

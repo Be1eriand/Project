@@ -47,3 +47,16 @@ export class specDetails {
     name: string;
     units: string;
 }
+
+export class ActiveMachine {
+    MachineID: string;
+    active: boolean;
+    nAlerts: number;
+}
+
+export let specList = {
+    "Voltage": "Volts",
+    "Current": "Amps",
+    "HeatInput": "KJ/mm",
+    "TravelSpeed": "mm/min"
+}

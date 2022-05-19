@@ -1,17 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { AlertService, AccountService,  SocketService, DataService } from '@app/_services';
-import { lineColour, specDetails } from './realtime.module';
+import { lineColour, specDetails, ActiveMachine } from './realtime.module';
 import { RTAlert, Machine } from '@app/_models'
 
 @Component({ templateUrl: 'dashboard.component.html',
              styleUrls: ['dashboard.component.sass'], 
  })
-export class DashboardComponent implements OnInit, OnDestroy  {
+export class DashboardComponent implements OnInit, OnDestroy, OnChanges  {
 
-    machineList: Machine[] = [];
+    machineList: ActiveMachine[] = [];
     selected: string[] = [];
+    selection: string[] = [];
     numSelect = 0;
     specList: specDetails[] = [
         {"name": 'Voltage',
@@ -44,18 +45,26 @@ export class DashboardComponent implements OnInit, OnDestroy  {
     ]
 
     constructor(
-        private socketService: SocketService,
         private alertService: AlertService,
-        private accountservice: AccountService,
         private dataService: DataService,
         ) {
-            this.selected.push(this.specList[0].name);
-            this.selected.push(this.specList[1].name);
-            this.numSelect = this.selected.length;
+            this.selection.push(this.specList[0].name);
+            this.selection.push(this.specList[1].name);
+            this.numSelect = this.selection.length;
 
             this.dataService.getMachines().subscribe({
                 next: (m) => {
-                    this.machineList = m;
+                    this.machineList = m.reduce((arr, machine)=> {
+                        let newMachine: ActiveMachine = new ActiveMachine();
+                        newMachine.MachineID = machine.id;
+                        newMachine.active = false;
+                        newMachine.nAlerts = 0;
+
+                        arr.push(newMachine);
+                        arr.sort(machineSort);
+
+                        return arr;
+                    }, []);
                 },
                 error: error => {
                     this.alertService.error(error);
@@ -64,13 +73,41 @@ export class DashboardComponent implements OnInit, OnDestroy  {
         }
 
     ngOnInit(): void {
-        if (this.accountservice.userValue) {
-
-        }
     }
 
     ngOnDestroy(): void {
-        //this.socketService.tdSocketListener.unsubscribe();
-        //this.AlertSubscription.unsubscribe();
     }
+
+    ngOnChanges(changes: SimpleChanges): void {
+    }
+
+    updateAlerts(machineUpdate) {
+
+        let activeMachine = this.machineList.find(m => m.MachineID === machineUpdate.MachineID);
+        activeMachine.nAlerts = machineUpdate.nAlerts;
+        this.machineList.sort(machineSort)
+
+    }
+
+    updateSelected(selected) {
+ 
+        for (const select in this.selected){
+            this.lines[parseInt(select)*3].line = this.selection[select];
+            this.lines[parseInt(select)*3 + 1].line = this.selection[select] + ' Max';
+            this.lines[parseInt(select)*3 + 2].line = this.selection[select] + ' Min';
+        }
+    }
+
+    getUnits(index) {
+        let variable = this.selection[index];
+        console.log(this.specList);
+        console.log(this.specList.find(v => v.name = variable).units);
+        return 'Volts'
+    }
+}
+
+function machineSort(a: ActiveMachine, b: ActiveMachine) { //we'll deal with the alerts in a second.
+    if (a.nAlerts < b.nAlerts) return 1;
+    if (a.nAlerts > b.nAlerts) return -1;
+    return 0;
 }
