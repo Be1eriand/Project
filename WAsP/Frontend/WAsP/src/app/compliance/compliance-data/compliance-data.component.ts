@@ -1,44 +1,42 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { RealTimeView, Specification, TaskView } from '@app/_models';
+import { ContractTaskView, RealTimeView, Specification } from '@app/_models';
 import { RealtimeService, SpecificationService } from '@app/_services';
 
 @Component({
-  selector: 'app-task-history',
-  templateUrl: './task-history.component.html',
-  styleUrls: ['../../weld-history.component.sass']
+  selector: 'app-compliance-data',
+  templateUrl: './compliance-data.component.html',
+  styleUrls: ['./compliance-data.component.sass']
 })
-export class TaskHistoryComponent implements OnInit {
+export class ComplianceDataComponent implements OnInit {
 
   wpsColumns: string[] = ['Run_No', 'WPS_No', 'Welding_Code', 'Joint_type', 'Side',  'Position', 
     'Size', 'Class', 'Gas_Flux_Type',  'Current', 'Voltage', 'Polarity', 'TravelSpeed', 'InterpassTemp', 'HeatInput'];
 
-  actualColumns: string[] = ['RunActual', 'Date',  'Duration', 'Welder', 'Machine', 'CurrentActual', 'CurrentAvg', 'VoltageActual', 'VoltageAvg', 
+  actualColumns: string[] = ['RunActual', 'Date', 'Duration', 'CurrentActual', 'CurrentAvg', 'VoltageActual', 'VoltageAvg', 
     'TravelSpeedActual', 'TravelSpeedAvg', 'HeatInputActual', 'HeatInputAvg'];
 
-  @Input() task: TaskView;
-
-  noData: boolean = false;
-  dataReady: boolean = false;
-  hideSpinner: boolean = false;
-  showLine: boolean = true;
+  @Input() contract: ContractTaskView;
 
   realtime: RealTimeView[];
   wps: Specification[];
-  taskRealtime: any[];
 
   results: {};
   taskRun: {};
   taskRange: any[]
 
+  dataReady: boolean = false;
+  noData: boolean = false;
+  hideSpinner: boolean = false;
 
   constructor(private specificationService: SpecificationService,
     private realtimeSerivce: RealtimeService) { }
 
   async ngOnInit(): Promise<void> {
 
-    this.wps = await this.getWPS(this.task.WPS_No);
+    this.wps = await this.getWPS(this.contract.WPS_No);
 
-    await this.realtimeSerivce.getRTTask(this.task.TaskID).subscribe(t => {
+
+    await this.realtimeSerivce.getRTTask(this.contract.TaskID).subscribe(t => {
       this.realtime = t;
 
       // If there is weld data available
@@ -48,16 +46,16 @@ export class TaskHistoryComponent implements OnInit {
         this.taskRange = this.groupTask2();
         this.dataReady = true;
       }
-      else {
+      else{
         this.noData = true;
       }
       this.hideSpinner = true;
-    })
+    });
   }
+
 
   // Group by Task and Run
   groupTaskRun() {
-    var tasks = []
     const merged = this.realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
       const key = `${TaskID}-${RunNo}`;
       r[key] = r[key] || { TaskID, RunNo, data: [] };
@@ -65,21 +63,6 @@ export class TaskHistoryComponent implements OnInit {
       return r;
     }, {})
     this.taskRun = Object.values(merged);
-
-    
-    // Creating data to parse to charts components
-    for (var i in this.taskRun){
-      var taskWPS = []
-      for (var j in this.wps) {
-        if (this.wps[j]["Run_No"] == this.taskRun[i]['RunNo']){
-          taskWPS.push(this.taskRun[i]);
-          taskWPS.push(this.wps[j]);
-        }
-      }
-      tasks.push(taskWPS);
-      this.taskRealtime = tasks;
-    }
-    this.taskRealtime = tasks;
   }
 
   // Calculate Min and Max values
@@ -256,10 +239,5 @@ export class TaskHistoryComponent implements OnInit {
     });
   }
 
-  showLineGraphs(){
-    this.showLine = !this.showLine;
-  }
-
 
 }
-

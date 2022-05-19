@@ -1,7 +1,12 @@
+<div class="filter">
 <h1>Compliance Report</h1>
 
 <div>
+<<<<<<< HEAD
     <form class="compliance-form" [formGroup]="contractForm" (ngSubmit)="contractSubmit()">
+=======
+    <form *ngIf="!showTask" class="compliance-form" [formGroup]="contractForm" (ngSubmit)="contractSubmit()">
+>>>>>>> origin/reports4
         <mat-label>Select:</mat-label>
         <mat-form-field appearance="outline">
             <mat-label>Contract</mat-label>
@@ -13,16 +18,44 @@
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
+<<<<<<< HEAD
         <button mat-raised-button color="primary" type="submit">Run Report</button>
 
         <button *ngIf="showTask" mat-stroked-button color="primary" type="submit"
             (click)="exportPDF('Weld History')">Export To PDF</button>
 
+=======
+        <button mat-raised-button color="submit" type="submit">Run Report</button>
+>>>>>>> origin/reports4
     </form>
+            <div *ngIf="showTask">
+                <button *ngIf="showTask" mat-raised-button color="submit" type="submit"
+                (click)="exportPDF('Weld Compliance')">Export To PDF</button>
+                <button mat-raised-button (click)="accordion.openAll()">Expand All</button>
+                <button mat-raised-button (click)="accordion.closeAll()">Collapse All</button>
+                <button mat-button color="clear" onClick="window.location.reload();">Clear</button>
+              
+            </div>
 
+<<<<<<< HEAD
     <div *ngIf="showTask" #pdf>
         <p>hello</p>
+=======
+
+    <div *ngIf="showTask" #pdf>
+
+        <h2>{{ allContracts[0].ContractName }}</h2>
+
+    <mat-accordion multi>
+
+        <app-compliance-data *ngFor="let task of allContracts" [contract]="task"></app-compliance-data>
+
+    
+
+    </mat-accordion>
+>>>>>>> origin/reports4
     </div>
 
 
+</div>
 </div>

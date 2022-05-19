@@ -1,3 +1,4 @@
+<div class="filter">
 <h1>Weld History</h1>
 <mat-tab-group>
     <mat-tab label="by Task">
@@ -18,7 +19,7 @@
                                 required>
                         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                             <mat-option *ngFor="let task of filteredTasks" [value]="task">
-                                {{task}}
+                                {{ task }}
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
@@ -31,15 +32,16 @@
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-date-range-picker #picker></mat-date-range-picker>
                     </mat-form-field>
-                    <button mat-raised-button color="primary" type="submit">Run Report</button>
-
-                    <button *ngIf="showTask" mat-stroked-button color="primary" type="submit"
-                        (click)="exportPDF('Task - Weld History')">Export To PDF</button>
-
+                    <button mat-raised-button color="submit" type="submit">Run Report</button>
                 </form>
-
-                <div *ngIf="showTask" #pdfWelders>
-                    <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
+                <div *ngIf="showTask">
+                    <button mat-raised-button (click)="accordion.openAll()">Expand All</button>
+                    <button mat-raised-button (click)="accordion.closeAll()">Collapse All</button>
+                </div>
+                <div *ngIf="showTask">
+                    <mat-accordion multi>
+                    <app-task-history *ngFor="let t of task" [task]="t"></app-task-history>
+                </mat-accordion>
                 </div>
             </div>
         </ng-template>
@@ -60,7 +62,7 @@
                             [matAutocomplete]="auto" required>
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                         <mat-option *ngFor="let welder of filteredWelders" [value]="welder">
-                            {{welder}}
+                            {{ welder }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -76,13 +78,13 @@
                 </mat-form-field>
                 <button mat-raised-button color="primary" type="submit">Run Report</button>
 
-                <button *ngIf="showWelder" mat-stroked-button color="primary" type="submit"
-                    (click)="exportPDF('Welder - Weld History')">Export To PDF</button>
 
             </form>
 
             <div *ngIf="showWelder" #pdfWelders>
+                <mat-accordion multi>
                 <app-welder-history *ngFor="let w of welders" [item]="w"></app-welder-history>
+            </mat-accordion>
             </div>
 
         </ng-template>
@@ -107,7 +109,7 @@
                             required>
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
                         <mat-option *ngFor="let machine of filteredMachines" [value]="machine">
-                            {{machine}}
+                            {{ machine }}
                         </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
@@ -125,18 +127,18 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-date-range-picker #picker></mat-date-range-picker>
                 </mat-form-field>
-                <button mat-raised-button color="primary" type="submit">Run Report</button>
-
-                <button *ngIf="showMachine" mat-stroked-button color="primary" type="submit"
-                    (click)="exportPDF('Machine - Weld History')">Export To PDF</button>
-
+                <button mat-raised-button color="submit" type="submit">Run Report</button>
             </form>
 
-            <div *ngIf="showMachine" #pdfWelders>
-                
+            <div *ngIf="showMachine">
+                <button mat-raised-button (click)="accordion.openAll()">Expand All</button>
+                <button mat-raised-button (click)="accordion.closeAll()">Collapse All</button>
+            </div>
+            <div *ngIf="showMachine">
                 <app-machine-history *ngFor="let rt of realtime" [realtime]="rt"></app-machine-history>
             </div>           
         </ng-template>
 
     </mat-tab>
 </mat-tab-group>
+</div>
