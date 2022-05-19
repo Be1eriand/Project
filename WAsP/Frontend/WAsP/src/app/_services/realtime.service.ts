@@ -33,8 +33,8 @@ export class RealtimeService {
     return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime?seconds=${seconds}&task=${task}&run=${run}`);
   }
 
-  getRTTask(task: string): Observable<RealTimeView> {
-    return this.http.get<RealTimeView>(`${environment.apiUrl}/data/realtime/task/${task}`)
+  getRTTask(task: string): Observable<RealTimeView[]> {
+    return this.http.get<RealTimeView[]>(`${environment.apiUrl}/data/realtime/task/${task}`)
   }
 
   getRTWelder(welder: string): Observable<RealTimeView> {

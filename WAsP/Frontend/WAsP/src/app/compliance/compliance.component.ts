@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ContractTaskView, RealTimeView, Specification, TaskView } from '@app/_models';
-import { RealtimeService } from '@app/_services/realtime.service';
+import { ContractTaskView } from '@app/_models';
 import { SpecificationService } from '@app/_services/specification.service';
+import { MatAccordion } from '@angular/material/expansion';
 
 const pdfMake = require('pdfmake/build/pdfmake.js');
 import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
@@ -16,34 +16,24 @@ const htmlToPdfmake = require("html-to-pdfmake");
 })
 export class ComplianceComponent implements OnInit {
 
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+
   contractForm: FormGroup;
-
-  tasks: string[];
-  allTasks: TaskView[];
-  filteredContracts: string[];
-
-  contractID: string[];
-  
-  
   showTask: boolean = false;
-
-  
   allContracts: ContractTaskView[];
+  filteredContracts: string[];
   contracts: string[];
-
 
   @ViewChild('pdf')
   pdf!: ElementRef;
 
-  constructor(private specificationService: SpecificationService,
-    private realtimeSerivce: RealtimeService,
+  constructor(private specificationService: SpecificationService
     ) {}
 
   ngOnInit(): void {
     this.specificationService.getAllContracts().subscribe(c => {
       this.allContracts = c;
       this.loadContracts();
-      console.log(this.allContracts);
     })
 
     this.contractForm = new FormGroup({
@@ -70,7 +60,6 @@ export class ComplianceComponent implements OnInit {
     return this.contracts.filter(option => option.toLocaleLowerCase().includes(filter));
   }
 
-
   contractSubmit() {
     console.log(this.contractForm);
     if (!this.contractForm.value.contractName) {
@@ -85,41 +74,7 @@ export class ComplianceComponent implements OnInit {
         contracts.push(this.allContracts[i])
       }
     }
-    console.log(contracts);
-    this.contracts = contracts;
-
-    /* Get WPS data
-    if (contracts.length > 0) {
-      let wps: Specification[][] = [];
-      for (var j in contracts) {
-        this.specificationService.getSpec(contracts[j].WPS_No).subscribe(w => wps.push(w));
-      }
-      this.wps = wps;
-      console.log(this.wps);
-
-      // Get realtime data
-      var realtime: RealTimeView[][] = []
-      let test: any = []
-      for (var k in contracts) {
-        var taskID: RealTimeView[] = []
-        console.log(contracts[k].TaskID);
-        let id = String(contracts[k].TaskID);
-        console.log(id);
-        //this.realtimeSerivce.getRTTask(id).subscribe(t => {taskID.push(t);realtime.push(taskID);})
-        this.realtimeSerivce.getRTTask('1').subscribe(t => test = t)
-      }
-      console.log(test);
-      console.log(realtime);
-
-    } */
-
-    //this.realtimeSerivce.getRTTask(id).subscribe((rt) => this.RTtask = rt);
-
-
-    //this.getRealtimeTask(this.taskForm.value.taskID);
-    //this.showTask = true;
-    //console.log(this.RTtask);
-
+    this.allContracts = contracts;
     this.showTask = true;
   }
 
@@ -134,12 +89,18 @@ export class ComplianceComponent implements OnInit {
                                 ],
                                 styles: {
                                   header: {
-                                    fontSize: 18,
-                                    color: '#374785',
+                                    fontSize: 16,
+                                    color: '#4B4276',
                                     bold: true,
                                   },
                                   'html-td': {
                                     fontSize: 9,
+                                  },
+                                  'html-th': {
+                                    fontSize: 10,
+                                  },
+                                  'html-mat-panel-title': {
+                                    fontSize: 14,
                                   },
                                 }
                               };

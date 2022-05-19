@@ -1,108 +1,46 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { RealTimeView, Specification, TaskView } from '@app/_models';
-import { RealtimeService } from '@app/_services/realtime.service';
-import { SpecificationService } from '@app/_services/specification.service';
+/*import { Injectable } from '@angular/core';
+import { RealTimeView } from '@app/_models/realtime';
+import { Observable, } from 'rxjs';
 
-@Component({
-  selector: 'app-machine-history',
-  templateUrl: './machine-history.component.html',
-  styleUrls: ['./machine-history.component.sass']
+@Injectable({
+  providedIn: 'root'
 })
-export class MachineHistoryComponent implements OnInit {
+export class GroupTaskService {
 
-  @Input() realtime: RealTimeView[];
-
-  // Has related WPS data - same index ref
-  validTaskID: any[];
-  validWpsID: string[];
-
-  wps: Specification[][];
-  taskData: TaskView[];
-
-  result: {};
-  taskRun: {};
-  taskRange: any[];
-
-  constructor(
-    private specificationService: SpecificationService,
-    private realtimeSerivce: RealtimeService) { }
-
-  async ngOnInit(): Promise<void> {
-
-    // Unique Task IDs
-    let taskIDs: string[] = []
-    for (let i = 0; i < this.realtime.length; i++) {
-      if (!(taskIDs.includes(this.realtime[i].TaskID))) {
-        taskIDs.push(this.realtime[i].TaskID);
-      }
-    }
-    console.log(taskIDs);
-
-    // Get Task data to find WPS number
-    let taskData: TaskView[][] = []
-
-    for (var i in taskIDs) {
-      let temp = await this.getTaskData(taskIDs[i]);
-      taskData.push(temp);
-    }
-
-    let task: string[] = [];
-    let wps: string[] = []
-
-    for (var i in taskData) {
-      if (taskData[i].length > 0) {
-        task.push(taskData[i][0].TaskID);
-        wps.push(taskData[i][0].WPS_No);
-      }
-    }
-    this.validTaskID = task;
-    this.validWpsID = wps
-
-    // Get WPS data 
-    let specs: Specification[][] = []
-
-    for (var i in wps) {
-      let temp = await this.getWPS(wps[i]);
-      specs.push(temp);
-    }
-
-    this.wps = specs;
-    this.groupTask();
-    this.taskRange = await this.groupTaskRun();
-
-  }
+  constructor() { }
 
   // Group realtime data by task ID
-  groupTask() {
-    var result = this.realtime.reduce(function (r, a) {
+  groupTask(realtime: RealTimeView[]) {
+    var result = realtime.reduce(function (r, a) {
       r[a.TaskID] = r[a.TaskID] || [];
       r[a.TaskID].push(a);
       return r;
     }, {});
-    this.result = result;
+    
+    return result;
   }
 
   // Group by Task and Run
-  groupTaskRun() {
-    const merged = this.realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
+  groupTaskRun(realtime: RealTimeView[]) {
+    const merged = realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
       const key = `${TaskID}-${RunNo}`;
       r[key] = r[key] || { TaskID, RunNo, data: [] };
       r[key]["data"].push(rest)
       return r;
     }, {})
-    this.taskRun = Object.values(merged);
+    var taskRun = Object.values(merged);
 
-    return this.weldActualRange();
+    return this.weldActualRange(taskRun);
   }
 
   // Calculate Min and Max values
-  weldActualRange() {
+  weldActualRange(taskRun: {}, wps: Specification[][]) {
     var results = [];
 
-    for (var i in this.taskRun) {
+    for (var i in taskRun) {
 
       // WPS Task data
-      var wpsTask = this.wps[this.validTaskID.indexOf(this.taskRun[i]['TaskID'])]
+      var wpsTask = thiswps[this.validTaskID.indexOf(this.taskRun[i]['TaskID'])]
 
       // For correct run number
       for (var j in wpsTask) {
@@ -273,31 +211,5 @@ export class MachineHistoryComponent implements OnInit {
     }, {});
     return result; 
   }
-
-  // Calls to get relevant WPS data
-  getWPS(id: string): Promise<Specification[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        let data: Specification[];
-        this.specificationService.getSpec(id).subscribe((t) => {
-          data = t;
-          resolve(data);
-        });
-      }, 200);
-    });
-  }
-
-  //Calls to get relevant Task data
-  getTaskData(id: string): Promise<TaskView[]> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        let data: TaskView[];
-        this.realtimeSerivce.getTask(id).subscribe((t) => {
-          data = t;
-          resolve(data);
-        });
-      }, 200);
-    });
-  }
-
 }
+*/
