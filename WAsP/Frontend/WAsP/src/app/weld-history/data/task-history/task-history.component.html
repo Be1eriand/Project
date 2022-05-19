@@ -1,1 +1,226 @@
-<p>task-history works!</p>
+<mat-spinner *ngIf="!hideSpinner"></mat-spinner>
+
+<mat-expansion-panel [expanded]="true" *ngIf="noData">
+  <mat-expansion-panel-header>
+      <mat-panel-title>
+          Task ID: {{ task.TaskID }}
+      </mat-panel-title>
+      <mat-panel-description>
+        <p>No weld data available for this Task ID</p>
+      </mat-panel-description>      
+  </mat-expansion-panel-header>
+
+</mat-expansion-panel>
+
+<mat-expansion-panel [expanded]="true" *ngIf="dataReady">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            Task ID: {{ task.TaskID }}
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+
+    <div>
+        <h6 id="wps">WPS</h6>
+            <table mat-table [dataSource]="wps" class="wps">
+
+                <ng-container matColumnDef="WPS_No">
+                    <th mat-header-cell *matHeaderCellDef> WPS No</th>
+                    <td mat-cell *matCellDef="let w"> {{w.WPS_No}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Run_No">
+                    <th mat-header-cell *matHeaderCellDef> Run </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Run_No }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Welding_Code">
+                    <th mat-header-cell *matHeaderCellDef> Welding Code </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Welding_Code }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Joint_type">
+                    <th mat-header-cell *matHeaderCellDef> Joint Type </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Joint_type }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Side">
+                    <th mat-header-cell *matHeaderCellDef> Side </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Side }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Position">
+                    <th mat-header-cell *matHeaderCellDef> Position  </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Position }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Size">
+                    <th mat-header-cell *matHeaderCellDef> Size </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Size }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Class">
+                    <th mat-header-cell *matHeaderCellDef> Class </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Class }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Gas_Flux_Type">
+                    <th mat-header-cell *matHeaderCellDef> Gas/Flux Type </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Gas_Flux_Type }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Current">
+                    <th mat-header-cell *matHeaderCellDef> Current (A) </th>
+                    <td mat-cell *matCellDef="let w">{{ w.Current_Min }} - {{ w.Current_Max }}</td>
+                  </ng-container>
+                  <ng-container matColumnDef="Voltage">
+                    <th mat-header-cell *matHeaderCellDef> Voltage (V) </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Voltage_Min }} - {{ w.Voltage_Max}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="Polarity">
+                    <th mat-header-cell *matHeaderCellDef> Polarity </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.Polarity }} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="TravelSpeed">
+                    <th mat-header-cell *matHeaderCellDef> Travel Speed (mm/min) </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.TravelSpeed_Min }} - {{ w.TravelSpeed_Max}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="InterpassTemp">
+                    <th mat-header-cell *matHeaderCellDef> Interpass Temp &#176;C</th>
+                    <td mat-cell *matCellDef="let w"> {{ w.InterpassTemp_Max}} </td>
+                  </ng-container>
+                  <ng-container matColumnDef="HeatInput">
+                    <th mat-header-cell *matHeaderCellDef> Heat Input (Kj/mm) </th>
+                    <td mat-cell *matCellDef="let w"> {{ w.HeatInput_Min }} - {{ w.HeatInput_Max}}</td>
+                  </ng-container>
+                  <tr mat-header-row *matHeaderRowDef="wpsColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: wpsColumns;"></tr>
+                  <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell" colspan="4">No WPS data</td>
+                  </tr>
+
+            </table>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+        
+        
+        <h6>Actual Weld Data</h6>
+
+        <table mat-table [dataSource]="taskRange[task.TaskID]" class="realtime">
+
+              <ng-container matColumnDef="RunActual">
+                <th mat-header-cell *matHeaderCellDef> Run </th>
+                <td mat-cell *matCellDef="let r"> {{ r.RunNo }} </td>
+              </ng-container>
+              <ng-container matColumnDef="Date">
+                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <td mat-cell *matCellDef="let r"> {{ r.Date }} </td>
+              </ng-container>
+              <ng-container matColumnDef="Duration">
+                <th mat-header-cell *matHeaderCellDef> Weld Duration (mins) </th>
+                <td mat-cell *matCellDef="let r"> {{ r.Timedelta | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="Welder">
+                <th mat-header-cell *matHeaderCellDef> Welder ID </th>
+                <td mat-cell *matCellDef="let r"> {{ r.WelderID }} </td>
+              </ng-container>
+              <ng-container matColumnDef="Machine">
+                <th mat-header-cell *matHeaderCellDef> Machine ID </th>
+                <td mat-cell *matCellDef="let r"> {{ r.MachineID }} </td>
+              </ng-container>
+              <ng-container matColumnDef="CurrentActual">
+                <th mat-header-cell *matHeaderCellDef> Current Range (A)</th>
+                <td mat-cell *matCellDef="let r">{{ r.Current_Min | number: '1.2-2' }} - {{ r.Current_Max | number: '1.2-2' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="CurrentAvg">
+                <th mat-header-cell *matHeaderCellDef> Current Avg (A)</th>
+                <td mat-cell *matCellDef="let r">{{ r.Current_Sum / r.Records|  number: '1.2-2' }}</td>
+              </ng-container>
+              <ng-container matColumnDef="VoltageActual">
+                <th mat-header-cell *matHeaderCellDef> Voltage Range (V) </th>
+                <td mat-cell *matCellDef="let r"> {{ r.Voltage_Min | number: '1.2-2' }} - {{ r.Voltage_Max | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="VoltageAvg">
+                <th mat-header-cell *matHeaderCellDef> Voltage Avg (V) </th>
+                <td mat-cell *matCellDef="let r"> {{ r.Voltage_Sum / r.Records | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="TravelSpeedActual">
+                <th mat-header-cell *matHeaderCellDef> Travel Speed Range (mm/min)</th>
+                <td mat-cell *matCellDef="let r"> {{ r.TravelSpeed_Min | number: '1.2-2' }} - {{ r.TravelSpeed_Max | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="TravelSpeedAvg">
+                <th mat-header-cell *matHeaderCellDef> Travel Speed Avg (mm/min)</th>
+                <td mat-cell *matCellDef="let r"> {{ r.TravelSpeed_Sum / r.Records | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="HeatInputActual">
+                <th mat-header-cell *matHeaderCellDef> Heat Input Range (Kj/mm) </th>
+                <td mat-cell *matCellDef="let r"> {{ r.HeatInput_Min | number: '1.2-2' }} - {{ r.HeatInput_Max | number: '1.2-2' }} </td>
+              </ng-container>
+              <ng-container matColumnDef="HeatInputAvg">
+                <th mat-header-cell *matHeaderCellDef> Heat Input Avg (Kj/mm) </th>
+                <td mat-cell *matCellDef="let r"> {{ r.HeatInput_Sum / r.Records | number: '1.2-2' }} </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="actualColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: actualColumns;"></tr>
+              <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="4">No Weld Data</td>
+              </tr>
+
+        </table>
+        
+    </div>
+    <br>
+    <div>
+        <h6>Variance (Weld Out of Parameters)</h6>
+      
+        <table *ngFor="let r of taskRange[task.TaskID]" style="margin-top: 10pt;" class="table realtime">
+            <tr>
+                <th> Run {{ r.RunNo }} </th>
+                <th> Current (A) </th>
+                <th> Voltage (V) </th>
+                <th> Travel Speed (mm/min) </th>
+                <th> Heat Input (Kj/mm) </th>
+            </tr>
+            <tr>
+                <td>Percentage Increase From Max WPS Value</td>
+                <td>{{ r.Current_Overpercent | number: '1.2-2' }}%</td>
+                <td>{{ r.Voltage_Overpercent | number: '1.2-2' }}%</td>
+                <td>{{ r.TravelSpeed_Overpercent | number: '1.2-2' }}%</td>
+                <td>{{ r.HeatInput_Overpercent | number: '1.2-2' }}%</td>
+            </tr>
+            <tr>
+                <td>Duration Over Max WPS Value (mins)</td>
+                <td>{{ r.Current_Overtime | number: '1.2-2' }}</td>
+                <td>{{ r.Voltage_Overtime | number: '1.2-2' }}</td>
+                <td>{{ r.TravelSpeed_Overtime | number: '1.2-2' }}</td>
+                <td>{{ r.HeatInput_Overtime | number: '1.2-2' }}</td>
+            </tr>
+            <tr>
+              <td>Percentage Decrease From Min WPS Value</td>
+              <td>{{ r.Current_Underpercent | number: '1.2-2' }}%</td>
+              <td>{{ r.Voltage_Underpercent | number: '1.2-2' }}%</td>
+              <td>{{ r.TravelSpeed_Underpercent | number: '1.2-2' }}%</td>
+              <td>{{ r.HeatInput_Underpercent | number: '1.2-2' }}%</td>
+          </tr>
+            <tr>
+                <td>Duration Under Min WPS Value (mins)</td>
+                <td>{{ r.Current_Undertime | number: '1.2-2' }}</td>
+                <td>{{ r.Voltage_Undertime | number: '1.2-2' }}</td>
+                <td>{{ r.TravelSpeed_Undertime | number: '1.2-2' }}</td>
+                <td>{{ r.HeatInput_Undertime | number: '1.2-2' }}</td>
+            </tr>
+
+        </table>
+    
+
+    </div>
+
+
+    <mat-divider></mat-divider>
+
+    <div>
+        <button mat-raised-button color="submit" (click)="showLineGraphs()">Line Charts</button>
+        <button mat-raised-button color="submit">Box Plots</button>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <div *ngIf="showLine">
+        <app-data *ngFor="let t of taskRealtime" [task]="t"></app-data>
+    </div>
+
+</mat-expansion-panel>
+
+  
+  

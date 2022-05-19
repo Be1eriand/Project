@@ -2,14 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ContractTaskView, RealTimeView, Specification, TaskView } from '@app/_models';
 import { SpecificationService } from '@app/_services/specification.service';
 import { RealtimeService } from '@app/_services/realtime.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { map, Observable, startWith } from 'rxjs';
-
-const pdfMake = require('pdfmake/build/pdfmake.js');
-import * as pdfFonts from 'pdfmake/build/vfs_fonts.js';
-const htmlToPdfmake = require("html-to-pdfmake");
-(pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
-
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatAccordion } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-weld-history',
@@ -17,6 +11,9 @@ const htmlToPdfmake = require("html-to-pdfmake");
   styleUrls: ['./weld-history.component.sass']
 })
 export class WeldHistoryComponent implements OnInit {
+
+  @ViewChild(MatAccordion) accordion: MatAccordion;
+
   taskForm: FormGroup;
   welderForm: FormGroup;
   machineForm: FormGroup;
@@ -37,7 +34,9 @@ export class WeldHistoryComponent implements OnInit {
   showTask: boolean = false;
   showMachine: boolean = false;
 
-  taskID: FormControl;
+  task: TaskView[];
+
+
   welderID: FormControl;
   machineID: FormControl;
   dateStart: FormControl;
@@ -52,7 +51,7 @@ export class WeldHistoryComponent implements OnInit {
   temp: RealTimeView[];
  
   allRT: RealTimeView[];
-  RTtask: RealTimeView;
+  RTtask: RealTimeView[];
   RTwelder: RealTimeView;
   realtime: any=[];
 
@@ -168,10 +167,16 @@ export class WeldHistoryComponent implements OnInit {
       return;
     }
 
-    this.taskID = this.taskForm.value.taskID;
+    var t = []
+    for (var i in this.allTasks){
+      if (this.allTasks[i].TaskID == this.taskForm.value.taskID) {
+        t.push(this.allTasks[i]);
+        this.task = t;
+      }
+    }
+
     this.dateStart = this.taskForm.value.dateStart;
     this.dateEnd = this.taskForm.value.dateEnd;
-    console.log(this.taskID, this.dateStart, this.dateEnd);
     this.showTask = true;
   }
 
@@ -205,28 +210,6 @@ export class WeldHistoryComponent implements OnInit {
     this.showMachine = true;
   }
 
-  exportPDF(header: string) {
-    const pdfWelders = this.pdfWelders.nativeElement;
-    var html = htmlToPdfmake(pdfWelders.innerHTML);
-    console.log(html);
-    const documentDefinition = {pageOrientation: 'landscape',
-                                content: [
-                                  {text: header, style: 'header'}, 
-                                  html
-                                ],
-                                styles: {
-                                  header: {
-                                    fontSize: 18,
-                                    color: '#374785',
-                                    bold: true,
-                                  },
-                                  'html-td': {
-                                    fontSize: 9,
-                                  },
-                                }
-                              };
-    pdfMake.createPdf(documentDefinition).download("Smart Fabrication Weld Report.pdf");
-  }
 
 
 

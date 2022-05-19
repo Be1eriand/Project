@@ -1,101 +1,145 @@
-<h4 hidden>Machine {{ realtime[0].MachineID }}</h4>
+<h2>Machine {{realtime[0].MachineID}}</h2>
 
 <mat-accordion multi>
-  <mat-expansion-panel
-    *ngFor="let task of allRealtime"
-    [expanded]="true"
-    id="history"
-  >
-    <mat-expansion-panel-header>
-      <mat-panel-title> Task ID: {{ task[0].TaskID }} </mat-panel-title>
-      <mat-panel-description>
-        Welder ID: {{ task[0].WelderID }}
-      </mat-panel-description>
-    </mat-expansion-panel-header>
 
-    <div *ngIf="!validTaskID.includes(task[0].TaskID)">
-      <p>No WPS data available</p>
-    </div>
-
-    <div *ngIf="validTaskID.includes(task[0].TaskID)">
-      <h4>WPS</h4>
-
-      <table>
-        <tr>
-          <td>WPS No</td>
-          <td>Run No</td>
-          <td>Welding Code</td>
-          <td>Class</td>
-          <td>Gas Flux Type</td>
-          <td>Joint Type</td>
-          <td>Polarity</td>
-          <td>Position</td>
-          <td>Side</td>
-          <td>Size</td>
-          <td>Current</td>
-          <td>Voltage</td>
-          <td>HeatInput</td>
-          <td>Interpass Temp</td>
-          <td>Travel Speed</td>
-        </tr>
-
-        <tr *ngFor="let w of wps[validTaskID.indexOf(task[0].TaskID)]">
-          <td>{{ w.WPS_No }}</td>
-          <td>{{ w.Run_No }}</td>
-          <td>{{ w.Welding_Code }}</td>
-          <td>{{ w.Class }}</td>
-          <td>{{ w.Gas_Flux_Type }}</td>
-          <td>{{ w.Joint_type }}</td>
-          <td>{{ w.Polarity }}</td>
-          <td>{{ w.Position }}</td>
-          <td>{{ w.Side }}</td>
-          <td>{{ w.Size }}</td>
-          <td>{{ w.Current_Min }} - {{ w.Current_Max }}</td>
-          <td>{{ w.Voltage_Min }} - {{ w.Voltage_Max }}</td>
-          <td>{{ w.HeatInput_Min }} - {{ w.HeatInput_Max }}</td>
-          <td>{{ w.InterpassTemp_Min }} - {{ w.InterpassTemp_Max }}</td>
-          <td>{{ w.TravelSpeed_Min }} - {{ w.TravelSpeed_Max }}</td>
-        </tr>
-      </table>
-    </div>
-
-    <!--Inner tabs-->
-
-    <mat-accordion multi>
-      <mat-expansion-panel>
+    <mat-expansion-panel *ngFor="let task of result | keyvalue" [expanded]="true" id="history">
         <mat-expansion-panel-header>
-          <mat-panel-title> Detailed Weld History </mat-panel-title>
+            <mat-panel-title>
+                Task ID: {{ task.key }}
+            </mat-panel-title>
         </mat-expansion-panel-header>
-        <table>
-          <tr>
-            <td>Datetime</td>
-            <td>Current</td>
-            <td>Voltage</td>
-            <td>GasUsed</td>
-            <td>HeatInput</td>
-            <td>Length</td>
-            <td>Power</td>
-            <td>RunNo</td>
-            <td>Temperature</td>
-            <td>TimeDelta</td>
-            <td>TravelSpeed</td>
-          </tr>
 
-          <tr *ngFor="let rt of task">
-            <td>{{ rt.Time }}</td>
-            <td>{{ rt.Current }}</td>
-            <td>{{ rt.Voltage }}</td>
-            <td>{{ rt.GasUsed }}</td>
-            <td>{{ rt.HeatInput }}</td>
-            <td>{{ rt.Length }}</td>
-            <td>{{ rt.Power }}</td>
-            <td>{{ rt.RunNo }}</td>
-            <td>{{ rt.Temperature }}</td>
-            <td>{{ rt.Timedelta }}</td>
-            <td>{{ rt.TravelSpeed }}</td>
-          </tr>
-        </table>
-      </mat-expansion-panel>
-    </mat-accordion>
-  </mat-expansion-panel>
+        <div *ngIf="!validTaskID.includes(task.value[0]['TaskID'])"><p>No WPS data available</p></div>
+
+        <div *ngIf="validTaskID.includes(task.value[0]['TaskID'])">
+            
+            <h4>WPS</h4>
+            <table>
+                <tr>
+                    <td>WPS No</td>
+                    <td>Run No</td>
+                    <td>Welding Code</td>
+                    <td>Class</td>
+                    <td>Gas Flux Type</td>
+                    <td>Joint Type</td>
+                    <td>Polarity</td>
+                    <td>Position</td>
+                    <td>Side</td>
+                    <td>Size</td>
+                    <td>Current</td>
+                    <td>Voltage</td>
+                    <td>Heat Input</td>
+                    <td>Interpass Temp</td>
+                    <td>Travel Speed</td>
+
+
+                </tr>
+
+
+                <tr *ngFor="let w of wps[validTaskID.indexOf(task.value[0]['TaskID'])]">
+                    <td>{{ w.WPS_No }}</td>
+                    <td>{{ w.Run_No }}</td>
+                    <td>{{ w.Welding_Code }}</td>
+                    <td>{{ w.Class }}</td>
+                    <td>{{ w.Gas_Flux_Type }}</td>
+                    <td>{{ w.Joint_type }}</td>
+                    <td>{{ w.Polarity }}</td>
+                    <td>{{ w.Position }}</td>
+                    <td>{{ w.Side }}</td>
+                    <td>{{ w.Size }}</td>
+                    <td>{{ w.Current_Min }} - {{ w.Current_Max}}</td>
+                    <td>{{ w.Voltage_Min }} - {{ w.Voltage_Max}}</td>
+                    <td>{{ w.HeatInput_Min }} - {{ w.HeatInput_Max}}</td>
+                    <td>{{ w.InterpassTemp_Min }} - {{ w.InterpassTemp_Max}}</td>
+                    <td>{{ w.TravelSpeed_Min }} - {{ w.TravelSpeed_Max}}</td>
+                </tr>
+            </table>
+
+            <br>
+        
+
+        
+            <h4>Actual</h4>
+            <table>
+                <tr>
+                    <td>Run No</td>
+                    <td>Date</td>
+                    <td>Welder ID</td>
+                    <td>Weld Duration (mins)</td>
+                    <td>Current</td>
+                    <td>Voltage</td>
+                    <td>Heat Input</td>
+                    <td>Interpass Temp</td>
+                    <td>Travel Speed</td>
+
+                </tr>
+
+
+                <tr *ngFor="let r of taskRange[task.key]">
+                  
+                    <td>{{ r.RunNo }}</td>
+                    <td>{{ r.Date }}</td>
+                    <td>{{ r.WelderID }}</td>
+                    <td>{{ r.Timedelta | number: '1.2-2' }}</td>
+                    <td>{{ r.Current_Min | number: '1.2-2' }} - {{ r.Current_Max | number: '1.2-2' }}</td>
+                    <td>{{ r.Voltage_Min | number: '1.2-2' }} - {{ r.Voltage_Max | number: '1.2-2' }}</td>
+                    <td>{{ r.HeatInput_Min | number: '1.2-2' }} - {{ r.HeatInput_Max | number: '1.2-2' }}</td>
+                    <td>{{ r.InterpassTemp_Min | number: '1.2-2' }} - {{ r.InterpassTemp_Max | number: '1.2-2' }}</td>
+                    <td>{{ r.TravelSpeed_Min | number: '1.2-2' }} - {{ r.TravelSpeed_Max | number: '1.2-2' }}</td>
+                  
+                </tr>
+            </table>
+            <br>
+        </div>
+
+        
+            <h4>Variance (Weld Out of Parameters)</h4>
+            <table *ngFor="let r of taskRange[task.key]">
+                <tr>
+                    <td>Run {{ r.RunNo }}</td>
+                    <td>Current</td>
+                    <td>Voltage</td>
+                    <td>Heat Input</td>
+                    <td>Interpass Temp</td>
+                    <td>Travel Speed</td>
+                </tr>
+                <tr>
+                    <td>% Increase From Max WPS Value</td>
+                    <td>{{ r.Current_Overpercent | number: '1.2-2' }}</td>
+                    <td>{{ r.Voltage_Overpercent | number: '1.2-2' }}</td>
+                    <td>{{ r.HeatInput_Overpercent | number: '1.2-2' }}</td>
+                    <td>{{ r.InterpassTemp_Overpercent | number: '1.2-2' }}</td>
+                    <td>{{ r.TravelSpeed_Overpercent | number: '1.2-2' }}</td>
+                </tr>
+                <tr>
+                    <td>Duration Over Max WPS Value (mins)</td>
+                    <td>{{ r.Current_Overtime | number: '1.2-2' }}</td>
+                    <td>{{ r.Voltage_Overtime | number: '1.2-2' }}</td>
+                    <td>{{ r.HeatInput_Overtime | number: '1.2-2' }}</td>
+                    <td>{{ r.InterpassTemp_Overtime | number: '1.2-2' }}</td>
+                    <td>{{ r.TravelSpeed_Overtime | number: '1.2-2' }}</td>
+                </tr>
+                <tr>
+                  <td>% Decrease From Min WPS Value</td>
+                  <td>{{ r.Current_Underpercent | number: '1.2-2' }}</td>
+                  <td>{{ r.Voltage_Underpercent | number: '1.2-2' }}</td>
+                  <td>{{ r.HeatInput_Underpercent | number: '1.2-2' }}</td>
+                  <td>{{ r.InterpassTemp_Underpercent | number: '1.2-2' }}</td>
+                  <td>{{ r.TravelSpeed_Underpercent | number: '1.2-2' }}</td>
+              </tr>
+                <tr>
+                    <td>Duration Under Min WPS Value (mins)</td>
+                    <td>{{ r.Current_Undertime | number: '1.2-2' }}</td>
+                    <td>{{ r.Voltage_Undertime | number: '1.2-2' }}</td>
+                    <td>{{ r.HeatInput_Undertime | number: '1.2-2' }}</td>
+                    <td>{{ r.InterpassTemp_Undertime | number: '1.2-2' }}</td>
+                    <td>{{ r.TravelSpeed_Undertime | number: '1.2-2' }}</td>
+                </tr>
+
+            </table>
+        
+        
+
+    </mat-expansion-panel>
+
 </mat-accordion>
