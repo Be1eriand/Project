@@ -48,9 +48,9 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges  {
         private alertService: AlertService,
         private dataService: DataService,
         ) {
-            this.selection.push(this.specList[0].name);
-            this.selection.push(this.specList[1].name);
-            this.numSelect = this.selection.length;
+            this.selected.push(this.specList[0].name);
+            this.selected.push(this.specList[1].name);
+            this.numSelect = this.selected.length;
 
             this.dataService.getMachines().subscribe({
                 next: (m) => {
@@ -90,6 +90,8 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges  {
     }
 
     updateSelected(selected) {
+
+        this.selection = this.selected;
  
         for (const select in this.selected){
             this.lines[parseInt(select)*3].line = this.selection[select];

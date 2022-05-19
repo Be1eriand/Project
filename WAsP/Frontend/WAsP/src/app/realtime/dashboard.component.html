@@ -11,9 +11,9 @@
             <div class="display-box">
                 <mat-card>
                     <mat-card-title>Line Selection</mat-card-title>
-                    <mat-form-field appearance="fill" *ngFor="let s of selection; let i = index" class="Variable-Dropdown">
+                    <mat-form-field appearance="fill" *ngFor="let s of selected; let i = index" class="Variable-Dropdown">
                         <mat-label>Variable</mat-label>
-                        <mat-select [(value)]="selection[i]" (selectionChange)="updateSelected($event)">
+                        <mat-select [(value)]="selected[i]" (selectionChange)="updateSelected($event)">
                             <mat-option></mat-option>
                             <mat-option [value]="option.name" *ngFor="let option of specList">{{ option.name }}</mat-option>
                         </mat-select>
