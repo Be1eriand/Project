@@ -13,6 +13,10 @@ import { AccountService } from './_services'
 //Base components of WAsP
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
+import { HomeComponent } from './home';
+import { DashboardComponent } from './realtime';
+import { ComplianceComponent } from './compliance';
+import { WeldHistoryComponent } from './weld-history';
 
 //Angular imports for prettifying the application
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,6 +50,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
     declarations: [
         AppComponent,
         AlertComponent,
+        HomeComponent,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

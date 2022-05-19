@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { User, Task } from '@app/_models';
 import { AccountService, DataService, AlertService } from '@app/_services';
@@ -13,7 +14,8 @@ export class HomeComponent {
 
     constructor(
         private accountService: AccountService,
-        private alertService: AlertService) {
+        private alertService: AlertService,
+        private router: Router) {
         this.user = this.accountService.userValue;
     }
 }
