@@ -40,6 +40,10 @@ import { ComplianceDataComponent } from './compliance-data/compliance-data.compo
     MatDividerModule,
     MatProgressSpinnerModule
     
+  ],
+  exports: [
+    ComplianceComponent,
+    ComplianceDataComponent
   ]
 })
 export class ComplianceModule { }

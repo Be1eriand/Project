@@ -31,6 +31,10 @@ import { WidgetComponent } from './widget.component';
           }),
     ],
     declarations: [
+       DashboardComponent,
+       WidgetComponent,
+    ],
+    exports: [
         DashboardComponent,
         WidgetComponent,
     ]

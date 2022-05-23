@@ -37,7 +37,7 @@ connection = settings.CONNECTION
 #logger.addHandler(file_handler)
 
 class RealtimeView(APIView): #Read Only -> Get
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 
@@ -77,7 +77,7 @@ class RealtimeView(APIView): #Read Only -> Get
 
 
 class SpecificationView(APIView): #Follows CRUD
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 
@@ -200,7 +200,7 @@ class SpecificationView(APIView): #Follows CRUD
 
 
 class ContractView(APIView):    #Follows CRUD
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -261,7 +261,7 @@ class ContractView(APIView):    #Follows CRUD
 
 
 class TaskAssignmentView(APIView):    #Follows CRUD
-    permission_classes = (IsAuthenticated,)
+   # permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -323,7 +323,7 @@ class TaskAssignmentView(APIView):    #Follows CRUD
         return Response(status.HTTP_400_BAD_REQUEST)
 
 class MachineView(APIView):    #Get Only at this point
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -334,7 +334,7 @@ class MachineView(APIView):    #Get Only at this point
         return JsonResponse(serialised.data, safe=False)
 
 class WelderView(APIView):    #Get Only at this point
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -345,7 +345,7 @@ class WelderView(APIView):    #Get Only at this point
         return JsonResponse(serialised.data, safe=False)
 
 class TaskSpecView(APIView):    #Get Only at this point
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
@@ -367,7 +367,7 @@ class TaskSpecView(APIView):    #Get Only at this point
         return JsonResponse(serialised.data, safe=False)
 
 class SpecListView(APIView):    #Get Only at this point
-    permission_classes = (IsAuthenticated,)
+    #permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
         
