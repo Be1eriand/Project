@@ -13,16 +13,32 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTableModule } from '@angular/material/table';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTabsModule } from '@angular/material/tabs';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ComplianceComponent } from './compliance.component';
 import { ComplianceDataComponent } from './compliance-data/compliance-data.component';
+import { TaskDashboardComponent } from './task-dashboard/task-dashboard.component';
+import { CurrentComponent } from './graphs/current/current.component';
+import { VoltageComponent } from './graphs/voltage/voltage.component';
+import { HeatInputComponent } from './graphs/heat-input/heat-input.component';
+import { TravelSpeedComponent } from './graphs/travel-speed/travel-speed.component';
+
+import * as echarts from 'echarts/core';
+import { NgxEchartsModule } from 'ngx-echarts';
+
 
 @NgModule({
   declarations: [
     ComplianceComponent,
-    ComplianceDataComponent
+    ComplianceDataComponent,
+    TaskDashboardComponent,
+    CurrentComponent,
+    VoltageComponent,
+    HeatInputComponent,
+    TravelSpeedComponent
   ],
   imports: [
     CommonModule,
@@ -38,7 +54,12 @@ import { ComplianceDataComponent } from './compliance-data/compliance-data.compo
     MatExpansionModule,
     MatTableModule,
     MatDividerModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatTabsModule,
+    NgxEchartsModule.forRoot({
+      echarts
+    }),
     
   ]
 })

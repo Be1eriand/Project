@@ -1,0 +1,74 @@
+<div class="filter">
+    <h1>Task Assurance Dashboard</h1>
+
+
+    <mat-form-field appearance="fill">
+        <mat-label>Select Task ID</mat-label>
+        <mat-select [formGroup]="taskForm" (selectionChange)="taskSelect($event)">
+            <mat-option *ngFor="let task of filteredTasks" [value]="task"> {{ task }} </mat-option>
+        </mat-select>
+
+    </mat-form-field>
+
+    <mat-tab-group>
+
+        <mat-tab label="Current (A)">
+                <ng-template matTabContent>
+
+                    <app-current *ngFor="let t of taskRealtime" [task]="t"></app-current>
+                    <div *ngIf="!dataAvail" class="graph">
+                        <p>No Weld Data Available</p>
+                    </div>
+
+                </ng-template>
+        </mat-tab>
+
+
+        <mat-tab label="Voltage (V)">
+
+                <ng-template matTabContent>
+                    <app-voltage *ngFor="let t of taskRealtime" [task]="t"></app-voltage>
+                    <div *ngIf="!dataAvail" class="graph">
+                        <p>No Weld Data Available</p>
+                    </div>
+                </ng-template>
+
+        </mat-tab>
+
+        <mat-tab label="Travel Speed (mm/min)">
+
+                <ng-template matTabContent>
+                    <app-travel-speed *ngFor="let t of taskRealtime" [task]="t"></app-travel-speed>
+                    <div *ngIf="!dataAvail" class="graph">
+                        <p>No Weld Data Available</p>
+                    </div>
+                </ng-template>
+
+        </mat-tab>
+
+        <mat-tab label="Heat Input (Kj/mm)">
+
+                <ng-template matTabContent>
+                    <app-heat-input *ngFor="let t of taskRealtime" [task]="t"></app-heat-input>
+                    <div *ngIf="!dataAvail" class="graph">
+                        <p>No Weld Data Available</p>
+                    </div>
+                </ng-template>
+
+        </mat-tab>
+
+        <mat-tab label="Alert Comparison"> 
+
+                <ng-template matTabContent>
+                    <p>Content 3 </p>
+                    
+                <div *ngIf="!dataAvail" class="graph">
+                    <p>No Weld Data Available</p>
+                </div>
+            </ng-template>
+
+        </mat-tab>
+        
+    </mat-tab-group>
+
+</div>
