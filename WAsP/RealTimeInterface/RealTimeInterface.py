@@ -21,9 +21,10 @@ def main(*args, **kwargs):
     reconnect_time = settings.getfloat('SENSOR_RECONNECT_TIME')
 
     while True:
-        
+        print("Connecting to sensor server")
         try:
             client.start()
+            print("Connected to sensor server")
             client.receive()
         except ConnectionRefusedError:
             print("Unable to connect to the Sensor Server to retrieve the data")

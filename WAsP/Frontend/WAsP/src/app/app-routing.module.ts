@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, RouterLink } from '@angular/router';
 
 import { HomeComponent } from './home';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardComponent } from './productivity/dashboard.component';
 import { AuthGuard } from './_helpers';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);
@@ -14,7 +14,7 @@ const complianceModule = () => import('./compliance/compliance.module').then(x =
 
 const routes: Routes = [
     { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-    { path: 'dashboard', component: DashboardComponent },
+    //{ path: 'dashboard', component: DashboardComponent },
     { path: 'account', loadChildren: accountModule },
     { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard]  },
     { path: 'realtime', loadChildren: realtimeModule, canActivate: [AuthGuard] },
@@ -28,6 +28,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule, RouterLink]
 })
 export class AppRoutingModule { }

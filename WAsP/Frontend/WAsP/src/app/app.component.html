@@ -31,29 +31,32 @@ C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\smartfab_logo.png
           <h1>Smart Fabrication</h1>
         </div>
         <!-- User button  -->
-        <div class="profile" *ngIf="user"></div>
-        <div class="dropdown show m-2">
-          <button
-            mat-raised-button
-            class="btn-user btn-warning text-center"
-            type="button"
-            id="dropdownUserButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-          >
-            <i class="bi bi-person-circle"></i>
-            <span style="font-weight: bold"> {{ user.username }}</span>
-          </button>
-          <div
-            class="dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center"
-            aria-labelledby="dropdownUserButton"
-          >
-            <div class="bg-dark rounded text-white">
-              <small> <span class="acc-font">Your Account</span></small>
+        <div class="profile" *ngIf="user">
+          <div class="dropdown show m-2">
+            <button
+              mat-raised-button
+              class="btn-user btn-warning text-center"
+              type="button"
+              id="dropdownUserButton"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              <i class="bi bi-person-circle"></i>
+              <span style="font-weight: bold"> {{ user.username }}</span>
+            </button>
+            <div
+              class="dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center"
+              aria-labelledby="dropdownUserButton"
+            >
+              <div class="bg-dark rounded text-white">
+                <small>
+                  <span class="font-weight-bold">Your Account</span></small
+                >
+              </div>
+              <a class="dropdown-item" href="/settings">Settings</a>
+              <a class="dropdown-item" (click)="logout()">Logout</a>
             </div>
-            <a class="dropdown-item" href="/settings">Settings</a>
-            <a class="dropdown-item" (click)="logout()">Logout</a>
           </div>
         </div>
       </div>

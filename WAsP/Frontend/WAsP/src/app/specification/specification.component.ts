@@ -159,8 +159,6 @@ export class SpecificationComponent implements OnInit {
 
     while (this.forms.length) {
       let popped = this.forms.pop();
-      console.log(popped.value);
-      console.log(popped);
       let spec = popped.value['WPS_No'];
       let run = popped.value['WPS_No'];
       this.specificationService.updateSpecRun(spec, run, popped.value).subscribe({

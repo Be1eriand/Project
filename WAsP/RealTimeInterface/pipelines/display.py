@@ -25,7 +25,7 @@ class DisplayDataPipe(Pipe):
         print(f"Voltage: {data.rtdata.voltage/1000}V")
         print(f"Temperature: {data.rtdata.temperature/1000}C")
         print(f"Weld Length: {data.rtdata.length/1000}mm")
-        print(f"Wire Feed Rate: {data.rtdata.wirefeedrate/1000}mm/min")
+        print(f"Wire Feed Rate: {data.rtdata.wirefeedrate/1000}mm/s")
         print(f"Gas Used: {data.rtdata.gasused/1000}L")
         print("-----------------------------------------------")
         print("")

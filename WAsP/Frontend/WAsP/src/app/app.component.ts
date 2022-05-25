@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 import { AccountService } from './_services';
 import { User } from './_models';
@@ -16,7 +17,10 @@ export class AppComponent {
     user: User;
     environment = environment;
 
-    constructor(private accountService: AccountService, private http: HttpClient) {
+    constructor(private accountService: AccountService, 
+                private http: HttpClient,
+                private router: Router
+                ) {
         this.accountService.user.subscribe(x => this.user = x);
     }
 

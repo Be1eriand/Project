@@ -1,0 +1,138 @@
+{% extends "base.html"%}
+{% load static %}
+{% load mathfilters %}
+
+
+{% block title %}Dashboard{% endblock title %}
+
+{%block css%}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" integrity="sha512-TQQ3J4WkE/rwojNFo6OJdyu6G8Xe9z8rMrlF9y7xpFbQfW5g8aSWcygCQ4vqRiJqFsDsE1T6MoAOMJkFXlrI9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+{%endblock%}
+
+{%block content%}
+
+<h1 class="display-4 box-header">Live Machines Productivity Dashboard <button type="button" id="back_btn" class="btn btn-info mb-2" onclick="window.history.go(-1);"><i class="bi bi-backspace-fill"></i> Back</button></h1>
+<div class="alert alert-primary">
+  <div class="row">
+    <div class="col-md-5 text-left btn-group">
+      <div class="dropdown show">
+        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Live Welders</button>
+        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+          <input class="form-control" id="welderSearch" type="text" placeholder="Search..">
+          <span id="activeWeldersList">
+          {% for job in activeJobs %}
+            <a class="dropdown-item text-center" href="{%if period is not None%}../{%endif%}../{{job.workerID}}/0/0/{{periodDate}}/{{currDate}}">{{job.workerName}} ({{job.workerID}})</a>
+          {% endfor %}
+          </span>
+        </div>
+      </div>
+      &nbsp;
+      <div class="dropdown show">
+        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Live Machines</button>
+        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+          <input class="form-control" id="machineSearch" type="text" placeholder="Search..">
+          <span id="activeMachinesList">
+          {% for job in activeJobs %}
+            <a class="dropdown-item text-center" href="{%if period is not None%}../{%endif%}../0/{{job.machineID}}/0/{{periodDate}}/{{currDate}}">{{job.machineName}}</a>
+          {% endfor %}
+          </span>
+        </div>
+      </div>
+      &nbsp;
+      <div class="dropdown show">
+        <button class="btn btn-primary dropdown-toggle btn-filter" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Live Jobs</button>
+        <div class="dropdown-menu filter-dropdown" aria-labelledby="dropdownMenuButton">
+          <input class="form-control" id="jobSearch" type="text" placeholder="Search..">
+          <span id="activeJobList">
+          {% for job in activeJobs %}
+            <a class="dropdown-item text-center" href="{%if period is not None%}../{%endif%}../0/0/{{job.jobID}}/{{periodDate}}/{{currDate}}">{{job.jobID}}</a>
+          {% endfor %}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row justify-content-center">
+  {% for job in activeJobs %}
+  <div class="col-sm-4 col-md-3 col-lg-2 m-0 p-2 bg-light border rounded" style="width: 250px; height: 300px;" id="liveChartCanvas{{forloop.counter}}">
+    <div class="p-2">
+      <div class="row">
+        <div class="title">
+          <span class="display-4 text-shadow {%if job.current >= job.expected|mul:0.95%}text-success
+                        {%elif job.current < job.expected|mul:0.95 and job.current >= job.expected|mul:0.85%}text-success
+                        {%elif job.current < job.expected|mul:0.85 and job.current >= job.expected|mul:0.75%}text-warning
+                        {%else%}text-danger
+                        {%endif%}">{{job.current|mul:100|floatformat:"2"}}%</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col p-3">
+          {%if job.current != None %}
+          <canvas id="liveChart{{forloop.counter}}" width="225" height="125" class="chart" cur="{{job.current}}" exp="{{job.expected}}" uid="{{job.workerID}}" mid="{{job.machineID}}" jid="{{job.jobID}}" start_date="{{periodDate}}" to_date="{{currDate}}"></canvas>
+          {%else%}
+          <span>No Data</span>
+          {%endif%}
+        </div>
+      </div>
+      <div class="row">        
+        <div class="info">
+          <h5 class="font-weight-bold">Target: {{job.expected|mul:100|floatformat:"2"}}%</h5>      
+          <small class="font-weight-bold">Job {{job.jobID}} - Category {{job.category}} - {{job.machineName}}</small><br />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+
+  </div>
+
+</div>
+
+
+
+{%endblock content%}
+
+{%block js%}
+<script>
+
+  $('#myTab a').on('click', function (event) {
+    event.preventDefault()
+    $(this).tab('show')
+  });
+
+  $(document).ready(function(){
+  $("#welderSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#activeWeldersList a").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
+
+  $("#machineSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#activeMachinesList a").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+
+    $("#jobSearch").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#activeJobList a").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script src="{% static 'js/live-chart-creator.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js" integrity="sha512-T/tUfKSV1bihCnd+MxKD0Hm1uBBroVYBOYSk1knyvQ9VyZJpc/ALb4P0r6ubwVPSGB2GvjeoMAJJImBG12TiaQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+
+{%endblock%}

@@ -37,10 +37,6 @@ ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
 
 INSTALLED_APPS = [
     #WAsP Applications
-    #'layout.apps.LayoutConfig',
-    #'dashboard.apps.DashboardConfig',
-    #'report.apps.ReportConfig',
-    #'accounts.apps.AccountsConfig',
     'index.apps.IndexConfig',
 
     #Django apps
@@ -93,11 +89,16 @@ ASGI_APPLICATION = "WAsP.routing.application"
 
 WSGI_APPLICATION = "WAsP.wsgi.application"
 
-#CHANNEL_REDIS_HOST = ("127.0.0.1", 3000) #IP address and port for the WAsP channel if using a Redis server which we are not
+#CHANNEL_REDIS_HOST = ("127.0.0.1", 6379) 
 
 CHANNEL_LAYERS = {
     'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+            "capacity": 1500,  # default 100
+            "expiry": 30, 
+        },
     },
 }
 
@@ -127,13 +128,29 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+"""
 
+DATABASES = {
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "SmartFab",
+        #"USER": "USER_NAME",
+        #"PASSWORD": "PASSWORD",
+        "HOST": "127.0.0.1", #Change to server address if not on local host
+        "PORT": "1433",
+        "OPTIONS": {"driver": "SQL Server Native Client 11.0",
+        "Trusted_Connection" : "yes",
+        "MARS_Connection": "yes,"
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -159,7 +176,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC' #probably change this to ACST
+TIME_ZONE = 'Australia/Adelaide' #probably change this to ACST
 
 USE_I18N = True
 
@@ -191,6 +208,12 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 LOGIN_URL = "/login"
+
+# Celery Configuration Options
+CELERY_TIMEZONE = "Australia/Adelaide"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 
 #CRISPY_TEMPLATE_PACK="bootstrap4"
 

@@ -15,6 +15,7 @@
 				<identity><![CDATA[IDENTITY]]></identity>
 			</column>
 			<column name="TaskID" prior="JobId" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="RunNo" type="int" jt="4" mandatory="y" />
 			<column name="AlertType" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="SpecType" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="StartTime" prior="DateTime" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
@@ -22,8 +23,8 @@
 			<index name="pk_AlertsTable" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<index name="idx_AlertsTable" unique="NORMAL" >
-				<column name="StartTime" options="DESC" />
+			<index name="idx_AlertsTable_StartTime" unique="NORMAL" >
+				<column name="StartTime" />
 			</index>
 			<fk name="fk_AlertsTable_AlertTypes" to_schema="SmartFab.dbo" to_table="AlertTypes" >
 				<fk_column name="AlertType" pk="id" />
@@ -312,19 +313,30 @@
 				<fk_column name="WT_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_group" generator_rows="100" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="name" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_auth_group" unique="PRIMARY_KEY" >
+		<table name="auth_group" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="name" type="nvarchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<index name="PK__auth_gro__3213E83F29E695FD" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+			<index name="auth_group_name_a6ea08ec_uniq" unique="UNIQUE_KEY" >
+				<column name="name" />
+			</index>
 		</table>
-		<table name="auth_group_permissions" generator_rows="225" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		<table name="auth_group_permissions" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
 			<column name="group_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="permission_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_auth_group_permissions" unique="PRIMARY_KEY" >
+			<index name="PK__auth_gro__3213E83FDC338679" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="auth_group_permissions_group_id_permission_id_0cd325b0_uniq" unique="UNIQUE_INDEX" >
+				<column name="group_id" />
+				<column name="permission_id" />
 			</index>
 			<index name="auth_group_permissions_group_id_b120cbf9" unique="NORMAL" >
 				<column name="group_id" />
@@ -332,50 +344,67 @@
 			<index name="auth_group_permissions_permission_id_84c5c92e" unique="NORMAL" >
 				<column name="permission_id" />
 			</index>
-			<fk name="FK_auth_group_permissions auth_group" to_schema="SmartFab.dbo" to_table="auth_group" >
+			<fk name="auth_group_permissions_group_id_b120cbf9_fk_auth_group_id" to_schema="SmartFab.dbo" to_table="auth_group" >
 				<fk_column name="group_id" pk="id" />
 			</fk>
-			<fk name="FK_auth_group_permissions auth_permission" to_schema="SmartFab.dbo" to_table="auth_permission" >
+			<fk name="auth_group_permissions_permission_id_84c5c92e_fk_auth_permission_id" to_schema="SmartFab.dbo" to_table="auth_permission" >
 				<fk_column name="permission_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_permission" generator_rows="150" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		<table name="auth_permission" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="name" type="nvarchar" length="255" decimal="0" jt="12" mandatory="y" />
 			<column name="content_type_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="codename" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
-			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_auth_permission" unique="PRIMARY_KEY" >
+			<column name="codename" type="nvarchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<index name="PK__auth_per__3213E83F31E606E0" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="auth_permission_content_type_id_codename_01ab375a_uniq" unique="UNIQUE_INDEX" >
+				<column name="content_type_id" />
+				<column name="codename" />
 			</index>
 			<index name="auth_permission_content_type_id_2f476e4b" unique="NORMAL" >
 				<column name="content_type_id" />
 			</index>
-			<fk name="FK_auth_permission django_content_type" to_schema="SmartFab.dbo" to_table="django_content_type" >
+			<fk name="auth_permission_content_type_id_2f476e4b_fk_django_content_type_id" to_schema="SmartFab.dbo" to_table="django_content_type" >
 				<fk_column name="content_type_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user" generator_rows="100" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="password" type="varchar" length="128" decimal="0" jt="12" mandatory="y" />
-			<column name="last_login" type="datetime" length="23" decimal="3" jt="92" />
+		<table name="auth_user" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="password" type="nvarchar" length="128" decimal="0" jt="12" mandatory="y" />
+			<column name="last_login" type="datetime2" length="7" decimal="7" jt="92" />
 			<column name="is_superuser" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<column name="username" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
-			<column name="last_name" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
-			<column name="email" type="varchar" length="254" decimal="0" jt="12" mandatory="y" />
+			<column name="username" type="nvarchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<column name="first_name" type="nvarchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<column name="last_name" type="nvarchar" length="150" decimal="0" jt="12" mandatory="y" />
+			<column name="email" type="nvarchar" length="254" decimal="0" jt="12" mandatory="y" />
 			<column name="is_staff" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
 			<column name="is_active" type="bit" length="1" decimal="0" jt="-7" mandatory="y" />
-			<column name="date_joined" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
-			<column name="first_name" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_auth_user" unique="PRIMARY_KEY" >
+			<column name="date_joined" type="datetime2" length="7" decimal="7" jt="92" mandatory="y" />
+			<index name="PK__auth_use__3213E83F3B85FC5C" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
+			<index name="auth_user_username_6821ab7c_uniq" unique="UNIQUE_KEY" >
+				<column name="username" />
+			</index>
 		</table>
-		<table name="auth_user_groups" generator_rows="150" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		<table name="auth_user_groups" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
 			<column name="user_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="group_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_auth_user_groups" unique="PRIMARY_KEY" >
+			<index name="PK__auth_use__3213E83FF12447A7" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="auth_user_groups_user_id_group_id_94350c0c_uniq" unique="UNIQUE_INDEX" >
+				<column name="user_id" />
+				<column name="group_id" />
 			</index>
 			<index name="auth_user_groups_group_id_97559544" unique="NORMAL" >
 				<column name="group_id" />
@@ -383,19 +412,25 @@
 			<index name="auth_user_groups_user_id_6a12ed8b" unique="NORMAL" >
 				<column name="user_id" />
 			</index>
-			<fk name="FK_auth_user_groups auth_group" to_schema="SmartFab.dbo" to_table="auth_group" >
+			<fk name="auth_user_groups_group_id_97559544_fk_auth_group_id" to_schema="SmartFab.dbo" to_table="auth_group" >
 				<fk_column name="group_id" pk="id" />
 			</fk>
-			<fk name="FK_auth_user_groups auth_user" to_schema="SmartFab.dbo" to_table="auth_user" >
+			<fk name="auth_user_groups_user_id_6a12ed8b_fk_auth_user_id" to_schema="SmartFab.dbo" to_table="auth_user" >
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="auth_user_user_permissions" generator_rows="225" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
+		<table name="auth_user_user_permissions" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
 			<column name="user_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="permission_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<index name="pk_auth_user_user_permissions" unique="PRIMARY_KEY" >
+			<index name="PK__auth_use__3213E83FA94A8336" unique="PRIMARY_KEY" >
 				<column name="id" />
+			</index>
+			<index name="auth_user_user_permissions_user_id_permission_id_14a6b632_uniq" unique="UNIQUE_INDEX" >
+				<column name="user_id" />
+				<column name="permission_id" />
 			</index>
 			<index name="auth_user_user_permissions_permission_id_1fbb5f2c" unique="NORMAL" >
 				<column name="permission_id" />
@@ -403,24 +438,25 @@
 			<index name="auth_user_user_permissions_user_id_a95ead1b" unique="NORMAL" >
 				<column name="user_id" />
 			</index>
-			<fk name="FK_auth_user_user_permissions auth_permission" to_schema="SmartFab.dbo" to_table="auth_permission" >
+			<fk name="auth_user_user_permissions_permission_id_1fbb5f2c_fk_auth_permission_id" to_schema="SmartFab.dbo" to_table="auth_permission" >
 				<fk_column name="permission_id" pk="id" />
 			</fk>
-			<fk name="FK_auth_user_user_permissions auth_user" to_schema="SmartFab.dbo" to_table="auth_user" >
+			<fk name="auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id" to_schema="SmartFab.dbo" to_table="auth_user" >
 				<fk_column name="user_id" pk="id" />
 			</fk>
 		</table>
-		<table name="django_admin_log" generator_rows="150" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="action_time" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
-			<column name="object_id" type="text" length="2147483647" decimal="0" jt="-1" />
-			<column name="object_repr" type="varchar" length="200" decimal="0" jt="12" mandatory="y" />
-			<column name="change_message" type="text" length="2147483647" decimal="0" jt="-1" mandatory="y" />
+		<table name="django_admin_log" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="action_time" type="datetime2" length="7" decimal="7" jt="92" mandatory="y" />
+			<column name="object_id" type="nvarchar(max)" length="0" decimal="0" jt="12" />
+			<column name="object_repr" type="nvarchar" length="200" decimal="0" jt="12" mandatory="y" />
+			<column name="action_flag" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
+			<column name="change_message" type="nvarchar(max)" length="0" decimal="0" jt="12" mandatory="y" />
 			<column name="content_type_id" type="int" length="10" decimal="0" jt="4" />
 			<column name="user_id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="action_flag" type="smallint" length="5" decimal="0" jt="5" mandatory="y" />
-			<column name="CHECK" type="varchar" length="1" decimal="0" jt="12" />
-			<index name="pk_django_admin_log" unique="PRIMARY_KEY" >
+			<index name="PK__django_a__3213E83F3F66F2B8" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="django_admin_log_content_type_id_c4bce8eb" unique="NORMAL" >
@@ -429,38 +465,46 @@
 			<index name="django_admin_log_user_id_c564eba6" unique="NORMAL" >
 				<column name="user_id" />
 			</index>
-			<constraint name="Cns_django_admin_log_CHECK" >
+			<constraint name="django_admin_log_action_flag_a8637d59_check" >
 				<string><![CDATA[[action_flag]>=(0)]]></string>
 			</constraint>
-			<fk name="FK_django_admin_log auth_user" to_schema="SmartFab.dbo" to_table="auth_user" >
+			<fk name="django_admin_log_user_id_c564eba6_fk_auth_user_id" to_schema="SmartFab.dbo" to_table="auth_user" >
 				<fk_column name="user_id" pk="id" />
 			</fk>
-			<fk name="FK_django_admin_log django_content_type" to_schema="SmartFab.dbo" to_table="django_content_type" >
+			<fk name="django_admin_log_content_type_id_c4bce8eb_fk_django_content_type_id" to_schema="SmartFab.dbo" to_table="django_content_type" >
 				<fk_column name="content_type_id" pk="id" />
 			</fk>
 		</table>
-		<table name="django_content_type" generator_rows="100" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="app_label" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
-			<column name="model" type="varchar" length="100" decimal="0" jt="12" mandatory="y" />
-			<index name="pk_django_content_type" unique="PRIMARY_KEY" >
+		<table name="django_content_type" >
+			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="app_label" type="nvarchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<column name="model" type="nvarchar" length="100" decimal="0" jt="12" mandatory="y" />
+			<index name="PK__django_c__3213E83FCB4266CE" unique="PRIMARY_KEY" >
+				<column name="id" />
+			</index>
+			<index name="django_content_type_app_label_model_76bd3d3b_uniq" unique="UNIQUE_INDEX" >
+				<column name="app_label" />
+				<column name="model" />
+			</index>
+		</table>
+		<table name="django_migrations" >
+			<column name="id" type="bigint" length="19" decimal="0" jt="-5" mandatory="y" >
+				<identity><![CDATA[IDENTITY]]></identity>
+			</column>
+			<column name="app" type="nvarchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="name" type="nvarchar" length="255" decimal="0" jt="12" mandatory="y" />
+			<column name="applied" type="datetime2" length="7" decimal="7" jt="92" mandatory="y" />
+			<index name="PK__django_m__3213E83FD766805F" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 		</table>
-		<table name="django_migrations" generator_rows="100" >
-			<column name="id" type="int" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="app" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
-			<column name="name" type="varchar" length="255" decimal="0" jt="12" mandatory="y" />
-			<column name="applied" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
-			<index name="pk_django_migrations" unique="PRIMARY_KEY" >
-				<column name="id" />
-			</index>
-		</table>
-		<table name="django_session" generator_rows="100" >
-			<column name="session_key" type="varchar" length="40" decimal="0" jt="12" mandatory="y" />
-			<column name="session_data" type="text" length="2147483647" decimal="0" jt="-1" mandatory="y" />
-			<column name="expire_date" type="datetime" length="23" decimal="3" jt="92" mandatory="y" />
-			<index name="pk_django_session" unique="PRIMARY_KEY" >
+		<table name="django_session" >
+			<column name="session_key" type="nvarchar" length="40" decimal="0" jt="12" mandatory="y" />
+			<column name="session_data" type="nvarchar(max)" length="0" decimal="0" jt="12" mandatory="y" />
+			<column name="expire_date" type="datetime2" length="7" decimal="7" jt="92" mandatory="y" />
+			<index name="PK__django_s__B3BA0F1FB4D9922F" unique="PRIMARY_KEY" >
 				<column name="session_key" />
 			</index>
 			<index name="django_session_expire_date_a5c62663" unique="NORMAL" >
@@ -496,12 +540,13 @@ WHERE DATEDIFF(SECOND, rd.time, SYSDATETIME() ) <= 30.0]]></view_script>
 			<column name="RunNo" type="int" />
 		</view>
 		<view name="AlertView" >
-			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT a.id, a.TaskID, a.StartTime, a.FinishTime, a1.Description AlertType, s.Description SpecType
+			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT a.id, a.TaskID, a.RunNo, a.StartTime, a.FinishTime, a1.Description AlertType, s.Description SpecType
 FROM SmartFab.dbo.AlertsTable a 
 	INNER JOIN SmartFab.dbo.AlertTypes a1 ON ( a.AlertType = a1.id  )  
 	INNER JOIN SmartFab.dbo.SpecTypes s ON ( a.SpecType = s.id  )  ]]></view_script>
 			<column name="id" type="int" />
 			<column name="TaskID" type="int" />
+			<column name="RunNo" type="int" />
 			<column name="StartTime" type="datetime" />
 			<column name="FinishTime" type="datetime" />
 			<column name="AlertType" type="varchar" />
@@ -1058,61 +1103,47 @@ FROM SmartFab.dbo.WPS w
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication, Current User" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Parsed Script Layout" id="Layout-239" confirmed="y" show_relation="name" >
-		<entity schema="SmartFab.dbo" name="ActiveView" color="3986C1" x="1728" y="960" />
-		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1696" y="1312" />
-		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="1712" y="672" />
-		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1888" y="1200" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1232" />
-		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="960" />
-		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="1872" y="672" />
-		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="752" />
-		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="944" />
-		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="480" y="928" />
-		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1328" />
-		<entity schema="SmartFab.dbo" name="MachineView" color="3986C1" x="1712" y="848" />
-		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1184" />
-		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="2416" y="672" />
-		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1168" />
-		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1232" />
-		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1696" y="1152" />
-		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="752" />
-		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="2032" y="672" />
-		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="976" y="944" />
-		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="816" />
-		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="1872" y="848" />
-		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1040" />
-		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1280" />
-		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="672" />
-		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="736" y="576" />
-		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1184" y="960" />
-		<entity schema="SmartFab.dbo" name="WPSView" color="3986C1" x="2224" y="672" />
-		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="752" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1216" />
-		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="432" y="272" />
-		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="608" y="176" />
-		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="352" y="112" />
-		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="96" y="304" />
-		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="272" y="256" />
-		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="112" y="80" />
-		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="944" y="288" />
-		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="864" y="96" />
-		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1152" y="96" />
-		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1184" y="304" />
-		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="976" y="560" />
-		<group name="Django Admin" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="django_session" />
-			<entity schema="SmartFab.dbo" name="django_migrations" />
-			<entity schema="SmartFab.dbo" name="django_admin_log" />
-			<entity schema="SmartFab.dbo" name="django_content_type" />
-		</group>
-		<group name="Authorisation" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="auth_permission" />
-			<entity schema="SmartFab.dbo" name="auth_user_groups" />
-			<entity schema="SmartFab.dbo" name="auth_group" />
-			<entity schema="SmartFab.dbo" name="auth_user_user_permissions" />
-			<entity schema="SmartFab.dbo" name="auth_group_permissions" />
-			<entity schema="SmartFab.dbo" name="auth_user" />
-		</group>
+		<entity schema="SmartFab.dbo" name="ActiveView" color="3986C1" x="1728" y="1040" />
+		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1696" y="1392" />
+		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="1712" y="752" />
+		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1888" y="1280" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1312" />
+		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="1040" />
+		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="1872" y="752" />
+		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="832" />
+		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="1024" />
+		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="480" y="1008" />
+		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1408" />
+		<entity schema="SmartFab.dbo" name="MachineView" color="3986C1" x="1712" y="928" />
+		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1264" />
+		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="2416" y="752" />
+		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1248" />
+		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1312" />
+		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1696" y="1232" />
+		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="832" />
+		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="2032" y="752" />
+		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="976" y="1024" />
+		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="896" />
+		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="1872" y="928" />
+		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1120" />
+		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1360" />
+		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="752" />
+		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="688" y="656" />
+		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1184" y="1040" />
+		<entity schema="SmartFab.dbo" name="WPSView" color="3986C1" x="2224" y="752" />
+		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="832" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1296" />
+		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="416" y="224" />
+		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="528" y="80" />
+		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="624" y="224" />
+		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="208" y="336" />
+		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="256" y="80" />
+		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="448" y="368" />
+		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="912" y="384" />
+		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="928" y="176" />
+		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1120" y="192" />
+		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1136" y="384" />
+		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="832" y="656" />
 		<group name="Procedures" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="WPS_Run" />
 			<entity schema="SmartFab.dbo" name="Specification" />
@@ -1136,8 +1167,8 @@ FROM SmartFab.dbo.WPS w
 		<group name="RealTime" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="Assignment" />
 			<entity schema="SmartFab.dbo" name="WeldingTable" />
-			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 			<entity schema="SmartFab.dbo" name="RunTable" />
+			<entity schema="SmartFab.dbo" name="RealTime_Data" />
 		</group>
 		<group name="Job Contract Assignment" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="TaskAssociation" />
@@ -1147,12 +1178,26 @@ FROM SmartFab.dbo.WPS w
 		<group name="WAsP Views" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="ContractTaskView" />
 			<entity schema="SmartFab.dbo" name="WPSView" />
-			<entity schema="SmartFab.dbo" name="AlertView" />
 			<entity schema="SmartFab.dbo" name="MachineView" />
 			<entity schema="SmartFab.dbo" name="ActiveView" />
 			<entity schema="SmartFab.dbo" name="TaskView" />
 			<entity schema="SmartFab.dbo" name="RealTimeView" />
 			<entity schema="SmartFab.dbo" name="SpecificationView" />
+			<entity schema="SmartFab.dbo" name="AlertView" />
+		</group>
+		<group name="Django Admin" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="django_admin_log" />
+			<entity schema="SmartFab.dbo" name="django_content_type" />
+			<entity schema="SmartFab.dbo" name="django_migrations" />
+			<entity schema="SmartFab.dbo" name="django_session" />
+		</group>
+		<group name="Authorisation" color="C4E0F9" >
+			<entity schema="SmartFab.dbo" name="auth_user" />
+			<entity schema="SmartFab.dbo" name="auth_permission" />
+			<entity schema="SmartFab.dbo" name="auth_group_permissions" />
+			<entity schema="SmartFab.dbo" name="auth_group" />
+			<entity schema="SmartFab.dbo" name="auth_user_user_permissions" />
+			<entity schema="SmartFab.dbo" name="auth_user_groups" />
 		</group>
 		<script name="SQL_Editor" id="Editor-a1c" language="SQL" >
 			<string><![CDATA[CREATE TABLE SmartFab.dbo.Assignment ( 
