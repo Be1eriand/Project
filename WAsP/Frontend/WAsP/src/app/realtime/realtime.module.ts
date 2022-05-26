@@ -6,6 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatChipsModule } from '@angular/material/chips';
 
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
@@ -26,6 +28,8 @@ import { WidgetComponent } from './widget.component';
         MatSelectModule,
         ColorPickerModule,
         FlexLayoutModule,
+        MatTooltipModule,
+        MatChipsModule,
         NgxEchartsModule.forRoot({
             echarts
           }),

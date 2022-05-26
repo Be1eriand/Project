@@ -5,6 +5,7 @@ import { RealTimeData, TaskData, Specification, RealTimeView, RTAlert } from '@a
 import { AlertService, DataService, SocketService } from '@app/_services';
 import { lineColour, specList, ActiveMachine } from './realtime.module';
 import { Subscription } from 'rxjs';
+import { kill } from 'process';
 
 @Component({ 
     selector: 'realtime-card',
@@ -25,6 +26,8 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
     Spec: Specification;
     Task: TaskData;
     Alerts: RTAlert[] = [];
+
+    AlertsInfo: {};
 
     numAlerts = 0;
 
@@ -97,6 +100,8 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
             next: (alert) => {
                 this.Alerts.push(alert)
                 this.numAlerts = this.Alerts.length;
+
+                this.AlertsInfo = createAlertsInfo(this.Alerts);
             }
         });
 
@@ -205,6 +210,30 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
 
         return rtd;
     }
+
+    createAlertTooltip() {
+
+        if (this.Alerts.length === 0)
+            return `<b>No Alerts have been raised.</b>`
+
+        let alertString = 'Alert Information\r\n';
+        
+        alertString += '\r\n';
+
+        for (const alert in this.AlertsInfo) {
+
+            alertString += `${alert}:\r\n`;
+
+            for (const index in this.AlertsInfo[alert]) {
+                let a: AlertArray = this.AlertsInfo[alert][index];
+                alertString += `    ${a.type}: ${a.num}\r\n`
+            }
+
+            alertString += '\r\n';
+        }
+
+        return alertString;
+    }
       
 }
 
@@ -255,4 +284,43 @@ function formatList(arr, l) {
             arr.push(v);
     }
     return arr;
+}
+
+function createAlertsInfo(Alerts: RTAlert[]) {
+
+    let info = {};
+
+    for( const a in Alerts) {
+
+        let alert = Alerts[a];
+
+        if (info[alert['SpecType']] === undefined) {
+            let AlertTypeInfo = new AlertArray();
+
+            AlertTypeInfo.type = alert['AlertType'];
+            AlertTypeInfo.num = 1;
+            info[alert['SpecType']] = [];
+            info[alert['SpecType']].push(AlertTypeInfo);
+        } else {
+
+            let type = info[alert['SpecType']].find(i => i.type===alert['AlertType']);
+
+            if (type === undefined) {
+                let AlertTypeInfo = new AlertArray();
+
+                AlertTypeInfo.type = alert['AlertType'];
+                AlertTypeInfo.num = 1;
+                info[alert['SpecType']].push(AlertTypeInfo);
+            } else {
+                type.num++;
+            }
+        }
+    }
+
+    return info;
+}
+
+class AlertArray {
+    type: string;
+    num: number;
 }

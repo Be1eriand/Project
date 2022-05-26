@@ -8,7 +8,7 @@ C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\smartfab_logo.png
 
 -->
 <div class="app-container">
-  <mat-drawer-container autosize>
+  <mat-drawer-container>
     <div class="nav">
       <div class="row col-12">
         <div class="home-logo d-flex justify-content-start">
@@ -93,24 +93,25 @@ C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\assets\smartfab_logo.png
     </mat-drawer>
 
     <router-outlet></router-outlet>
-    <footer class="app-footer">
-      <p>
-        <span class="org">W</span>eld <span class="org">A</span>ssurance
-        <span class="org">P</span>rogram
-        <span> Copyright © 2022</span>
-        <span> Smart Fabrication Pty Ltd </span>
-        <span>| ABN: 70 089 359 366 |</span>
-        <span> ACN: 089 359 366</span>
-        <img
-          class="footer-img-logo"
-          src="{{ environment.static }}smartfab_logo.png"
-        />
-      </p>
-      <!-- <script>
-      document.write(new Date().getFullYear());
-    </script>-->
-    </footer>
+
   </mat-drawer-container>
+  <footer class="app-footer">
+    <p>
+      <span class="org">W</span>eld <span class="org">A</span>ssurance
+      <span class="org">P</span>rogram
+      <span> Copyright © 2022</span>
+      <span> Smart Fabrication Pty Ltd </span>
+      <span>| ABN: 70 089 359 366 |</span>
+      <span> ACN: 089 359 366</span>
+      <img
+        class="footer-img-logo"
+        src="{{ environment.static }}smartfab_logo.png"
+      />
+    </p>
+    <!-- <script>
+    document.write(new Date().getFullYear());
+  </script>-->
+  </footer>
 </div>
 <!--
 <script>

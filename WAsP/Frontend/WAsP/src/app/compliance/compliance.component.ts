@@ -31,9 +31,11 @@ export class ComplianceComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.specificationService.getAllContracts().subscribe(c => {
-      this.allContracts = c;
-      this.loadContracts();
+    this.specificationService.getAllContracts().subscribe({
+      next: c => {
+        this.allContracts = c;
+        this.loadContracts();
+      },
     })
 
     this.contractForm = new FormGroup({

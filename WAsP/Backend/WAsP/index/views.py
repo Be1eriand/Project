@@ -13,12 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 
 def AppView(request):
 
-    print('Rendering Index.html')
     return render(request,"index.html")
-
-def jsView(request):
-    print(request)
-    return HttpResponse('Js')
 
 def page_not_found_view(request, exception):
     return HttpResponse(exception)

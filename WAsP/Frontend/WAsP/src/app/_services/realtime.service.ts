@@ -18,7 +18,7 @@ export class RealtimeService {
   ) { }
 
   getTaskData(): Observable<TaskView[]>{
-    return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks/`);
+    return this.http.get<TaskView[]>(`${environment.apiUrl}/data/tasks`);
   }
 
   getTask(task: string): Observable<TaskView[]>{

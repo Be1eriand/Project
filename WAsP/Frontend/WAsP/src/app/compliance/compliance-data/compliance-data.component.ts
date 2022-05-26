@@ -36,8 +36,11 @@ export class ComplianceDataComponent implements OnInit {
     this.wps = await this.getWPS(this.contract.WPS_No);
 
 
-    await this.realtimeSerivce.getRTTask(this.contract.TaskID).subscribe(t => {
+    this.realtimeSerivce.getRTTask(this.contract.TaskID).subscribe({
+      next: t => {
       this.realtime = t;
+
+      console.log(t);
 
       // If there is weld data available
       if (this.realtime.length > 0) {
@@ -50,6 +53,7 @@ export class ComplianceDataComponent implements OnInit {
         this.noData = true;
       }
       this.hideSpinner = true;
+    },
     });
   }
 
@@ -231,9 +235,11 @@ export class ComplianceDataComponent implements OnInit {
     return new Promise((resolve) => {
       setTimeout(() => {
         let data: Specification[];
-        this.specificationService.getSpec(id).subscribe((t) => {
-          data = t;
-          resolve(data);
+        this.specificationService.getSpec(id).subscribe({
+          next: (t) => {
+            data = t;
+            resolve(data);
+          },
         });
       }, 200);
     });
