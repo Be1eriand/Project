@@ -47,7 +47,9 @@ import { NgxEchartsModule } from 'ngx-echarts';
     declarations: [
         AppComponent,
         AlertComponent,
-        HomeComponent,
+        HomeComponent
+
+
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
