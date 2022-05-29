@@ -14,7 +14,6 @@ import { AccountService } from './_services'
 import { AppComponent } from './app.component';
 import { AlertComponent } from './_components';
 import { HomeComponent } from './home';
-import { DashboardComponent, WidgetComponent } from './realtime';
 
 //Angular imports for prettifying the application
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

@@ -557,7 +557,7 @@ FROM SmartFab.dbo.AlertsTable a
 FROM SmartFab.dbo.JobContract j 
 	INNER JOIN SmartFab.dbo.TaskAssociation t ON ( j.id = t.Jobid  )  
 	INNER JOIN SmartFab.dbo.TaskAssignment t1 ON ( t.Taskid = t1.id  )  
-	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.WPS_No  )  
+	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.id  )  
 	INNER JOIN SmartFab.dbo.Employees e ON ( t1.Welderid = e.payroll_id  )  
 	INNER JOIN SmartFab.dbo.Machines m ON ( t1.Machineid = m.id  )  ]]></view_script>
 			<column name="ContractID" type="int" />
@@ -1176,14 +1176,14 @@ FROM SmartFab.dbo.WPS w
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 		</group>
 		<group name="WAsP Views" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="ContractTaskView" />
 			<entity schema="SmartFab.dbo" name="WPSView" />
 			<entity schema="SmartFab.dbo" name="MachineView" />
 			<entity schema="SmartFab.dbo" name="ActiveView" />
 			<entity schema="SmartFab.dbo" name="TaskView" />
 			<entity schema="SmartFab.dbo" name="RealTimeView" />
-			<entity schema="SmartFab.dbo" name="SpecificationView" />
 			<entity schema="SmartFab.dbo" name="AlertView" />
+			<entity schema="SmartFab.dbo" name="SpecificationView" />
+			<entity schema="SmartFab.dbo" name="ContractTaskView" />
 		</group>
 		<group name="Django Admin" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="django_admin_log" />

@@ -18,7 +18,7 @@ export class SpecificationComponent implements OnInit {
   formSubs: Subscription[] = [];
 
   specFilter = new FormControl();
-  filteredOptions: Observable<Spec[]>;
+  filteredOptions: string[] = [];
 
   SpecLoaded = false;
   Editing = false;
@@ -61,29 +61,38 @@ export class SpecificationComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.filteredOptions = this.specFilter.valueChanges.pipe(
+  this.specFilter.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value)),
-    );
-
-    this.specFilter.valueChanges.subscribe({
+    ).subscribe({
       next: (value) => {
-        this.SpecLoaded = false;
-        this.Editing = false;
-        if (value !== '') {
-          this.loadSpecification(value);
-        
-          this.Specifications.forEach( spec => {
-            this.createFormGroup(spec);
-          });
-          
-          this.formLoaded = true;
+        this.filteredOptions = [];
+        for (const v of value){
+          this.filteredOptions.push(v.WPS_No);
         }
-      },
-      error: error => {
-        this.alertService.error(error);
-        }
-    })
+      }
+    });
+  }
+
+  SpecOnKey(event: Event) {
+    const target = event.target as HTMLTextAreaElement;
+    console.log(target);
+
+    this.SpecLoaded = false;
+    this.Editing = false;
+    if (target.value !== '') {
+      this.loadSpecification(target.value);
+
+      this.forms = [];
+              
+      this.Specifications.forEach( spec => {
+        this.createFormGroup(spec);
+      });
+      
+      this.formLoaded = true;
+    }
+
+    console.log(this.Specifications);
   }
 
   private _filter(value: string): Spec[] {
@@ -130,6 +139,19 @@ export class SpecificationComponent implements OnInit {
             this.alertService.error(error);
             }
           });
+
+    this.dataService.getSpecList()
+      .subscribe({
+        next: (specifications) => { 
+          this.filteredOptions = specifications.reduce( function (arr, spec) {
+            arr.push(spec.WPS_No);
+            return arr;
+          }, [])
+        },
+        error: error => {
+            this.alertService.error(error);
+            }
+        });
   }
 
 
@@ -142,7 +164,6 @@ export class SpecificationComponent implements OnInit {
           arr.push(spec);
           return arr;
         }, [])
-
         this.SpecLoaded = true;
       },
       error: error => {

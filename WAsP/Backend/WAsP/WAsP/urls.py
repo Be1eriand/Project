@@ -27,7 +27,6 @@ urlpatterns = [
 
     #re_path(r'^dashboard/', include('dashboard.urls')),
     #re_path(r'^report/', include('report.urls')),
-    #re_path(r'^register/', views.register),
     #re_path(r'^accounts/', include('accounts.urls')),
     #path('settings', include("layout.urls")),
     
