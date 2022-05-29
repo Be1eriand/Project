@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, RouterLink } from '@angular/router';
 
 import { HomeComponent } from './home';
-import { DashboardComponent } from './productivity/dashboard.component';
 import { AuthGuard } from './_helpers';
 
 const accountModule = () => import('./account/account.module').then(x => x.AccountModule);

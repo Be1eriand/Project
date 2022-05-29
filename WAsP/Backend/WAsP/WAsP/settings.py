@@ -66,11 +66,15 @@ REST_FRAMEWORK = {
     ),
 }
 
-JWT_AUTH = {
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600), #expires in an hour
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(seconds=3600),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'UPDATE_LAST_LOGIN': True,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 }
 
 MIDDLEWARE = [
@@ -89,7 +93,6 @@ ASGI_APPLICATION = "WAsP.routing.application"
 
 WSGI_APPLICATION = "WAsP.wsgi.application"
 
-#CHANNEL_REDIS_HOST = ("127.0.0.1", 6379) 
 
 CHANNEL_LAYERS = {
     'default': {
@@ -176,7 +179,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Australia/Adelaide' #probably change this to ACST
+TIME_ZONE = 'Australia/Adelaide' 
 
 USE_I18N = True
 
@@ -220,7 +223,7 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #MS SQL Setting
 
 import urllib
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, true
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 

@@ -61,6 +61,10 @@ import { NgxEchartsModule } from 'ngx-echarts';
       echarts
     }),
     
+  ],
+  exports: [
+    ComplianceComponent,
+    ComplianceDataComponent
   ]
 })
 export class ComplianceModule { }

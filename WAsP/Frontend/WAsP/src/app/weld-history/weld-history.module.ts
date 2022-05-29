@@ -57,6 +57,13 @@ import { NgxEchartsModule } from 'ngx-echarts';
     NgxEchartsModule.forRoot({
       echarts
     }),
-  ]
+  ],
+  exports: [
+    WeldHistoryComponent,
+    DataComponent,
+    WelderHistoryComponent,
+    MachineHistoryComponent,
+    TaskHistoryComponent
+  ],
 })
 export class WeldHistoryModule { }

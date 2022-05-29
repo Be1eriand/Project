@@ -57,11 +57,10 @@ export class SpecificationComponent implements OnInit {
     private alertService: AlertService,
     private specificationService: SpecificationService,
   ) { 
+    this.loadData();
   }
 
   ngOnInit(): void {
-    this.loadData();
-
     this.filteredOptions = this.specFilter.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value)),

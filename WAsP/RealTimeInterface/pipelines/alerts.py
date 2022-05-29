@@ -76,10 +76,12 @@ class AlertsPipe(Pipe):
         
         TaskID = dict['processed']['TaskID']
         RunNo = dict['processed']['RunNo']
-        
-        spec = self._get_specification(TaskID,RunNo)
+        try:
+            spec = self._get_specification(TaskID,RunNo)
 
-        self._validate_data(dict['processed'], spec)
+            self._validate_data(dict['processed'], spec)
+        except Exception:
+            pass
 
         return dict
 
