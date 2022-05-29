@@ -162,8 +162,8 @@ export class WeldHistoryComponent implements OnInit {
   taskSubmit() {
 
     console.log(this.taskForm);
-    if (!this.taskForm.value.taskID) {
-      alert('Please select a task ID');
+    if (!this.taskForm.value.taskID || !(this.filteredTasks.includes(this.taskForm.value.taskID ))) {
+      alert('Please select a valid task ID');
       return;
     }
 
@@ -183,8 +183,8 @@ export class WeldHistoryComponent implements OnInit {
   welderSubmit() {
 
     console.log(this.welderForm);
-    if (!this.welderForm.value.welderID) {
-      alert('Please select a welder');
+    if (!this.welderForm.value.welderID || !(this.filteredWelders.includes(this.welderForm.value.welderID))) {
+      alert('Please select a valid welder');
       return;
     }
 
@@ -198,8 +198,8 @@ export class WeldHistoryComponent implements OnInit {
   machineSubmit() {
 
     console.log(this.machineForm);
-    if (!this.machineForm.value.machineID) {
-      alert('Please select a machine');
+    if (!this.machineForm.value.machineID || !(this.filteredMachines.includes(this.machineForm.value.machineID))) {
+      alert('Please select a valid machine');
       return;
     }
 

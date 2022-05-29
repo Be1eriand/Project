@@ -10,10 +10,13 @@ export class ChartsService {
   gaugeChart: EChartsOption = {};
   pieChart: EChartsOption = {};
   boxplot: EChartsOption = {};
+  radarChart:EChartsOption = {};
+  barChart: EChartsOption = {};
 
   constructor() { }
 
   // Line chart - showing Min and Max. In Range displays as green
+  // task[0] = all realtime, task[1] = wps, task[2] = summarised realtime
   lineChartMinMaxOptions(title, variable, task) {
 
     const data = task[0]['data'].map((item) => {
@@ -45,7 +48,7 @@ export class ChartsService {
       title: {
         left: 'center',
         text: 'Realtime Weld Data',
-        subtext: title + ' - Run ' + task[0]['RunNo'],
+        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'axis'
@@ -78,7 +81,6 @@ export class ChartsService {
           markLine: {
             lineStyle: {
               type: 'solid',
-              color: '#5470c6'
             },
             data: [
               {
@@ -150,7 +152,7 @@ export class ChartsService {
       title: {
         left: 'center',
         text: 'Realtime Weld Data',
-        subtext: title + ' - Run ' + task[0]['RunNo'],
+        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'axis'
@@ -195,9 +197,6 @@ export class ChartsService {
           },
         },
       ],
-      legend: {
-        data: [{ name: 'Min & Max: ' + task[1][variable + '_Max'], icon: 'circle', }]
-      },
       visualMap: [
         {
           show: false,
@@ -232,7 +231,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Within Range Percentage',
-        subtext: title + ' - Run ' + task[0]['RunNo'],
+        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       {
         text: 'Percentage of total weld duration that was in WPS range',
@@ -242,7 +241,7 @@ export class ChartsService {
           lineHeight: 15,
           fontStyle: 'italic'
         },
-        left: '25%',
+        left: '15%',
         top: '95%'
       }],
       series: [
@@ -328,7 +327,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Alert Distribution',
-        subtext: title + ' - Run ' + task[0]['RunNo'],
+        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'item'
@@ -395,7 +394,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Boxplot',
-        subtext: title + ' - Run ' + task[0]['RunNo'],
+        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       {
         text: 'Weld distribution displaying data quartiles and averages',
@@ -484,6 +483,159 @@ export class ChartsService {
       ]
     };
     return this.boxplot;
+  };
+
+  // Radar Chart for alert duration for all params
+  radarChartOptions(task) {
+    this.radarChart = {
+      title: {
+        left: 'center',
+        text: 'Weld Alert Duration Radar Chart',
+        subtext: 'Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+      },
+      tooltip: {
+        trigger: 'item'
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          saveAsImage: { show: true }
+        }
+      },
+      legend: {
+        data: ['Out of Range Duration (min)'],
+        top: '15%'
+      },
+      color: '#ff6028',
+      radar: {
+        radius: ["0%", "50%"],
+        center: ["50%", "57%"],
+        indicator: [
+          { name: 'Current', max: task[2]['Timedelta'] },
+          { name: 'Voltage', max: task[2]['Timedelta'] },
+          { name: 'Travel Speed', max: task[2]['Timedelta'] },
+          { name: 'Heat Input', max: task[2]['Timedelta'] },
+        ]
+      },
+      series: [
+        {
+          areaStyle: {
+            color: '#FFDC60'
+          },
+          name: 'Weld Alert Duration',
+          type: 'radar',
+          data: [
+            {
+              value: [
+                (task[2]['Current_Undertime'] + task[2]['Current_Overtime']).toFixed(2),
+                (task[2]['Voltage_Undertime'] + task[2]['Voltage_Overtime']).toFixed(2),
+                (task[2]['TravelSpeed_Undertime'] + task[2]['TravelSpeed_Overtime']).toFixed(2),
+                (task[2]['HeatInput_Undertime'] + task[2]['HeatInput_Overtime']).toFixed(2)
+              ],
+              name: 'Out of Range Duration (min)'
+            },
+
+          ]
+        }
+      ]
+    }
+    return this.radarChart;
+  };
+
+  // Bar Chart for alert duration for all params - under, in range, and over
+  barChartOptions(task) {
+    this.barChart = {
+      title: {
+        left: 'center',
+        text: 'Weld Alert Duration Comparison Bar Chart',
+        subtext: 'Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      legend: {
+        data: ['Under Min', 'In Range', 'Over Max'],
+        top: '15%'
+      },
+      toolbox: {
+        show: true,
+        orient: 'vertical',
+        left: 'right',
+        top: 'center',
+        feature: {
+          mark: { show: true },
+          dataView: { show: true, readOnly: false },
+          magicType: { show: true, type: ['bar', 'stack'] },
+          restore: { show: true },
+          saveAsImage: { show: true }
+        }
+      },
+      grid: {
+        top: '30%'
+      },
+      xAxis: [
+        {
+          type: 'category',
+          axisTick: { show: false },
+          data: ['Current', 'Voltage', 'Travel Speed', 'Heat Input']
+        }
+      ],
+      yAxis: [
+        {
+          type: 'value',
+          name: 'Duration (min)',
+        }
+      ],
+      series: [
+        {
+          name: 'Under Min',
+          type: 'bar',
+          barGap: 0,
+          emphasis: {
+            focus: 'series'
+          },
+          data: [
+            task[2]['Current_Undertime'].toFixed(2), 
+            task[2]['Voltage_Undertime'].toFixed(2), 
+            task[2]['TravelSpeed_Undertime'].toFixed(2), 
+            task[2]['HeatInput_Undertime'].toFixed(2)]
+        },
+        {
+          name: 'In Range',
+          type: 'bar',
+          emphasis: {
+            focus: 'series'
+          },
+          data: [
+            (task[2]['Timedelta'] - (task[2]['Current_Undertime'] + task[2]['Current_Overtime'])).toFixed(2),
+            (task[2]['Timedelta'] - (task[2]['Voltage_Undertime'] + task[2]['Voltage_Overtime'])).toFixed(2),
+            (task[2]['Timedelta'] - (task[2]['TravelSpeed_Undertime'] + task[2]['TravelSpeed_Overtime'])).toFixed(2),
+            (task[2]['Timedelta'] - (task[2]['HeatInput_Undertime'] + task[2]['HeatInput_Overtime'])).toFixed(2)
+          ]
+        },
+        {
+          name: 'Over Max',
+          type: 'bar',
+          emphasis: {
+            focus: 'series'
+          },
+          data: [
+            task[2]['Current_Overtime'].toFixed(2), 
+            task[2]['Voltage_Overtime'].toFixed(2), 
+            task[2]['TravelSpeed_Overtime'].toFixed(2), 
+            task[2]['HeatInput_Overtime'].toFixed(2)]
+        },
+      ]
+    };
+    return this.barChart;
   };
 
 }

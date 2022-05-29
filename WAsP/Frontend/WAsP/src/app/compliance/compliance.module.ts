@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { ComplianceRoutingModule } from './compliance-routing.module';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -20,15 +19,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { ComplianceComponent } from './compliance.component';
 import { ComplianceDataComponent } from './compliance-data/compliance-data.component';
-import { TaskDashboardComponent } from './task-dashboard/task-dashboard.component';
+
+import { TaskDashboardComponent } from './task-dashboard.component';
 import { CurrentComponent } from './graphs/current/current.component';
 import { VoltageComponent } from './graphs/voltage/voltage.component';
 import { HeatInputComponent } from './graphs/heat-input/heat-input.component';
 import { TravelSpeedComponent } from './graphs/travel-speed/travel-speed.component';
+import { AlertComparisonComponent } from './graphs/alert-comparison/alert-comparison.component';
 
 import * as echarts from 'echarts/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-
 
 @NgModule({
   declarations: [
@@ -38,7 +38,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
     CurrentComponent,
     VoltageComponent,
     HeatInputComponent,
-    TravelSpeedComponent
+    TravelSpeedComponent,
+    AlertComparisonComponent,
   ],
   imports: [
     CommonModule,
@@ -46,7 +47,6 @@ import { NgxEchartsModule } from 'ngx-echarts';
     MatFormFieldModule,
     FormsModule,
     ReactiveFormsModule,
-    MatDatepickerModule,
     MatAutocompleteModule,
     MatInputModule,
     MatNativeDateModule,
