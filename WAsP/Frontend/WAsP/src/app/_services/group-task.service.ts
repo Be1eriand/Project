@@ -8,9 +8,38 @@ export class GroupTaskService {
 
   wps: Specification[];
   taskRun: {};
-  results: {};
 
   constructor() { }
+
+   // Group by Task and Run
+   groupTaskRunforCharts(realtime, wps) {
+    this.wps = wps;
+    var wpsRealtime = []
+    const merged = realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
+      const key = `${TaskID}-${RunNo}`;
+      r[key] = r[key] || { TaskID, RunNo, data: [] };
+      r[key]["data"].push(rest)
+      return r;
+    }, {})
+    this.taskRun = Object.values(merged);
+
+
+    // Creating data to parse to charts/inner components
+    // taskWPS[0] = all realtime, taskWPS[1] = wps, taskWPS[2] = summarised realtime
+    for (var i in this.taskRun) {
+      var taskWPS = []
+      for (var j in wps) {
+        if (wps[j]["Run_No"] == this.taskRun[i]['RunNo']) {
+          taskWPS.push(this.taskRun[i]);
+          taskWPS.push(wps[j]);
+          taskWPS.push(this.weldActualRangeKnownIndex(i, j));
+        }
+      }
+
+      wpsRealtime.push(taskWPS);
+    }
+    return wpsRealtime;
+  };
 
   // Group realtime data by Task ID and Run No
   groupTaskRun(realtime) {
@@ -24,37 +53,8 @@ export class GroupTaskService {
     return taskRun;
   };
 
-  // Group by Task and Run
-  groupTaskRunforComponents(realtime, wps) {
-    this.wps = wps;
-    var wpsRealtime = []
-    const merged = realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
-      const key = `${TaskID}-${RunNo}`;
-      r[key] = r[key] || { TaskID, RunNo, data: [] };
-      r[key]["data"].push(rest)
-      return r;
-    }, {})
-    this.taskRun = Object.values(merged);
-
-
-    // Creating data to parse to charts/inner components
-    for (var i in this.taskRun) {
-      var taskWPS = []
-      for (var j in wps) {
-        if (wps[j]["Run_No"] == this.taskRun[i]['RunNo']) {
-          taskWPS.push(this.taskRun[i]);
-          taskWPS.push(wps[j]);
-          taskWPS.push(this.weldActualRangeSummary(i, j));
-        }
-      }
-
-      wpsRealtime.push(taskWPS);
-    }
-    console.log(wpsRealtime);
-    return wpsRealtime;
-  };
-  // Calculate min and max values, total duration, and variances for out of range. 
-  weldActualRangeSummary(i, j) {
+  // Calculate weld range with known indexs. Min and max values, total duration, and variances for out of range. 
+  weldActualRangeKnownIndex(i, j) {
     var result = []
     this.taskRun[i]['data'].reduce((r, a) => {
 
@@ -196,6 +196,7 @@ export class GroupTaskService {
     var results = [];
 
     for (var i in taskRun) {
+      var found = false;
       // For correct run number
       for (var j in wps) {
 
@@ -334,26 +335,12 @@ export class GroupTaskService {
 
             return r;
           }, {});
-        }
+          results.push(result);
+        };
       }
-
     }
-    results.push(result);
-
-    // Call function to regroup the data by TaskID again
-    return this.groupTaskID(results);
+    return results;
   };
-
-  // After collecting summarised weld acutal range data, group by Task ID again
-  groupTaskID(results) {
-    var taskIDResult = results[0].reduce(function (r, a) {
-      r[a.TaskID] = r[a.TaskID] || [];
-      r[a.TaskID].push(a);
-      return r;
-    }, {});
-    return taskIDResult;
-  }
-
 
 }
 

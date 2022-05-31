@@ -1,6 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ContractTaskView, RealTimeView, Specification, TaskView } from '@app/_models';
-import { SpecificationService } from '@app/_services/specification.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TaskView } from '@app/_models';
 import { RealtimeService } from '@app/_services/realtime.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
@@ -28,71 +27,35 @@ export class WeldHistoryComponent implements OnInit {
   filteredTasks: string[];
   filteredMachines: string[];
 
-  maxDate: Date;
-
   showWelder: boolean = false;
   showTask: boolean = false;
   showMachine: boolean = false;
 
   task: TaskView[];
 
-
-  welderID: FormControl;
-  machineID: FormControl;
-  dateStart: FormControl;
-  dateEnd: FormControl;
-
-  // needed?
-  allSpec: Specification[];
-  spec: Specification;
-  specs: Specification[];
-  contract: ContractTaskView[];
-
-  temp: RealTimeView[];
- 
-  allRT: RealTimeView[];
-  RTtask: RealTimeView[];
-  RTwelder: RealTimeView;
-  realtime: any=[];
-
-  @ViewChild('pdfWelders')
-  pdfWelders!: ElementRef;
-  
- constructor(
-    private specificationService: SpecificationService,
-    private realtimeSerivce: RealtimeService,
-    ) { 
-      this.maxDate = new Date();
-    }
+ constructor(private realtimeSerivce: RealtimeService) { }
 
   ngOnInit(): void {
-    this.realtimeSerivce.getTaskData().subscribe(t => this.allTasks = t); 
-    
-    this.specificationService.getAllSpecs().subscribe((specs) => {
-      this.allSpec = specs;
+    this.realtimeSerivce.getTaskData().subscribe({
+      next: t => {
+      this.allTasks = t;
       this.loadWelders();
       this.loadMachines();
       this.loadTasks();
+      },
     });
 
     this.taskForm = new FormGroup({
-      taskID: new FormControl(''),
-      dateStart: new FormControl(''),
-      dateEnd: new FormControl('')
-    })
+      taskID: new FormControl('')
+    });
 
     this.welderForm = new FormGroup({
-      welderID: new FormControl(''),
-      dateStart: new FormControl(''),
-      dateEnd: new FormControl('')
-    })
+      welderName: new FormControl('')
+    });
 
     this.machineForm = new FormGroup({
-      machineID: new FormControl(''),
-      dateStart: new FormControl(''),
-      dateEnd: new FormControl(''),
-    })
-      
+      machineName: new FormControl('')
+    });
   }
 
 
@@ -160,13 +123,10 @@ export class WeldHistoryComponent implements OnInit {
   }
 
   taskSubmit() {
-
-    console.log(this.taskForm);
     if (!this.taskForm.value.taskID || !(this.filteredTasks.includes(this.taskForm.value.taskID ))) {
       alert('Please select a valid task ID');
       return;
     }
-
     var t = []
     for (var i in this.allTasks){
       if (this.allTasks[i].TaskID == this.taskForm.value.taskID) {
@@ -174,100 +134,38 @@ export class WeldHistoryComponent implements OnInit {
         this.task = t;
       }
     }
-
-    this.dateStart = this.taskForm.value.dateStart;
-    this.dateEnd = this.taskForm.value.dateEnd;
     this.showTask = true;
   }
 
   welderSubmit() {
-
-    console.log(this.welderForm);
-    if (!this.welderForm.value.welderID || !(this.filteredWelders.includes(this.welderForm.value.welderID))) {
+    if (!this.welderForm.value.welderName || !(this.filteredWelders.includes(this.welderForm.value.welderName))) {
       alert('Please select a valid welder');
       return;
     }
-
-    this.welderID = this.welderForm.value.welderID;
-    this.dateStart = this.welderForm.value.dateStart;
-    this.dateEnd = this.welderForm.value.dateEnd;
-    console.log(this.welderID, this.dateStart, this.dateEnd);
+    var t = []
+    for (var i in this.allTasks){
+      
+      if (this.allTasks[i].FullName == this.welderForm.value.welderName) {
+        t.push(this.allTasks[i]);
+        this.task = t;
+      }
+    }
     this.showWelder = true;
   }
 
   machineSubmit() {
-
-    console.log(this.machineForm);
-    if (!this.machineForm.value.machineID || !(this.filteredMachines.includes(this.machineForm.value.machineID))) {
+    if (!this.machineForm.value.machineName || !(this.filteredMachines.includes(this.machineForm.value.machineName))) {
       alert('Please select a valid machine');
       return;
     }
-
-    var re = /[a-zA-Z]+\s/; // all letters and trailling space
-    this.dateStart = this.machineForm.value.dateStart;
-    this.dateEnd = this.machineForm.value.dateEnd;
-    this.getRealtimeMachine(this.machineForm.value.machineID.replace(re, ""))
+    var t = []
+    for (var i in this.allTasks){
+      
+      if (this.allTasks[i].MachineName == this.machineForm.value.machineName) {
+        t.push(this.allTasks[i]);
+        this.task = t;
+      }
+    }
     this.showMachine = true;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-  loadData(): void {
-    console.log(this.allSpec)
-  }
-
-  getSpecification(id: string){
-    this.specificationService.getSpec(id).subscribe((spec) => this.specs = spec);
-    console.log(this.spec)
-  }
-
-  getSpecificationRun(id: string, run: string) {
-    this.specificationService.getSpecRun(id, run).subscribe((spec) => this.spec = spec);
-    console.log(this.spec)
-  }
-
-  getRealtime(){
-    this.realtimeSerivce.getAllRT().subscribe((rt) => this.allRT = rt);
-    console.log(this.allRT)
-  }
-
-  getRealtimeTask(id: string){
-    this.realtimeSerivce.getRTTask(id).subscribe((rt) => this.RTtask = rt);
-    console.log(this.RTtask)
-  }
-
-  getRealtimeWelder(id: string){
-    this.realtimeSerivce.getRTWelder(id).subscribe((rt) => this.RTwelder = rt);
-    console.log(this.RTwelder)
-  }
-
-  getRealtimeMachine(id: string){
-    let machine: RealTimeView[] = [];
-    this.realtimeSerivce.getRTMachine(id).subscribe((rt) => {machine.push(rt);
-    this.realtime = machine;
-    console.log(machine);
-    });
-    
-  }
-
-  getTasks(){
-    this.realtimeSerivce.getTaskData().subscribe((t) => this.allTasks = t);
-    console.log(this.allTasks)
-  }
-
-  getContracts(){
-    this.specificationService.getAllContracts().subscribe((rt) => this.contract = rt);
-    console.log(this.contract)
-  }
-
-
 }

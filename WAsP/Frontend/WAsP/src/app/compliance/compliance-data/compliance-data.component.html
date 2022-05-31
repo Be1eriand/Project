@@ -97,14 +97,14 @@
         
         <h6>Actual Weld Data</h6>
 
-        <table mat-table [dataSource]="taskRange[contract.TaskID]" class="realtime">
+        <table mat-table [dataSource]="taskRange[0]" class="realtime">
 
               <ng-container matColumnDef="RunActual">
                 <th mat-header-cell *matHeaderCellDef> Run </th>
                 <td mat-cell *matCellDef="let r"> {{ r.RunNo }} </td>
               </ng-container>
               <ng-container matColumnDef="Date">
-                <th mat-header-cell *matHeaderCellDef> Date </th>
+                <th mat-header-cell *matHeaderCellDef> Start Time </th>
                 <td mat-cell *matCellDef="let r"> {{ r.Date }} </td>
               </ng-container>
               <ng-container matColumnDef="Duration">
@@ -156,7 +156,7 @@
     <div>
         <h6>Variance (Weld Out of Parameters)</h6>
       
-        <table *ngFor="let r of taskRange[contract.TaskID]" style="margin-top: 10pt;" class="table realtime">
+        <table *ngFor="let r of taskRange[0]" style="margin-top: 10pt;" class="table realtime">
             <tr>
                 <th> Run {{ r.RunNo }} </th>
                 <th> Current (A) </th>
