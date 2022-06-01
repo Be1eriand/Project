@@ -37,8 +37,6 @@ export class ComplianceDataComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
 
-    console.log('contract', this.contract);
-
     this.wps = await this.getWPS(this.contract.WPS_No);
 
 
@@ -51,7 +49,6 @@ export class ComplianceDataComponent implements OnInit {
         if (this.realtime.length > 0) {
           this.taskRun = this.groupTaskService.groupTaskRun(this.realtime);
           this.taskRange = this.groupTaskService.weldActualRange(this.taskRun, this.wps);
-          console.log(this.taskRange);
           this.dataReady = true;
 =======
     this.realtimeSerivce.getRTTask(this.contract.TaskID).subscribe({

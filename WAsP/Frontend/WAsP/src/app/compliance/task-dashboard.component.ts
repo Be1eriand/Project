@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RealTimeView, Specification, TaskView } from '@app/_models';
 import { RealtimeService, SpecificationService } from '@app/_services';
@@ -85,7 +85,7 @@ export class TaskDashboardComponent implements OnInit {
     // Get task ID's realtime weld data
     this.realtime = await this.getRealtime(task.value);
 
-    this.taskRealtime = this.groupTaskService.groupTaskRunforComponents(this.realtime, this.wps);
+    this.taskRealtime = this.groupTaskService.groupTaskRunforCharts(this.realtime, this.wps);
     this.dataAvail = true;
 
     if (this.realtime.length < 1) {
