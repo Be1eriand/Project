@@ -87,62 +87,62 @@
 
     <h6>Weld Range Summary</h6>
 
-    <table mat-table [dataSource]="taskRange[0]" class="realtime">
+    <table mat-table [dataSource]="taskRange" class="realtime">
 
       <ng-container matColumnDef="RunActual">
         <th mat-header-cell *matHeaderCellDef> Run </th>
-        <td mat-cell *matCellDef="let r"> {{ r.RunNo }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].RunNo }} </td>
       </ng-container>
       <ng-container matColumnDef="Date">
         <th mat-header-cell *matHeaderCellDef> Start Time </th>
-        <td mat-cell *matCellDef="let r"> {{ r.Date }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].Date }} </td>
       </ng-container>
       <ng-container matColumnDef="Duration">
         <th mat-header-cell *matHeaderCellDef> Weld Duration (mins) </th>
-        <td mat-cell *matCellDef="let r"> {{ r.Timedelta | number: '1.2-2' }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].Timedelta | number: '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="Welder">
         <th mat-header-cell *matHeaderCellDef> Welder ID </th>
-        <td mat-cell *matCellDef="let r"> {{ r.WelderID }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].WelderID }} </td>
       </ng-container>
       <ng-container matColumnDef="Machine">
         <th mat-header-cell *matHeaderCellDef> Machine ID </th>
-        <td mat-cell *matCellDef="let r"> {{ r.MachineID }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].MachineID }} </td>
       </ng-container>
       <ng-container matColumnDef="CurrentActual">
         <th mat-header-cell *matHeaderCellDef> Current Range (A)</th>
-        <td mat-cell *matCellDef="let r">{{ r.Current_Min | number: '1.2-2' }} - {{ r.Current_Max | number: '1.2-2' }}
+        <td mat-cell *matCellDef="let r">{{ r[0].Current_Min | number: '1.2-2' }} - {{ r[0].Current_Max | number: '1.2-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="CurrentAvg">
         <th mat-header-cell *matHeaderCellDef> Current Avg (A)</th>
-        <td mat-cell *matCellDef="let r">{{ r.Current_Sum / r.Records| number: '1.2-2' }}</td>
+        <td mat-cell *matCellDef="let r">{{ r[0].Current_Sum / r[0].Records| number: '1.2-2' }}</td>
       </ng-container>
       <ng-container matColumnDef="VoltageActual">
         <th mat-header-cell *matHeaderCellDef> Voltage Range (V) </th>
-        <td mat-cell *matCellDef="let r"> {{ r.Voltage_Min | number: '1.2-2' }} - {{ r.Voltage_Max | number: '1.2-2' }}
+        <td mat-cell *matCellDef="let r"> {{ r[0].Voltage_Min | number: '1.2-2' }} - {{ r[0].Voltage_Max | number: '1.2-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="VoltageAvg">
         <th mat-header-cell *matHeaderCellDef> Voltage Avg (V) </th>
-        <td mat-cell *matCellDef="let r"> {{ r.Voltage_Sum / r.Records | number: '1.2-2' }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].Voltage_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="TravelSpeedActual">
         <th mat-header-cell *matHeaderCellDef> Travel Speed Range (mm/min)</th>
-        <td mat-cell *matCellDef="let r"> {{ r.TravelSpeed_Min | number: '1.2-2' }} - {{ r.TravelSpeed_Max | number:
+        <td mat-cell *matCellDef="let r"> {{ r[0].TravelSpeed_Min | number: '1.2-2' }} - {{ r[0].TravelSpeed_Max | number:
           '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="TravelSpeedAvg">
         <th mat-header-cell *matHeaderCellDef> Travel Speed Avg (mm/min)</th>
-        <td mat-cell *matCellDef="let r"> {{ r.TravelSpeed_Sum / r.Records | number: '1.2-2' }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].TravelSpeed_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="HeatInputActual">
         <th mat-header-cell *matHeaderCellDef> Heat Input Range (Kj/mm) </th>
-        <td mat-cell *matCellDef="let r"> {{ r.HeatInput_Min | number: '1.2-2' }} - {{ r.HeatInput_Max | number: '1.2-2'}} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].HeatInput_Min | number: '1.2-2' }} - {{ r[0].HeatInput_Max | number: '1.2-2'}} </td>
       </ng-container>
       <ng-container matColumnDef="HeatInputAvg">
         <th mat-header-cell *matHeaderCellDef> Heat Input Avg (Kj/mm) </th>
-        <td mat-cell *matCellDef="let r"> {{ r.HeatInput_Sum / r.Records | number: '1.2-2' }} </td>
+        <td mat-cell *matCellDef="let r"> {{ r[0].HeatInput_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="actualColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: actualColumns;"></tr>
@@ -157,9 +157,9 @@
   <div>
     <h6> Weld Variance Summary (Out of Parameters)</h6>
 
-    <table *ngFor="let r of taskRange[0]" style="margin-top: 10pt;" class="table realtime">
+    <table *ngFor="let r of taskRange" style="margin-top: 10pt;" class="table realtime">
       <tr>
-        <th> Run {{ r.RunNo }} </th>
+        <th> Run {{ r[0].RunNo }} </th>
         <th> Current (A) </th>
         <th> Voltage (V) </th>
         <th> Travel Speed (mm/min) </th>
@@ -167,31 +167,31 @@
       </tr>
       <tr>
         <td>Percentage Increase From Max WPS Value</td>
-        <td>{{ r.Current_Overpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.Voltage_Overpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.TravelSpeed_Overpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.HeatInput_Overpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].Current_Overpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].Voltage_Overpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].TravelSpeed_Overpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].HeatInput_Overpercent | number: '1.2-2' }}%</td>
       </tr>
       <tr>
         <td>Duration Over Max WPS Value (mins)</td>
-        <td>{{ r.Current_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r.Voltage_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r.TravelSpeed_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r.HeatInput_Overtime | number: '1.2-2' }}</td>
+        <td>{{ r[0].Current_Overtime | number: '1.2-2' }}</td>
+        <td>{{ r[0].Voltage_Overtime | number: '1.2-2' }}</td>
+        <td>{{ r[0].TravelSpeed_Overtime | number: '1.2-2' }}</td>
+        <td>{{ r[0].HeatInput_Overtime | number: '1.2-2' }}</td>
       </tr>
       <tr>
         <td>Percentage Decrease From Min WPS Value</td>
-        <td>{{ r.Current_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.Voltage_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.TravelSpeed_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r.HeatInput_Underpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].Current_Underpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].Voltage_Underpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].TravelSpeed_Underpercent | number: '1.2-2' }}%</td>
+        <td>{{ r[0].HeatInput_Underpercent | number: '1.2-2' }}%</td>
       </tr>
       <tr>
         <td>Duration Under Min WPS Value (mins)</td>
-        <td>{{ r.Current_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r.Voltage_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r.TravelSpeed_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r.HeatInput_Undertime | number: '1.2-2' }}</td>
+        <td>{{ r[0].Current_Undertime | number: '1.2-2' }}</td>
+        <td>{{ r[0].Voltage_Undertime | number: '1.2-2' }}</td>
+        <td>{{ r[0].TravelSpeed_Undertime | number: '1.2-2' }}</td>
+        <td>{{ r[0].HeatInput_Undertime | number: '1.2-2' }}</td>
       </tr>
 
     </table>

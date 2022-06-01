@@ -16,15 +16,15 @@ export class TaskHistoryComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  wpsColumns: string[] = ['Run_No', 'WPS_No', 'Welding_Code', 'Joint_type', 'Side',  'Position', 
-    'Size', 'Class', 'Gas_Flux_Type',  'Current', 'Voltage', 'Polarity', 'TravelSpeed', 'InterpassTemp', 'HeatInput'];
+  wpsColumns: string[] = ['Run_No', 'WPS_No', 'Welding_Code', 'Joint_type', 'Side', 'Position',
+    'Size', 'Class', 'Gas_Flux_Type', 'Current', 'Voltage', 'Polarity', 'TravelSpeed', 'InterpassTemp', 'HeatInput'];
 
-  actualColumns: string[] = ['RunActual', 'Date',  'Duration', 'Welder', 'Machine', 'CurrentActual', 'CurrentAvg', 'VoltageActual', 'VoltageAvg', 
+  actualColumns: string[] = ['RunActual', 'Date', 'Duration', 'Welder', 'Machine', 'CurrentActual', 'CurrentAvg', 'VoltageActual', 'VoltageAvg',
     'TravelSpeedActual', 'TravelSpeedAvg', 'HeatInputActual', 'HeatInputAvg'];
-  
-  allDataColumns: string[] = ['RunNo', 'Time', 'WelderID', 'MachineID', 'Current', 'Voltage', 
+
+  allDataColumns: string[] = ['RunNo', 'Time', 'WelderID', 'MachineID', 'Current', 'Voltage',
     'TravelSpeed', 'HeatInput', 'Temperature'];
-  public allDataList = new MatTableDataSource<any>(); 
+  public allDataList = new MatTableDataSource<any>();
 
   @Input() task: TaskView;
 
@@ -43,8 +43,8 @@ export class TaskHistoryComponent implements OnInit {
   constructor(private specificationService: SpecificationService,
     private realtimeSerivce: RealtimeService,
     private groupTaskService: GroupTaskService,
-    public datepipe: DatePipe
-    ) {}
+    public datepipe: DatePipe,
+  ) { }
 
   async ngOnInit(): Promise<void> {
 
@@ -54,20 +54,19 @@ export class TaskHistoryComponent implements OnInit {
 
     await this.realtimeSerivce.getRTTask(this.task.TaskID).subscribe(t => {
       this.realtime = t;
-      for (var i in this.realtime){
-        this.realtime[i].Time = this.datepipe.transform(this.realtime[i].Time, 'MMM d, y h:mm:ss a')
-      }
       this.allDataList.data = this.realtime;
 
-      this.allDataList.filterPredicate = function(data, filter: string): boolean {
+      this.allDataList.filterPredicate = function (data, filter: string): boolean {
         return data.RunNo.toString().toLowerCase().includes(filter);
-    };
+      };
 
       // If there is weld data available
       if (this.realtime.length > 0) {
         this.taskRun = this.groupTaskService.groupTaskRun(this.realtime);
+        console.log('taskRun', this.taskRun)
         this.taskRange = this.groupTaskService.weldActualRange(this.taskRun, this.wps);
         this.dataReady = true;
+        this.allDataList.paginator = this.paginator;
       }
       else {
         this.noData = true;
@@ -78,16 +77,16 @@ export class TaskHistoryComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.allDataList.paginator = this.paginator;
+    
     this.allDataList.sort = this.sort;
-}
-applyFilter(event: Event): void {
-  const filter = (event.target as HTMLInputElement).value.trim().toLocaleLowerCase();
-  this.allDataList.filter = filter;
-  if (this.allDataList.paginator) {
-    this.allDataList.paginator.firstPage();
   }
-}
+  applyFilter(event: Event): void {
+    const filter = (event.target as HTMLInputElement).value.trim().toLocaleLowerCase();
+    this.allDataList.filter = filter;
+    if (this.allDataList.paginator) {
+      this.allDataList.paginator.firstPage();
+    }
+  }
 
 }
 
