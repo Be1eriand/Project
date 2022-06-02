@@ -42,5 +42,11 @@ ngx-color-picker
 *** Building the Front End ***
 1. Go to the directory '\Frontend\WAsP'
 2. Type WAsPBuild.bat
+3. Go to the directory '\Backend\WAsP'
+4. Type python manage.py collectstatic
 
 *** Starting WAsP ***
+1. Open a terminal window at the root WAsP directory ie ".\Project\WAsP"
+2. Ensure that the venv environment has bee activated
+    2a. Type .\venv\scripts\activate.ps1
+3. Type .\WAsPStart.ps1

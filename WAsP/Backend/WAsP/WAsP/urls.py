@@ -32,7 +32,7 @@ urlpatterns = [
     
     re_path(r'^admin/', admin.site.urls),
     path('', include("django.contrib.auth.urls")),
-    path('', include('index.urls')),
+    path('', include('home.urls')),
 ]
 
-handler404 = 'index.views.page_not_found_view'
+handler404 = 'home.views.page_not_found_view'
