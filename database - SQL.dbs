@@ -1176,14 +1176,23 @@ FROM SmartFab.dbo.WPS w
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 		</group>
 		<group name="WAsP Views" color="C4E0F9" >
+<<<<<<< HEAD
 			<entity schema="SmartFab.dbo" name="MachineView" />
+=======
+			<entity schema="SmartFab.dbo" name="ContractTaskView" />
+			<entity schema="SmartFab.dbo" name="MachineView" />
+			<entity schema="SmartFab.dbo" name="ActiveView" />
+>>>>>>> master
 			<entity schema="SmartFab.dbo" name="RealTimeView" />
 			<entity schema="SmartFab.dbo" name="AlertView" />
 			<entity schema="SmartFab.dbo" name="WPSView" />
 			<entity schema="SmartFab.dbo" name="SpecificationView" />
 			<entity schema="SmartFab.dbo" name="TaskView" />
+<<<<<<< HEAD
 			<entity schema="SmartFab.dbo" name="ActiveView" />
 			<entity schema="SmartFab.dbo" name="ContractTaskView" />
+=======
+>>>>>>> master
 		</group>
 		<group name="Django Admin" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="django_admin_log" />
