@@ -28,16 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u=(4vu@-g@y)(lo34byv4@5q1az#!&9c-*1&3#wms_&tpx!*1o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False 
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1'] 
 
 # Application definition
 
 INSTALLED_APPS = [
     #WAsP Applications
     'home.apps.HomeConfig',
+    #'accounts.apps.AccountsConfig',
+    #'layout.apps.LayoutConfig',
+    #'dashboard.apps.DashboardConfig',
+    #'report.apps.ReportConfig',
 
     #Django apps
     'django.contrib.admin',
@@ -135,15 +138,7 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-"""
-
+#Modify the settings for the location of the SQL Server if it is not local
 DATABASES = {
     "default": {
         "ENGINE": "mssql",
@@ -236,6 +231,7 @@ from sqlalchemy.exc import IntegrityError
 
 from Models.models import Base
 
+#Modify the settings for the location of the SQL Server if it is not local
 params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;MARS_Connection=yes;')
 ENGINE = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
         
