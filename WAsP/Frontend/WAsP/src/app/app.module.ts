@@ -25,10 +25,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 //eCharts import to allow the data to be charted easily
 import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { FooterComponent } from './footer/footer.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
     imports: [
@@ -43,6 +46,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
         MatIconModule,
         MatCardModule,
         MatSidenavModule,
+        MatToolbarModule,
         NgxEchartsModule.forRoot({
             echarts
           }),
@@ -51,6 +55,8 @@ import { NgxEchartsModule } from 'ngx-echarts';
         AppComponent,
         AlertComponent,
         HomeComponent,
+        FooterComponent,
+        HeaderComponent,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

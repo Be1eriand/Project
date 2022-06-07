@@ -12,7 +12,9 @@ import { environment } from '@environments/environment';
   styleUrls: ['./app.component.sass']
 }) 
 
+
 export class AppComponent {
+    opened = false;
     title = 'WAsP';
     user: User;
     environment = environment;
@@ -27,4 +29,8 @@ export class AppComponent {
     logout() {
         this.accountService.logout();
     }
-}
+    
+    
+
+    }
+
