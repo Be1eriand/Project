@@ -1,10 +1,20 @@
-<mat-card class="realtime-widget" matBadge="{{numAlerts}}" matBadgeSize="medium">
+<div class="container"> 
+<mat-card class="realtime-widget" >
   <mat-card-header>
-    <mat-card-title>
+    <mat-card-title class="container">
       <div class="row">
-        <div class="col-2"></div>
-        <div class="col-8 justify-center">Machine ID: {{Machine}}</div>
-        <div class="col-2"></div>
+        <div class="col-10 text-center">Machine ID: {{Machine}}</div>
+        <div class="col-2">
+          <span class="badge badge-light"
+            role="tooltip"
+            data-toggle="tooltip"
+            data-html="true"
+            data-placement="bottom"
+            data-title="{{createAlertTooltip()}}"
+            >
+            {{numAlerts}}
+          </span>
+        </div>
       </div>
     </mat-card-title>
     <mat-card-subtitle>
@@ -19,3 +29,4 @@
     <div echarts [options]="chartOption" (chartInit)="onChartInit($event)" class="realtime-chart"></div>
   </mat-card-content>
 </mat-card>
+</div>

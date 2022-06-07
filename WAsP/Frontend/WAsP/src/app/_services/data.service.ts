@@ -16,15 +16,15 @@ export class DataService{
     }
 
     getMachines(): Observable<Machine[]> {
-        return this.http.get<Machine[]>(`${environment.apiUrl}/data/machine/`);
+        return this.http.get<Machine[]>(`${environment.apiUrl}/data/machine`);
     }
 
     getWelders(): Observable<Welder[]> {
-        return this.http.get<Welder[]>(`${environment.apiUrl}/data/welder/`);
+        return this.http.get<Welder[]>(`${environment.apiUrl}/data/welder`);
     }
 
     getSpecList(): Observable<Spec[]> {
-        return this.http.get<Spec[]>(`${environment.apiUrl}/data/specification/list/`);
+        return this.http.get<Spec[]>(`${environment.apiUrl}/data/specification/list`);
     }
 
     getTask(task: string): Observable<Specification[]> {

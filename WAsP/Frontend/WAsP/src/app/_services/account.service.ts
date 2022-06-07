@@ -42,10 +42,6 @@ export class AccountService {
         this.router.navigate(['/account/login']);
     }
 
-    register(user: User) {
-        return this.http.post(`${environment.apiUrl}/users/register`, user); // change this
-    }
-
     update(id: string, params: any) {
         return this.http.put(`${environment.apiUrl}/users/${id}`, params) // change this to change password
             .pipe(map(x => {

@@ -557,7 +557,7 @@ FROM SmartFab.dbo.AlertsTable a
 FROM SmartFab.dbo.JobContract j 
 	INNER JOIN SmartFab.dbo.TaskAssociation t ON ( j.id = t.Jobid  )  
 	INNER JOIN SmartFab.dbo.TaskAssignment t1 ON ( t.Taskid = t1.id  )  
-	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.WPS_No  )  
+	INNER JOIN SmartFab.dbo.WPS w ON ( t1.WPSNo = w.id )  
 	INNER JOIN SmartFab.dbo.Employees e ON ( t1.Welderid = e.payroll_id  )  
 	INNER JOIN SmartFab.dbo.Machines m ON ( t1.Machineid = m.id  )  ]]></view_script>
 			<column name="ContractID" type="int" />
@@ -629,11 +629,14 @@ FROM SmartFab.dbo.TaskAssignment t
 			<column name="HeatInput_Max" type="float" />
 		</view>
 		<view name="TaskView" >
-			<view_script><![CDATA[CREATE VIEW ${name} AS SELECT t.id as TaskID, w.WPS_No, e.FullName, m.Description MachineName
-FROM SmartFab.dbo.TaskAssignment t 
-	INNER JOIN SmartFab.dbo.WPS w ON ( t.WPSNo = w.WPS_No  )  
-	INNER JOIN SmartFab.dbo.Employees e ON ( t.Welderid = e.payroll_id  )  
-	INNER JOIN SmartFab.dbo.Machines m ON ( t.Machineid = m.id  )  ]]></view_script>
+			<view_script><![CDATA[CREATE VIEW ${name}
+AS
+SELECT t.id AS TaskID, w.WPS_No, e.FullName, m.Description AS MachineName
+FROM     dbo.TaskAssignment AS t INNER JOIN
+                  dbo.WPS AS w ON t.WPSNo = w.id INNER JOIN
+                  dbo.Employees AS e ON t.Welderid = e.payroll_id INNER JOIN
+                  dbo.Machines AS m ON t.Machineid = m.id
+]]></view_script>
 			<column name="TaskID" type="int" />
 			<column name="WPS_No" type="int" />
 			<column name="FullName" type="varchar" />
@@ -1103,47 +1106,47 @@ FROM SmartFab.dbo.WPS w
 	</schema>
 	<connector name="SqlServer" database="SqlServer" driver_class="com.microsoft.sqlserver.jdbc.SQLServerDriver" driver_jar="mssql-jdbc-9.2.0.jre11.jar" driver_desc="Windows Authentication, Current User" host="localhost" port="1433" instance="SmartFab" />
 	<layout name="Parsed Script Layout" id="Layout-239" confirmed="y" show_relation="name" >
-		<entity schema="SmartFab.dbo" name="ActiveView" color="3986C1" x="1728" y="1040" />
-		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1696" y="1392" />
-		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="1712" y="752" />
-		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1888" y="1280" />
-		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1312" />
-		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="1040" />
-		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="1872" y="752" />
-		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="832" />
-		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="1024" />
-		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="480" y="1008" />
-		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1408" />
-		<entity schema="SmartFab.dbo" name="MachineView" color="3986C1" x="1712" y="928" />
-		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1264" />
-		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="2416" y="752" />
-		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1248" />
-		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1312" />
-		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1696" y="1232" />
-		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="832" />
-		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="2032" y="752" />
-		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="976" y="1024" />
-		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="896" />
-		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="1872" y="928" />
-		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1120" />
-		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1360" />
-		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="752" />
-		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="688" y="656" />
-		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1184" y="1040" />
-		<entity schema="SmartFab.dbo" name="WPSView" color="3986C1" x="2224" y="752" />
-		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="832" />
-		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1296" />
-		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="416" y="224" />
-		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="528" y="80" />
-		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="624" y="224" />
-		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="208" y="336" />
-		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="256" y="80" />
-		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="448" y="368" />
-		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="912" y="384" />
-		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="928" y="176" />
-		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="1120" y="192" />
-		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1136" y="384" />
-		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="832" y="656" />
+		<entity schema="SmartFab.dbo" name="ActiveView" color="3986C1" x="1728" y="1008" />
+		<entity schema="SmartFab.dbo" name="AlertTypes" color="3986C1" x="1696" y="1360" />
+		<entity schema="SmartFab.dbo" name="AlertView" color="3986C1" x="1712" y="720" />
+		<entity schema="SmartFab.dbo" name="AlertsTable" color="3986C1" x="1888" y="1248" />
+		<entity schema="SmartFab.dbo" name="Assignment" color="3986C1" x="832" y="1280" />
+		<entity schema="SmartFab.dbo" name="Category" color="3986C1" x="256" y="1008" />
+		<entity schema="SmartFab.dbo" name="ContractTaskView" color="3986C1" x="1872" y="720" />
+		<entity schema="SmartFab.dbo" name="Employees" color="3986C1" x="368" y="800" />
+		<entity schema="SmartFab.dbo" name="JobContract" color="C1D8EE" x="800" y="992" />
+		<entity schema="SmartFab.dbo" name="JobTimeTracker" color="3986C1" x="480" y="976" />
+		<entity schema="SmartFab.dbo" name="Locations" color="3986C1" x="384" y="1376" />
+		<entity schema="SmartFab.dbo" name="MachineView" color="3986C1" x="1712" y="896" />
+		<entity schema="SmartFab.dbo" name="Machines" color="3986C1" x="496" y="1232" />
+		<entity schema="SmartFab.dbo" name="RealTimeView" color="3986C1" x="2416" y="720" />
+		<entity schema="SmartFab.dbo" name="RealTime_Data" color="3986C1" x="1504" y="1216" />
+		<entity schema="SmartFab.dbo" name="RunTable" color="3986C1" x="1024" y="1280" />
+		<entity schema="SmartFab.dbo" name="SpecTypes" color="3986C1" x="1696" y="1200" />
+		<entity schema="SmartFab.dbo" name="Specification" color="3986C1" x="1392" y="800" />
+		<entity schema="SmartFab.dbo" name="SpecificationView" color="3986C1" x="2032" y="720" />
+		<entity schema="SmartFab.dbo" name="TaskAssignment" color="C1D8EE" x="976" y="992" />
+		<entity schema="SmartFab.dbo" name="TaskAssociation" color="C1D8EE" x="896" y="864" />
+		<entity schema="SmartFab.dbo" name="TaskView" color="3986C1" x="1872" y="896" />
+		<entity schema="SmartFab.dbo" name="TimesheetTask" color="3986C1" x="112" y="1088" />
+		<entity schema="SmartFab.dbo" name="TimesheetTaskType" color="3986C1" x="96" y="1328" />
+		<entity schema="SmartFab.dbo" name="Timesheet_entry" color="3986C1" x="48" y="720" />
+		<entity schema="SmartFab.dbo" name="WASP_Settings" color="3986C1" x="688" y="624" />
+		<entity schema="SmartFab.dbo" name="WPS" color="3986C1" x="1184" y="1008" />
+		<entity schema="SmartFab.dbo" name="WPSView" color="3986C1" x="2224" y="720" />
+		<entity schema="SmartFab.dbo" name="WPS_Run" color="3986C1" x="1168" y="800" />
+		<entity schema="SmartFab.dbo" name="WeldingTable" color="3986C1" x="1264" y="1264" />
+		<entity schema="SmartFab.dbo" name="auth_group" color="3986C1" x="288" y="224" />
+		<entity schema="SmartFab.dbo" name="auth_group_permissions" color="3986C1" x="400" y="80" />
+		<entity schema="SmartFab.dbo" name="auth_permission" color="3986C1" x="496" y="224" />
+		<entity schema="SmartFab.dbo" name="auth_user" color="3986C1" x="80" y="336" />
+		<entity schema="SmartFab.dbo" name="auth_user_groups" color="3986C1" x="128" y="80" />
+		<entity schema="SmartFab.dbo" name="auth_user_user_permissions" color="3986C1" x="320" y="368" />
+		<entity schema="SmartFab.dbo" name="django_admin_log" color="3986C1" x="784" y="304" />
+		<entity schema="SmartFab.dbo" name="django_content_type" color="3986C1" x="800" y="96" />
+		<entity schema="SmartFab.dbo" name="django_migrations" color="3986C1" x="992" y="112" />
+		<entity schema="SmartFab.dbo" name="django_session" color="3986C1" x="1008" y="304" />
+		<entity schema="SmartFab.dbo" name="sysdiagrams" color="3986C1" x="832" y="624" />
 		<group name="Procedures" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="WPS_Run" />
 			<entity schema="SmartFab.dbo" name="Specification" />
@@ -1176,14 +1179,14 @@ FROM SmartFab.dbo.WPS w
 			<entity schema="SmartFab.dbo" name="TaskAssignment" />
 		</group>
 		<group name="WAsP Views" color="C4E0F9" >
-			<entity schema="SmartFab.dbo" name="ContractTaskView" />
-			<entity schema="SmartFab.dbo" name="WPSView" />
 			<entity schema="SmartFab.dbo" name="MachineView" />
-			<entity schema="SmartFab.dbo" name="ActiveView" />
-			<entity schema="SmartFab.dbo" name="TaskView" />
 			<entity schema="SmartFab.dbo" name="RealTimeView" />
-			<entity schema="SmartFab.dbo" name="SpecificationView" />
 			<entity schema="SmartFab.dbo" name="AlertView" />
+			<entity schema="SmartFab.dbo" name="WPSView" />
+			<entity schema="SmartFab.dbo" name="ActiveView" />
+			<entity schema="SmartFab.dbo" name="ContractTaskView" />
+			<entity schema="SmartFab.dbo" name="SpecificationView" />
+			<entity schema="SmartFab.dbo" name="TaskView" />
 		</group>
 		<group name="Django Admin" color="C4E0F9" >
 			<entity schema="SmartFab.dbo" name="django_admin_log" />

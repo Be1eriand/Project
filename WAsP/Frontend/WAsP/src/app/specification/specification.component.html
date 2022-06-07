@@ -14,11 +14,12 @@
                placeholder="Select Specification"
                aria-label="Specification"
                matInput
+               (keyup)="SpecOnKey($event)"
                [formControl]="specFilter"
                [matAutocomplete]="auto">
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let Specification of filteredOptions | async" [value]="Specification.WPS_No">
-            {{Specification.WPS_No}}
+            <mat-option *ngFor="let Specification of filteredOptions" [value]="Specification">
+            {{Specification}}
             </mat-option>
         </mat-autocomplete>
       </mat-form-field>

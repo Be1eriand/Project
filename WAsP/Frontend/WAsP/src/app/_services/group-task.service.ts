@@ -1,63 +1,220 @@
-/*import { Injectable } from '@angular/core';
-import { RealTimeView } from '@app/_models/realtime';
-import { Observable, } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Specification } from '@app/_models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GroupTaskService {
 
+  wps: Specification[];
+  taskRun: {};
+
   constructor() { }
 
-  // Group realtime data by task ID
-  groupTask(realtime: RealTimeView[]) {
-    var result = realtime.reduce(function (r, a) {
-      r[a.TaskID] = r[a.TaskID] || [];
-      r[a.TaskID].push(a);
-      return r;
-    }, {});
-    
-    return result;
-  }
-
-  // Group by Task and Run
-  groupTaskRun(realtime: RealTimeView[]) {
+   // Group by Task and Run
+   groupTaskRunforCharts(realtime, wps) {
+    this.wps = wps;
+    var wpsRealtime = []
     const merged = realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
       const key = `${TaskID}-${RunNo}`;
       r[key] = r[key] || { TaskID, RunNo, data: [] };
       r[key]["data"].push(rest)
       return r;
     }, {})
-    var taskRun = Object.values(merged);
+    this.taskRun = Object.values(merged);
 
-    return this.weldActualRange(taskRun);
-  }
 
-  // Calculate Min and Max values
-  weldActualRange(taskRun: {}, wps: Specification[][]) {
+    // Creating data to parse to charts/inner components
+    // taskWPS[0] = all realtime, taskWPS[1] = wps, taskWPS[2] = summarised realtime
+    for (var i in this.taskRun) {
+      var taskWPS = []
+      for (var j in wps) {
+        if (wps[j]["Run_No"] == this.taskRun[i]['RunNo']) {
+          taskWPS.push(this.taskRun[i]);
+          taskWPS.push(wps[j]);
+          taskWPS.push(this.weldActualRangeKnownIndex(i, j));
+        }
+      }
+
+      wpsRealtime.push(taskWPS);
+    }
+    return wpsRealtime;
+  };
+
+  // Group realtime data by Task ID and Run No
+  groupTaskRun(realtime) {
+    const merged = realtime.reduce((r, { TaskID, RunNo, ...rest }) => {
+      const key = `${TaskID}-${RunNo}`;
+      r[key] = r[key] || { TaskID, RunNo, data: [] };
+      r[key]["data"].push(rest)
+      return r;
+    }, {})
+    let taskRun = Object.values(merged);
+    return taskRun;
+  };
+
+  // Calculate weld range with known indexs. Min and max values, total duration, and variances for out of range. 
+  weldActualRangeKnownIndex(i, j) {
+    var result = []
+    this.taskRun[i]['data'].reduce((r, a) => {
+
+      if (!r[a.WelderID]) {
+        r[a.WelderID] = r[a.WelderID] || {
+          TaskID: this.taskRun[i]['TaskID'],
+          RunNo: this.taskRun[i]['RunNo'],
+          WelderID: a.WelderID,
+          MachineID: a.MachineID,
+          Date: a.Time.split('T')[0],
+          TravelSpeed: 0,
+          Timedelta: 0,
+          Records: 0,
+
+          Current_Min: a.Current,
+          Current_Max: 0,
+          Current_Overtime: 0,
+          Current_Undertime: 0,
+          Current_Overpercent: 0,
+          Current_Underpercent: 0,
+          Current_Sum: 0,
+
+
+          Voltage_Min: a.Voltage,
+          Voltage_Max: 0,
+          Voltage_Overtime: 0,
+          Voltage_Undertime: 0,
+          Voltage_Overpercent: 0,
+          Voltage_Underpercent: 0,
+          Voltage_Sum: 0,
+
+          HeatInput_Min: a.HeatInput,
+          HeatInput_Max: 0,
+          HeatInput_Overtime: 0,
+          HeatInput_Undertime: 0,
+          HeatInput_Overpercent: 0,
+          HeatInput_Underpercent: 0,
+          HeatInput_Sum: 0,
+
+          TravelSpeed_Min: a.TravelSpeed,
+          TravelSpeed_Max: 0,
+          TravelSpeed_Overtime: 0,
+          TravelSpeed_Undertime: 0,
+          TravelSpeed_Overpercent: 0,
+          TravelSpeed_Underpercent: 0,
+          TravelSpeed_Sum: 0
+
+        };
+        result.push(r[a.WelderID])
+      }
+      r[a.WelderID].Timedelta += (a.Timedelta / 60);
+
+      r[a.WelderID].Records += 1;
+
+      // Current - Min Max
+      r[a.WelderID].Current_Sum += a.Current;
+      if (r[a.WelderID].Current_Min > a.Current) {
+        r[a.WelderID].Current_Min = a.Current;
+      }
+      else if (r[a.WelderID].Current_Max < a.Current) {
+        r[a.WelderID].Current_Max = a.Current;
+      }
+      if (a.Current > this.wps[j]["Current_Max"]) {
+        r[a.WelderID].Current_Overtime += (a.Timedelta / 60);
+        var max = Number(this.wps[j]["Current_Max"]);
+        r[a.WelderID].Current_Overpercent = (r[a.WelderID].Current_Max - max) / max * 100;
+      }
+      else if (a.Current < this.wps[j]["Current_Min"]) {
+        r[a.WelderID].Current_Undertime += (a.Timedelta / 60);
+        var min = Number(this.wps[j]["Current_Min"]);
+        r[a.WelderID].Current_Underpercent = (r[a.WelderID].Current_Min - min) / min * 100;
+      }
+
+      // Voltage
+      r[a.WelderID].Voltage_Sum += a.Voltage;
+      if (r[a.WelderID].Voltage_Min > a.Voltage || (r[a.WelderID].Voltage_Min == 0 && a.Voltage > 0)) {
+        r[a.WelderID].Voltage_Min = a.Voltage;
+      }
+      else if (r[a.WelderID].Voltage_Max < a.Voltage) {
+        r[a.WelderID].Voltage_Max = a.Voltage;
+      }
+      if (a.Voltage > this.wps[j]["Voltage_Max"]) {
+        r[a.WelderID].Voltage_Overtime += (a.Timedelta / 60);
+        var max = Number(this.wps[j]["Voltage_Max"]);
+        r[a.WelderID].Voltage_Overpercent = (r[a.WelderID].Voltage_Max - max) / max * 100;
+      }
+      else if (a.Voltage < this.wps[j]["Voltage_Min"] && a.Timedelta > 0) {
+        r[a.WelderID].Voltage_Undertime += (a.Timedelta / 60);
+        var min = Number(this.wps[j]["Voltage_Min"]);
+        r[a.WelderID].Voltage_Underpercent = (r[a.WelderID].Voltage_Min - min) / min * 100;
+      }
+
+      // Heat Input
+      r[a.WelderID].HeatInput_Sum += a.HeatInput;
+      if (r[a.WelderID].HeatInput_Min > a.HeatInput || (r[a.WelderID].HeatInput_Min == 0 && a.HeatInput > 0)) {
+        r[a.WelderID].HeatInput_Min = a.HeatInput;
+      }
+      else if (r[a.WelderID].HeatInput_Max < a.HeatInput) {
+        r[a.WelderID].HeatInput_Max = a.HeatInput;
+      }
+      if (a.HeatInput > this.wps[j]["HeatInput_Max"]) {
+        r[a.WelderID].HeatInput_Overtime += (a.Timedelta / 60);
+        var max = Number(this.wps[j]["HeatInput_Max"]);
+        r[a.WelderID].HeatInput_Overpercent = (r[a.WelderID].HeatInput_Max - max) / max * 100;
+      }
+      else if (a.HeatInput < this.wps[j]["HeatInput_Min"] && a.Timedelta > 0) {
+        r[a.WelderID].HeatInput_Undertime += (a.Timedelta / 60);
+        var min = Number(this.wps[j]["HeatInput_Min"]);
+        r[a.WelderID].HeatInput_Underpercent = (r[a.WelderID].HeatInput_Min - min) / min * 100;
+      }
+
+      // Travel Speed
+      r[a.WelderID].TravelSpeed_Sum += a.TravelSpeed;
+      if (r[a.WelderID].TravelSpeed_Min > a.TravelSpeed || (r[a.WelderID].TravelSpeed_Min == 0 && a.TravelSpeed > 0)) {
+        r[a.WelderID].TravelSpeed_Min = a.TravelSpeed;
+      }
+      else if (r[a.WelderID].TravelSpeed_Max < a.TravelSpeed) {
+        r[a.WelderID].TravelSpeed_Max = a.TravelSpeed;
+      }
+      if (a.TravelSpeed > this.wps[j]["TravelSpeed_Max"]) {
+        r[a.WelderID].TravelSpeed_Overtime += (a.Timedelta / 60);
+        var max = Number(this.wps[j]["TravelSpeed_Max"]);
+        r[a.WelderID].TravelSpeed_Overpercent = (r[a.WelderID].TravelSpeed_Max - max) / max * 100;
+      }
+      else if (a.TravelSpeed < this.wps[j]["TravelSpeed_Min"] && a.Timedelta > 0) {
+        r[a.WelderID].TravelSpeed_Undertime += (a.Timedelta / 60);
+        var min = Number(this.wps[j]["TravelSpeed_Min"]);
+        r[a.WelderID].TravelSpeed_Underpercent = (r[a.WelderID].TravelSpeed_Min - min) / min * 100;
+      }
+      return r;
+    }, {});
+
+    return result[0];
+
+  };
+
+  // Calculate min and max values, total duration, and variances for out of range. 
+  weldActualRange(taskRun, wps) {
     var results = [];
 
     for (var i in taskRun) {
-
-      // WPS Task data
-      var wpsTask = thiswps[this.validTaskID.indexOf(this.taskRun[i]['TaskID'])]
-
+      var found = false;
       // For correct run number
-      for (var j in wpsTask) {
-        if (wpsTask[j]["Run_No"] == this.taskRun[i]['RunNo']) {
+      for (var j in wps) {
+
+        if (wps[j]["Run_No"] == taskRun[i]['RunNo']) {
 
           var result = []
-          this.taskRun[i]['data'].reduce((r, a) => {
+          taskRun[i]['data'].reduce((r, a) => {
 
             if (!r[a.WelderID]) {
               r[a.WelderID] = r[a.WelderID] || {
-                RunNo: this.taskRun[i]['RunNo'],
-                TaskID: this.taskRun[i]['TaskID'],
+                RunNo: taskRun[i]['RunNo'],
+                TaskID: taskRun[i]['TaskID'],
                 WelderID: a.WelderID,
                 MachineID: a.MachineID,
                 Date: a.Time.split('T')[0],
                 TravelSpeed: 0,
                 Timedelta: 0,
+                Records: 0,
 
                 Current_Min: a.Current,
                 Current_Max: 0,
@@ -65,6 +222,7 @@ export class GroupTaskService {
                 Current_Undertime: 0,
                 Current_Overpercent: 0,
                 Current_Underpercent: 0,
+                Current_Sum: 0,
 
 
                 Voltage_Min: a.Voltage,
@@ -73,6 +231,7 @@ export class GroupTaskService {
                 Voltage_Undertime: 0,
                 Voltage_Overpercent: 0,
                 Voltage_Underpercent: 0,
+                Voltage_Sum: 0,
 
                 HeatInput_Min: a.HeatInput,
                 HeatInput_Max: 0,
@@ -80,13 +239,7 @@ export class GroupTaskService {
                 HeatInput_Undertime: 0,
                 HeatInput_Overpercent: 0,
                 HeatInput_Underpercent: 0,
-
-                InterpassTemp_Min: a.Temperature,
-                InterpassTemp_Max: 0,
-                InterpassTemp_Overtime: 0,
-                InterpassTemp_Undertime: 0,
-                InterpassTemp_Overpercent: 0,
-                InterpassTemp_Underpercent: 0,
+                HeatInput_Sum: 0,
 
                 TravelSpeed_Min: a.TravelSpeed,
                 TravelSpeed_Max: 0,
@@ -94,122 +247,100 @@ export class GroupTaskService {
                 TravelSpeed_Undertime: 0,
                 TravelSpeed_Overpercent: 0,
                 TravelSpeed_Underpercent: 0,
+                TravelSpeed_Sum: 0
 
               };
               result.push(r[a.WelderID])
             }
             r[a.WelderID].Timedelta += (a.Timedelta / 60);
 
+            r[a.WelderID].Records += 1;
+
             // Current - Min Max
+            r[a.WelderID].Current_Sum += a.Current;
             if (r[a.WelderID].Current_Min > a.Current) {
               r[a.WelderID].Current_Min = a.Current;
             }
             else if (r[a.WelderID].Current_Max < a.Current) {
               r[a.WelderID].Current_Max = a.Current;
             }
-            if (a.Current > wpsTask[j]["Current_Max"]) {
-              r[a.WelderID].Current_Overtime += ( a.Timedelta / 60);
-              var max = Number(wpsTask[j]["Current_Max"]);
+            if (a.Current > wps[j]["Current_Max"]) {
+              r[a.WelderID].Current_Overtime += (a.Timedelta / 60);
+              var max = Number(wps[j]["Current_Max"]);
               r[a.WelderID].Current_Overpercent = (r[a.WelderID].Current_Max - max) / max * 100;
             }
-            else if (a.Current < wpsTask[j]["Current_Min"]) {
-              r[a.WelderID].Current_Undertime += ( a.Timedelta / 60);
-              var min = Number(wpsTask[j]["Current_Min"]);
+            else if (a.Current < wps[j]["Current_Min"]) {
+              r[a.WelderID].Current_Undertime += (a.Timedelta / 60);
+              var min = Number(wps[j]["Current_Min"]);
               r[a.WelderID].Current_Underpercent = (r[a.WelderID].Current_Min - min) / min * 100;
             }
 
             // Voltage
+            r[a.WelderID].Voltage_Sum += a.Voltage;
             if (r[a.WelderID].Voltage_Min > a.Voltage || (r[a.WelderID].Voltage_Min == 0 && a.Voltage > 0)) {
               r[a.WelderID].Voltage_Min = a.Voltage;
             }
             else if (r[a.WelderID].Voltage_Max < a.Voltage) {
               r[a.WelderID].Voltage_Max = a.Voltage;
             }
-            if (a.Voltage > wpsTask[j]["Voltage_Max"]) {
-              r[a.WelderID].Voltage_Overtime += ( a.Timedelta / 60);
-              var max = Number(wpsTask[j]["Voltage_Max"]);
+            if (a.Voltage > wps[j]["Voltage_Max"]) {
+              r[a.WelderID].Voltage_Overtime += (a.Timedelta / 60);
+              var max = Number(wps[j]["Voltage_Max"]);
               r[a.WelderID].Voltage_Overpercent = (r[a.WelderID].Voltage_Max - max) / max * 100;
             }
-            else if (a.Voltage < wpsTask[j]["Voltage_Min"] && a.Timedelta > 0) {
-              r[a.WelderID].Voltage_Undertime += ( a.Timedelta / 60);
-              var min = Number(wpsTask[j]["Voltage_Min"]);
+            else if (a.Voltage < wps[j]["Voltage_Min"] && a.Timedelta > 0) {
+              r[a.WelderID].Voltage_Undertime += (a.Timedelta / 60);
+              var min = Number(wps[j]["Voltage_Min"]);
               r[a.WelderID].Voltage_Underpercent = (r[a.WelderID].Voltage_Min - min) / min * 100;
             }
 
             // Heat Input
+            r[a.WelderID].HeatInput_Sum += a.HeatInput;
             if (r[a.WelderID].HeatInput_Min > a.HeatInput || (r[a.WelderID].HeatInput_Min == 0 && a.HeatInput > 0)) {
               r[a.WelderID].HeatInput_Min = a.HeatInput;
             }
             else if (r[a.WelderID].HeatInput_Max < a.HeatInput) {
               r[a.WelderID].HeatInput_Max = a.HeatInput;
             }
-            if (a.HeatInput > wpsTask[j]["HeatInput_Max"]) {
-              r[a.WelderID].HeatInput_Overtime += ( a.Timedelta / 60);
-              var max = Number(wpsTask[j]["HeatInput_Max"]);
+            if (a.HeatInput > wps[j]["HeatInput_Max"]) {
+              r[a.WelderID].HeatInput_Overtime += (a.Timedelta / 60);
+              var max = Number(wps[j]["HeatInput_Max"]);
               r[a.WelderID].HeatInput_Overpercent = (r[a.WelderID].HeatInput_Max - max) / max * 100;
             }
-            else if (a.HeatInput < wpsTask[j]["HeatInput_Min"] && a.Timedelta > 0) {
-              r[a.WelderID].HeatInput_Undertime += ( a.Timedelta / 60);
-              var min = Number(wpsTask[j]["HeatInput_Min"]);
+            else if (a.HeatInput < wps[j]["HeatInput_Min"] && a.Timedelta > 0) {
+              r[a.WelderID].HeatInput_Undertime += (a.Timedelta / 60);
+              var min = Number(wps[j]["HeatInput_Min"]);
               r[a.WelderID].HeatInput_Underpercent = (r[a.WelderID].HeatInput_Min - min) / min * 100;
             }
 
             // Travel Speed
-            if (r[a.WelderID].TravelSpeed_Min > a.TravelSpeed || (r[a.WelderID].TravelSpeed_Min < 0 && a.TravelSpeed > 0)) {
+            r[a.WelderID].TravelSpeed_Sum += a.TravelSpeed;
+            if (r[a.WelderID].TravelSpeed_Min > a.TravelSpeed || (r[a.WelderID].TravelSpeed_Min == 0 && a.TravelSpeed > 0)) {
               r[a.WelderID].TravelSpeed_Min = a.TravelSpeed;
             }
             else if (r[a.WelderID].TravelSpeed_Max < a.TravelSpeed) {
               r[a.WelderID].TravelSpeed_Max = a.TravelSpeed;
             }
-            if (a.TravelSpeed > wpsTask[j]["TravelSpeed_Max"]) {
-              r[a.WelderID].TravelSpeed_Overtime += ( a.Timedelta / 60);
-              var max = Number(wpsTask[j]["TravelSpeed_Max"]);
+            if (a.TravelSpeed > wps[j]["TravelSpeed_Max"]) {
+              r[a.WelderID].TravelSpeed_Overtime += (a.Timedelta / 60);
+              var max = Number(wps[j]["TravelSpeed_Max"]);
               r[a.WelderID].TravelSpeed_Overpercent = (r[a.WelderID].TravelSpeed_Max - max) / max * 100;
             }
-            else if (a.TravelSpeed < wpsTask[j]["TravelSpeed_Min"] && a.Timedelta > 0) {
-              r[a.WelderID].TravelSpeed_Undertime += ( a.Timedelta / 60);
-              var min = Number(wpsTask[j]["TravelSpeed_Min"]);
+            else if (a.TravelSpeed < wps[j]["TravelSpeed_Min"] && a.Timedelta > 0) {
+              r[a.WelderID].TravelSpeed_Undertime += (a.Timedelta / 60);
+              var min = Number(wps[j]["TravelSpeed_Min"]);
               r[a.WelderID].TravelSpeed_Underpercent = (r[a.WelderID].TravelSpeed_Min - min) / min * 100;
             }
 
-            // Interpass Temp
-            if (r[a.WelderID].InterpassTemp_Min > a.Temperature || (r[a.WelderID].InterpassTemp_Min == 0 && a.Temperature > 0)) {
-              r[a.WelderID].InterpassTemp_Min = a.Temperature;
-            }
-            else if (r[a.WelderID].InterpassTemp_Max < a.Temperature) {
-              r[a.WelderID].InterpassTemp_Max = a.Temperature;
-            }
-            if (a.InterpassTemp > wpsTask[j]["InterpassTemp_Max"] && wpsTask[j]["InterpassTemp_Max"].length > 0) {
-              r[a.WelderID].InterpassTemp_Overtime += ( a.Timedelta / 60);
-              var max = Number(wpsTask[j]["InterpassTemp_Max"]);
-              r[a.WelderID].InterpassTemp_Overpercent = (r[a.WelderID].InterpassTemp_Max - max) / max * 100;
-            }
-            else if (a.InterpassTemp < wpsTask[j]["InterpassTemp_Min"] && 
-                      wpsTask[j]["InterpassTemp_Min"].length > 0 &&
-                      a.Timedelta > 0) {
-              r[a.WelderID].InterpassTemp_Undertime += ( a.Timedelta / 60);
-              var min = Number(wpsTask[j]["InterpassTemp_Min"]);
-              r[a.WelderID].InterpassTemp_Underpercent = (r[a.WelderID].InterpassTemp_Min - min) / min * 100;
-            }
+
             return r;
           }, {});
-        }
+          results.push(result);
+        };
       }
-
     }
-    results.push(result);
-    return this.groupTask2(results);
+    return results;
+  };
 
-  }
-
-  // After collecting Min Max value by run, group by Task ID again
-  groupTask2(results: {}) {
-    var result = results[0].reduce(function (r, a) {
-      r[a.TaskID] = r[a.TaskID] || [];
-      r[a.TaskID].push(a);
-      return r;
-    }, {});
-    return result; 
-  }
 }
-*/
+

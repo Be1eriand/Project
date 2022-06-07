@@ -28,16 +28,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u=(4vu@-g@y)(lo34byv4@5q1az#!&9c-*1&3#wms_&tpx!*1o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False 
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
-
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1'] 
 
 # Application definition
 
 INSTALLED_APPS = [
     #WAsP Applications
-    'index.apps.IndexConfig',
+    'home.apps.HomeConfig',
+    #'accounts.apps.AccountsConfig',
+    #'layout.apps.LayoutConfig',
+    #'dashboard.apps.DashboardConfig',
+    #'report.apps.ReportConfig',
 
     #Django apps
     'django.contrib.admin',
@@ -66,16 +69,21 @@ REST_FRAMEWORK = {
     ),
 }
 
-JWT_AUTH = {
-    'JWT_VERIFY': True,
-    'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=3600), #expires in an hour
-    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(seconds=3600),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=1),
+    'UPDATE_LAST_LOGIN': True,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 }
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,12 +92,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+]
+
 # Channels settings
 ASGI_APPLICATION = "WAsP.routing.application" 
 
 WSGI_APPLICATION = "WAsP.wsgi.application"
 
-#CHANNEL_REDIS_HOST = ("127.0.0.1", 6379) 
 
 CHANNEL_LAYERS = {
     'default': {
@@ -108,11 +119,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'WAsP.urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['./index/templates/'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,15 +138,7 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-"""
-
+#Modify the settings for the location of the SQL Server if it is not local
 DATABASES = {
     "default": {
         "ENGINE": "mssql",
@@ -176,7 +178,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Australia/Adelaide' #probably change this to ACST
+TIME_ZONE = 'Australia/Adelaide' 
 
 USE_I18N = True
 
@@ -199,6 +201,8 @@ STATICFILES_DIRS = (
     os.path.join(STATIC_ROOT, 'images'),
 )
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -220,13 +224,14 @@ CELERY_BROKER_URL = 'redis://localhost:6379/0'
 #MS SQL Setting
 
 import urllib
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, true
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
 
 
 from Models.models import Base
 
+#Modify the settings for the location of the SQL Server if it is not local
 params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;MARS_Connection=yes;')
 ENGINE = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
         

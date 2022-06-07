@@ -20,8 +20,12 @@ export class ComplianceComponent implements OnInit {
 
   contractForm: FormGroup;
   showTask: boolean = false;
+
+  // Used to load all contracts, then used to filter the selected contract
   allContracts: ContractTaskView[];
+  // Used for filterable and searchable list
   filteredContracts: string[];
+  // Sorted Contract list
   contracts: string[];
 
   @ViewChild('pdf')
@@ -31,9 +35,11 @@ export class ComplianceComponent implements OnInit {
     ) {}
 
   ngOnInit(): void {
-    this.specificationService.getAllContracts().subscribe(c => {
-      this.allContracts = c;
-      this.loadContracts();
+    this.specificationService.getAllContracts().subscribe({
+      next: c => {
+        this.allContracts = c;
+        this.loadContracts();
+      },
     })
 
     this.contractForm = new FormGroup({
@@ -41,6 +47,7 @@ export class ComplianceComponent implements OnInit {
     })
   }
 
+  // Loading Contract Names and making them auto complete and filterable
   loadContracts(): void {
     let contracts = []
     for (let i = 0; i < this.allContracts.length; i++){
@@ -60,10 +67,10 @@ export class ComplianceComponent implements OnInit {
     return this.contracts.filter(option => option.toLocaleLowerCase().includes(filter));
   }
 
+  // On Run Report submit
   contractSubmit() {
-    console.log(this.contractForm);
-    if (!this.contractForm.value.contractName) {
-      alert('Please select a contract');
+     if (!this.contractForm.value.contractName || !(this.filteredContracts.includes(this.contractForm.value.contractName))) {
+      alert('Please select a valid contract');
       return;
     }
 
@@ -78,6 +85,8 @@ export class ComplianceComponent implements OnInit {
     this.showTask = true;
   }
 
+
+  // Export pdf div to PDF
   exportPDF(header: string) {
     const pdf = this.pdf.nativeElement;
     var html = htmlToPdfmake(pdf.innerHTML);

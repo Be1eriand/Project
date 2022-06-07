@@ -10,7 +10,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { SpecificationRoutingModule } from './specification-routing.module';
 
-import { LayoutComponent } from './layout.component';
 import { SpecificationComponent } from './specification.component';
 
 @NgModule({
@@ -26,7 +25,6 @@ import { SpecificationComponent } from './specification.component';
         FlexLayoutModule,
     ],
     declarations: [
-        LayoutComponent,
         SpecificationComponent,
     ]
 })

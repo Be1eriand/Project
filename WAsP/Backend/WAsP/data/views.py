@@ -378,7 +378,7 @@ class SpecListView(APIView):    #Get Only at this point
         return JsonResponse(serialised.data, safe=False)
 
 class ActiveMachinesView(APIView):
-    #permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, *args):
 

@@ -1,7 +1,6 @@
 import os
 
 import json
-import datetime
 
 from celery import shared_task, Celery
 from asgiref.sync import async_to_sync

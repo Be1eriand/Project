@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Params, Router } from '@angular/router';
-import { HttpClient, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import {  Observable, BehaviorSubject } from 'rxjs';
 import { ContractTaskView, Specification } from '@app/_models';
 
 import { environment } from '@environments/environment';
@@ -11,10 +10,15 @@ import { environment } from '@environments/environment';
 })
 export class SpecificationService {
 
+  private specSubjects: BehaviorSubject<Specification[]>;
+  public specifications: Observable<Specification[]>;
+
   constructor(
-    private router: Router,
-        private http: HttpClient
-  ) { }
+    private http: HttpClient
+  ) { 
+    this.specSubjects = new BehaviorSubject<Specification[]>([]);
+    this.specifications = this.specSubjects.asObservable();
+  }
 
   getAllSpecs(): Observable<Specification[]> {
     return this.http.get<Specification[]>(`${environment.apiUrl}/data/specification`);
@@ -42,6 +46,10 @@ export class SpecificationService {
 
   getContract(contract: string): Observable<ContractTaskView> {
     return this.http.get<ContractTaskView>(`${environment.apiUrl}/data/contracts/${contract}`);
+  }
+
+  getSpec2(spec: string): Observable<Specification[]> {
+    return this.http.get<Specification[]>(`${environment.apiUrl}/data/specification/${spec}`);
   }
 
 }

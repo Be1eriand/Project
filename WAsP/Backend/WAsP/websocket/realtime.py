@@ -1,4 +1,3 @@
-from pprint import pprint
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 
 class RealTimeConsumer(AsyncJsonWebsocketConsumer):

@@ -23,5 +23,5 @@ copy .\dist\was-p\assets\*.jpg %BackendPath%static\images\
 copy .\dist\was-p\assets\*.gif %BackendPath%static\images\
 
 ::Copy HTML files
-copy  .\dist\was-p\*.html ..\..\Backend\WAsP\index\templates\
+copy  .\dist\was-p\*.html ..\..\Backend\WAsP\home\templates\
 ENDLOCAL
