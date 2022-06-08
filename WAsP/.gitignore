@@ -60,11 +60,6 @@ cover/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
-SensorDataDB.mdf
-SensorDataDB_log.ldf
-SensorFab.mdf
-SensorFab_log.ldf
-database/
 
 # Flask stuff:
 instance/
@@ -148,16 +143,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-© 2022 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Docs
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About

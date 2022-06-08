@@ -41,7 +41,8 @@ ngx-color-picker
     .\venv\scripts\activate.ps1 (this places the terminal into the venv environment)
     pip install -r requirements.txt
 3. Change directory to .\Backend\WAsP
-4. Type
+4. Type python manage.py migrate
+5. Type python manage.py createsuperuser
 
 *** Creating the Front End Environment ***
 1. Open a terminal window at the root project workspace folder (ie where this Readme.md exists).
@@ -61,3 +62,7 @@ ngx-color-picker
 2. Ensure that the venv environment has bee activated
     2a. Type .\venv\scripts\activate.ps1
 3. Type .\WAsPStart.ps1
+
+
+*** Compiling the Sensor Server program ***
+Compile the test data program to test the real-time functionality
