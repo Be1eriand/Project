@@ -66,3 +66,10 @@ ngx-color-picker
 
 *** Compiling the Sensor Server program ***
 Compile the test data program to test the real-time functionality
+1. Start Visual Studio 2019
+2. Select the solution SensorServer.sln in the SensorServer directory
+3. Press ctrl + shift + B to build the solution
+4. Press ctrl + F5 to run from the Studio 
+5. or Run the program from the default directory
+    ie .\SensorServer\bin\Release or \Debug
+    SensorServer.exe
