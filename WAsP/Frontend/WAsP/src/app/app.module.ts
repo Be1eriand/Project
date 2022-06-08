@@ -29,6 +29,10 @@ import * as echarts from 'echarts';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { SideBarComponent } from './side-bar/side-bar.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatListModule } from '@angular/material/list';
+
 
 @NgModule({
     imports: [
@@ -47,6 +51,8 @@ import { HeaderComponent } from './header/header.component';
         NgxEchartsModule.forRoot({
             echarts
           }),
+        LayoutModule,
+        MatListModule,
     ],
     declarations: [
         AppComponent,
@@ -54,6 +60,7 @@ import { HeaderComponent } from './header/header.component';
         HomeComponent,
         FooterComponent,
         HeaderComponent,
+        SideBarComponent,
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

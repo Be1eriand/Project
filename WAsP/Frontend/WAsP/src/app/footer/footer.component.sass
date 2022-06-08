@@ -10,11 +10,16 @@
     z-index: 10
     min-width: 100% !important
     padding: auto
-    bottom: 0 !important
-    margin-bottom: auto
+    bottom: 0px !important
+    left: 0px
+    right: 0px
+    //overflow: hidden
+    //margin-bottom: auto
     position: fixed
-    z-index: 1
-    background: $waspBoarderWhite
+    //position: absolute
+    //top
+    background: $standUpBgSlideTen
+    color: $waspBoarderWhite
 
 .footer-img-logo
     height: 2rem
@@ -37,6 +42,5 @@
 @media only screen and (max-width:450px)
 .footer-wasp
     font-size: 0.8rem
-    //grid-template-columns: minmax(1fr, 3)
     grid-template-rows: minmax(0.2fr, auto)
-    //grid-template-areas: "nav-wasp" "sidebar-wasp" "main-Wasp" "footer-wasp"
+    // still need to fix this media settings for smaller screens 

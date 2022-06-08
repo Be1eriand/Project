@@ -2,22 +2,32 @@
 
 .header-wasp
     grid-area: nav-wasp
-    display: grid
-    grid-template-columns: 4fr 6fr 3fr
+    display: flex
+    //grid-template-columns: 1fr 3fr 1fr
     align-items: center
     justify-content: center
-    border: 3px dashed purple
     z-index: 10
     min-width: 100% !important
     padding: auto
     top: 0 !important
     margin-bottom: auto
-    position: fixed
-    z-index: 1
+    position: fixed !important
+    // position: absolute
+    height: 6rem
     background: $OLDboxHeader
+    justify-content: space-evenly
+    scroll-margin-top: 5rem
+
+    // overflow-y: scroll
+    // overflow-x: hidden
 
 .home-text-1
     color: $waspBoarderWhite
+    display: flex
+    justify-content: center
+    align-items: center
+    font-size: 1.5rem
+
 .btn-menu
 
 span
@@ -29,9 +39,28 @@ span
 .home-text-2
     justify-content: space-around
 
+.side-nav-button
+    color: $bgKhakiLight
+    box-shadow: $waspHeadBlack
+    &:hover
+        background-color: $waspButtYellow
 .btn-home
     grid-area: btn-home
     box-shadow: $waspHeadBlack
+    &:hover
+        background-color: $waspButtYellow
+
+.side-nav-button
+    display: flex
+    justify-content: center
+    align-items: center
+    font-size: 1.5rem
+    cursor: pointer
+
+.btn-user
+
+    &:hover
+        background-color: $waspButtYellow
 
 .profile
   // grid-area: profile
