@@ -1,11 +1,14 @@
 <mat-spinner *ngIf="!hideSpinner"></mat-spinner>
 
 
-<mat-expansion-panel >
+<mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
       Task ID: {{ task.TaskID }}
     </mat-panel-title>
+    <mat-panel-description *ngIf="noData">
+      <p>No weld data available for this Task ID</p>
+    </mat-panel-description>     
   </mat-expansion-panel-header>
 
   <div *ngIf="!noData">
