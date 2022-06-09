@@ -5,7 +5,6 @@ import { GroupTaskService } from '@app/_services/group-task.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-task-history',
@@ -42,8 +41,7 @@ export class TaskHistoryComponent implements OnInit {
 
   constructor(private specificationService: SpecificationService,
     private realtimeSerivce: RealtimeService,
-    private groupTaskService: GroupTaskService,
-    public datepipe: DatePipe,
+    private groupTaskService: GroupTaskService
   ) { }
 
   async ngOnInit(): Promise<void> {
@@ -63,10 +61,10 @@ export class TaskHistoryComponent implements OnInit {
       // If there is weld data available
       if (this.realtime.length > 0) {
         this.taskRun = this.groupTaskService.groupTaskRun(this.realtime);
-        console.log('taskRun', this.taskRun)
         this.taskRange = this.groupTaskService.weldActualRange(this.taskRun, this.wps);
         this.dataReady = true;
         this.allDataList.paginator = this.paginator;
+        this.allDataList.sort = this.sort;
       }
       else {
         this.noData = true;
@@ -76,10 +74,6 @@ export class TaskHistoryComponent implements OnInit {
     this.allDataList = new MatTableDataSource(this.realtime);
   }
 
-  ngAfterViewInit(): void {
-    
-    this.allDataList.sort = this.sort;
-  }
   applyFilter(event: Event): void {
     const filter = (event.target as HTMLInputElement).value.trim().toLocaleLowerCase();
     this.allDataList.filter = filter;

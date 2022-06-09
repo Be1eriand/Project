@@ -31,7 +31,7 @@ export class ComplianceComponent implements OnInit {
   @ViewChild('pdf')
   pdf!: ElementRef;
 
-  constructor(private specificationService: SpecificationService
+  constructor(private specificationService: SpecificationService,
     ) {}
 
   ngOnInit(): void {
@@ -85,15 +85,19 @@ export class ComplianceComponent implements OnInit {
     this.showTask = true;
   }
 
+  
 
   // Export pdf div to PDF
-  exportPDF(header: string) {
+  async exportPDF(header: string) {
     const pdf = this.pdf.nativeElement;
     var html = htmlToPdfmake(pdf.innerHTML);
-    console.log(html);
     const documentDefinition = {pageOrientation: 'landscape',
                                 content: [
                                   {text: header, style: 'header'}, 
+                                  {image: await this.getBase64ImageFromURL(
+                                    "../../assets/smartfab_logo.png"), 
+                                    width: 100,
+                                    absolutePosition: {x: 700, y: 35}},
                                   html
                                 ],
                                 styles: {
@@ -115,5 +119,31 @@ export class ComplianceComponent implements OnInit {
                               };
     pdfMake.createPdf(documentDefinition).download("Smart Fabrication Weld Compliance Report.pdf");
   }
+
+  // Function to parse url to suitable format for pdfMake
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+    
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+    
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+    
+        var dataURL = canvas.toDataURL("image/png");
+    
+        resolve(dataURL);
+      };
+    
+      img.onerror = error => {
+        reject(error);
+      };
+    
+      img.src = url;
+    });}
 
 }

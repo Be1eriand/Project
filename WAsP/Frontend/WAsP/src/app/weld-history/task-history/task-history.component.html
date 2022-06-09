@@ -1,11 +1,14 @@
 <mat-spinner *ngIf="!hideSpinner"></mat-spinner>
 
 
-<mat-expansion-panel >
+<mat-expansion-panel>
   <mat-expansion-panel-header>
     <mat-panel-title>
       Task ID: {{ task.TaskID }}
     </mat-panel-title>
+    <mat-panel-description *ngIf="noData">
+      <p>No weld data available for this Task ID</p>
+    </mat-panel-description>     
   </mat-expansion-panel-header>
 
   <div *ngIf="!noData">
@@ -94,7 +97,7 @@
         <td mat-cell *matCellDef="let r"> {{ r[0].RunNo }} </td>
       </ng-container>
       <ng-container matColumnDef="Date">
-        <th mat-header-cell *matHeaderCellDef> Start Time </th>
+        <th mat-header-cell *matHeaderCellDef> Weld Date</th>
         <td mat-cell *matCellDef="let r"> {{ r[0].Date }} </td>
       </ng-container>
       <ng-container matColumnDef="Duration">
@@ -110,38 +113,38 @@
         <td mat-cell *matCellDef="let r"> {{ r[0].MachineID }} </td>
       </ng-container>
       <ng-container matColumnDef="CurrentActual">
-        <th mat-header-cell *matHeaderCellDef> Current Range (A)</th>
+        <th mat-header-cell *matHeaderCellDef> Current Range </th>
         <td mat-cell *matCellDef="let r">{{ r[0].Current_Min | number: '1.2-2' }} - {{ r[0].Current_Max | number: '1.2-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="CurrentAvg">
-        <th mat-header-cell *matHeaderCellDef> Current Avg (A)</th>
+        <th mat-header-cell *matHeaderCellDef> Current Avg </th>
         <td mat-cell *matCellDef="let r">{{ r[0].Current_Sum / r[0].Records| number: '1.2-2' }}</td>
       </ng-container>
       <ng-container matColumnDef="VoltageActual">
-        <th mat-header-cell *matHeaderCellDef> Voltage Range (V) </th>
+        <th mat-header-cell *matHeaderCellDef> Voltage Range </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].Voltage_Min | number: '1.2-2' }} - {{ r[0].Voltage_Max | number: '1.2-2' }}
         </td>
       </ng-container>
       <ng-container matColumnDef="VoltageAvg">
-        <th mat-header-cell *matHeaderCellDef> Voltage Avg (V) </th>
+        <th mat-header-cell *matHeaderCellDef> Voltage Avg </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].Voltage_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="TravelSpeedActual">
-        <th mat-header-cell *matHeaderCellDef> Travel Speed Range (mm/min)</th>
+        <th mat-header-cell *matHeaderCellDef> Travel Speed Range </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].TravelSpeed_Min | number: '1.2-2' }} - {{ r[0].TravelSpeed_Max | number:
           '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="TravelSpeedAvg">
-        <th mat-header-cell *matHeaderCellDef> Travel Speed Avg (mm/min)</th>
+        <th mat-header-cell *matHeaderCellDef> Travel Speed Avg </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].TravelSpeed_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <ng-container matColumnDef="HeatInputActual">
-        <th mat-header-cell *matHeaderCellDef> Heat Input Range (Kj/mm) </th>
+        <th mat-header-cell *matHeaderCellDef> Heat Input Range </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].HeatInput_Min | number: '1.2-2' }} - {{ r[0].HeatInput_Max | number: '1.2-2'}} </td>
       </ng-container>
       <ng-container matColumnDef="HeatInputAvg">
-        <th mat-header-cell *matHeaderCellDef> Heat Input Avg (Kj/mm) </th>
+        <th mat-header-cell *matHeaderCellDef> Heat Input Avg </th>
         <td mat-cell *matCellDef="let r"> {{ r[0].HeatInput_Sum / r[0].Records | number: '1.2-2' }} </td>
       </ng-container>
       <tr mat-header-row *matHeaderRowDef="actualColumns"></tr>
