@@ -1,4 +1,5 @@
 import os
+from pprint import pprint
 import sys
 from pathlib import Path
 from asgiref.sync import async_to_sync
@@ -6,7 +7,8 @@ from channels.layers import get_channel_layer
 
 from pipelines.pipe import Pipe
 
-WAsPdir = os.path.join(Path.cwd(), 'Backend', 'WAsP')
+WAsPdir = os.path.join(Path.cwd(), 'WAsP')
+pprint(Path.cwd())
 sys.path.append(WAsPdir)
 
 os.environ['DJANGO_SETTINGS_MODULE'] =  'WAsP.settings'
