@@ -9,6 +9,12 @@ Angular 13.3.0
 Redis (Installation for Redis see https://redis.io/docs/getting-started/installation/install-redis-on-windows/)
 SQL Server 2019 (SQL Server 2019 Developer or SQL Express Edition can be used for testing purposes)
 
+If these software are not installed WAsP will not function or be able to run
+
+*** Note ***
+WAsP will perform the best in a Docker or Kubernetes container using a Linux Environment. SQL Server can be run in a Windows Server Environment separate to the Docker or Kubernetes container.
+
+
 *** Python Packages ***
 See Requirements.txt for packages to be installed
 
