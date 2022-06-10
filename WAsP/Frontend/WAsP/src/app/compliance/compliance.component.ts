@@ -97,7 +97,7 @@ export class ComplianceComponent implements OnInit {
                                   {image: await this.getBase64ImageFromURL(
                                     "../../assets/smartfab_logo.png"), 
                                     width: 100,
-                                    absolutePosition: {x: 700, y: 35}},
+                                    absolutePosition: {x: 700, y: 35}},  // top right corner
                                   html
                                 ],
                                 styles: {
@@ -120,7 +120,7 @@ export class ComplianceComponent implements OnInit {
     pdfMake.createPdf(documentDefinition).download("Smart Fabrication Weld Compliance Report.pdf");
   }
 
-  // Function to parse url to suitable format for pdfMake
+  // Function to parse image url to suitable format for pdfMake
   getBase64ImageFromURL(url) {
     return new Promise((resolve, reject) => {
       var img = new Image();

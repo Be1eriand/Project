@@ -34,8 +34,8 @@ export class TravelSpeedComponent implements OnInit {
       else {
         this.lineChart = this.chartsService.lineChartMinMaxOptions(this.title, this.variable, this.task);
       }
-      this.gaugeChart = this.chartsService.gaugeChartsOptions(this.title, this.variable, this.task);
-      this.pieChart = this.chartsService.pieChartOptions(this.title, this.variable, this.task);
+      this.gaugeChart = this.chartsService.gaugeChartsOptions(this.variable, this.task);
+      this.pieChart = this.chartsService.pieChartOptions(this.variable, this.task);
       this.boxplot = this.chartsService.boxplotOptions(this.title, this.variable, this.task);
 
     }

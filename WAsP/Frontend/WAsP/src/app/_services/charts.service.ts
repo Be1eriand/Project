@@ -48,7 +48,7 @@ export class ChartsService {
       title: {
         left: 'center',
         text: 'Realtime Weld Data',
-        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+        subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'axis'
@@ -58,7 +58,7 @@ export class ChartsService {
         bottom: '30%',
       },
       xAxis: {
-        name: 'Date Time (ACST)',
+        name: 'Date Time',
         nameLocation: 'middle',
         nameGap: 35,
         boundaryGap: true,
@@ -152,7 +152,7 @@ export class ChartsService {
       title: {
         left: 'center',
         text: 'Realtime Weld Data',
-        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+        subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'axis'
@@ -162,7 +162,7 @@ export class ChartsService {
         bottom: '30%',
       },
       xAxis: {
-        name: 'Date Time (ACST)',
+        name: 'Date Time',
         nameLocation: 'middle',
         nameGap: 35,
         boundaryGap: true,
@@ -217,7 +217,7 @@ export class ChartsService {
   };
 
   // Gauge Chart - Percenatge of total weld that was in WPS range
-  gaugeChartsOptions(title, variable, task) {
+  gaugeChartsOptions(variable, task) {
     this.gaugeChart = {
       toolbox: {
         show: true,
@@ -231,7 +231,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Within Range Percentage',
-        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+        subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       {
         text: 'Percentage of total weld duration that was in WPS range',
@@ -310,7 +310,7 @@ export class ChartsService {
   };
 
   // Pie Chart - Showing Weld Alert distribution (over, under, in range)
-  pieChartOptions(title, variable, task) {
+  pieChartOptions(variable, task) {
     this.pieChart = {
       toolbox: {
         show: true,
@@ -327,7 +327,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Alert Distribution',
-        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+        subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
         trigger: 'item'
@@ -394,7 +394,7 @@ export class ChartsService {
         top: '8%',
         left: 'center',
         text: 'Weld Boxplot',
-        subtext: title + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
+        subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       {
         text: 'Weld distribution displaying data quartiles and averages',
@@ -431,7 +431,7 @@ export class ChartsService {
       grid: {
         bottom: '15%',
         right: '10%',
-        left: '10%',
+        left: '15%',
         top: '30%'
       },
       xAxis: {
@@ -447,7 +447,9 @@ export class ChartsService {
       },
       yAxis: {
         type: 'value',
-        name: variable,
+        name: title,
+        nameLocation: 'middle',
+        nameGap: 35
       },
 
       series: [
@@ -508,7 +510,7 @@ export class ChartsService {
         }
       },
       legend: {
-        data: ['Out of Range Duration (min)'],
+        data: ['Out of Range Duration (mins)'],
         top: '15%'
       },
       color: '#ff6028',
@@ -537,7 +539,7 @@ export class ChartsService {
                 (task[2]['TravelSpeed_Undertime'] + task[2]['TravelSpeed_Overtime']).toFixed(2),
                 (task[2]['HeatInput_Undertime'] + task[2]['HeatInput_Overtime']).toFixed(2)
               ],
-              name: 'Out of Range Duration (min)'
+              name: 'Out of Range Duration (mins)'
             },
 
           ]
@@ -591,7 +593,7 @@ export class ChartsService {
       yAxis: [
         {
           type: 'value',
-          name: 'Duration (min)',
+          name: 'Duration (mins)',
         }
       ],
       series: [
