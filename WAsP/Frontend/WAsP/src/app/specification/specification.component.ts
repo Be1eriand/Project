@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import {map, startWith} from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 
 import { AlertService, DataService } from '@app/_services';
 
@@ -52,7 +52,6 @@ export class SpecificationComponent implements OnInit {
   ]
 
   constructor(
-    private fb: FormBuilder,
     private dataService: DataService,
     private alertService: AlertService,
     private specificationService: SpecificationService,
@@ -91,7 +90,7 @@ export class SpecificationComponent implements OnInit {
       
       this.formLoaded = true;
     }
-    
+
   }
 
   private _filter(value: string): Spec[] {
@@ -179,17 +178,27 @@ export class SpecificationComponent implements OnInit {
     while (this.forms.length) {
       let popped = this.forms.pop();
       let spec = popped.value['WPS_No'];
-      let run = popped.value['WPS_No'];
+      let run = popped.value['Run_No'];
       this.specificationService.updateSpecRun(spec, run, popped.value).subscribe({
-        next: () =>{
-          this.alertService.success('Succesfully Saved!');
-        },
-
         error: error => {
           this.alertService.error(error);
           this.SpecLoaded = false;
-          }
+          },
+        complete: () => {
+          this.alertService.success('Succesfully Saved!');
+        }
       })
+      this.updateSpecificationFromForm(popped.value);
+    }
+
+    this.specificationService.getSpec
+
+  }
+
+  updateSpecificationFromForm(popped) {
+
+    for (var key in popped) {
+      this.Specifications[popped['Run_No']-1][key] = popped[key];
     }
 
   }
