@@ -23,11 +23,13 @@
                     <mat-card-title>Legend</mat-card-title>
                     <mat-card-content>
                         <div *ngFor="let line of lines">
-                            <label class="label-line-colour">{{line.line}}</label>
-                            <input  [(colorPicker)]="line.colour" 
-                                    [style.background]="line.colour"
-                                    class="input-colour"
-                            />
+                            <div *ngIf="line.line">
+                                <label class="label-line-colour">{{line.line}}</label>
+                                <input  [(colorPicker)]="line.colour" 
+                                        [style.background]="line.colour"
+                                        class="input-colour"
+                                />
+                            </div>
                         </div>
                     </mat-card-content>
                 </mat-card>      
