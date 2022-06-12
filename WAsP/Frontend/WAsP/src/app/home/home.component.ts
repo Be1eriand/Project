@@ -18,7 +18,7 @@ export class HomeComponent {
         private router: Router) {
         this.user = this.accountService.userValue;
     }
-    logout() {
+   logout() {
         this.accountService.logout();
     }
 }
