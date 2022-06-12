@@ -1,0 +1,62 @@
+
+canvas.chart {
+    background-color: #EEEEEE;
+    border: 1px solid rgb(151, 151, 151);
+}
+
+tr.clickable-row {
+    cursor: pointer;
+}
+
+tr.clickable-row:hover {
+    background-color: #cce5ff !important;
+}
+
+.inactive-machine {
+    color: darkgray;
+    background-color: lightgrey;
+    border: 1px solid rgb(151, 151, 151);
+}
+
+/* Dashboard Page CSS */
+
+.db-period {
+    font-size: 1.2em;
+}
+
+.db-period a:hover {
+    text-decoration: underline;
+}
+
+.filter-dropdown {
+    min-width: 250px !important;
+    max-height: 300px !important;
+    overflow-y: auto;
+}
+
+input[type=search]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}
+
+.alert-main-table {
+    height: 100%;
+}
+
+.alert-main-filters {
+    width: 100%;
+}
+
+.filter-form {
+    min-width: 11em;
+}
+
+.info-header {
+    display: flex;
+    align-items: baseline;
+    font-variant: small-caps;
+}
+
+.db-info-card {
+    min-width: 100px !important;
+    min-height: 100px !important;
+}
