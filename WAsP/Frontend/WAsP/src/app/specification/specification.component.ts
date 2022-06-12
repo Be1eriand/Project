@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, FormArray, FormBuilder} from '@angular/forms';
-import { Observable, Subscription } from 'rxjs';
+import {FormControl, FormGroup, FormBuilder} from '@angular/forms';
+import { Subscription } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 
 import { AlertService, DataService } from '@app/_services';
@@ -76,7 +76,6 @@ export class SpecificationComponent implements OnInit {
 
   SpecOnKey(event: Event) {
     const target = event.target as HTMLTextAreaElement;
-    console.log(target.value);
 
     this.SpecLoaded = false;
     this.Editing = false;
@@ -92,8 +91,7 @@ export class SpecificationComponent implements OnInit {
       
       this.formLoaded = true;
     }
-
-    console.log(this.Specifications);
+    
   }
 
   private _filter(value: string): Spec[] {
@@ -226,12 +224,7 @@ export class SpecificationComponent implements OnInit {
         });
 
       if (this.forms.length < this.Specifications.length){
-        this.forms.push(form);
-        this.formSubs.push(form.valueChanges.subscribe( x => {
-            console.log('This works unbelievably')
-          })
-        );
-      
+        this.forms.push(form);      
       }
     }
 
