@@ -28,11 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u=(4vu@-g@y)(lo34byv4@5q1az#!&9c-*1&3#wms_&tpx!*1o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-<<<<<<< HEAD
-DEBUG = True 
-=======
 DEBUG = True
->>>>>>> LogoHomeAndImageUpdate
 
 ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1'] 
 
