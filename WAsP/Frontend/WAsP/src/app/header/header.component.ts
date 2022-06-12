@@ -1,38 +1,47 @@
 
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { SideBarComponent } from '@app/side-bar/side-bar.component';
 import { User } from '@app/_models/user';
 import { AccountService } from '@app/_services/account.service';
 import { environment } from '@environments/environment';
-import * as EventEmitter from 'events';
+
+
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.sass']
 })
 export class HeaderComponent implements OnInit {
-  @Output() sideBarToggled = new EventEmitter();
-  menuStatus:boolean = false;
-  [x: string]: any;
-    opened = false;
+  
+    isMenuOpened = true; // isMENUHTSOpened
     title = 'WAsP';
     user: User;
     environment = environment;
+  
 
-   constructor(private accountService: AccountService, 
-                
-                ) {
-        this.accountService.user.subscribe(x => this.user = x);
+
+    onToolbarMenuToggle(){
+        console.log('On Toolbar toggled', this.isMenuOpened); //not sure ?? fix 
+        this.isMenuOpened= !this.isMenuOpened;
+        //this.isMenuOpened.emit(this.isMenuOpened);
+
     }
+   constructor(private accountService: AccountService) {
+        this.accountService.user.subscribe(x => this.user = x);
+          }
+  
+    
 
-  ngOnInit(): void {
+    ngOnInit(): void {
 
-  }
-  SideNavToggle(){
-    this.menuStatus = !this.menuStatus;
-    this.sideBarToggled.emit(this.menuStatus.toString());
-  }
-  logout() {
+    }
+  
+    logout() {
         this['accountService'].logout();
     }
+   
+    // headerClick(){
+    //     this.accountService.sendMenuEvent();
+    // }
 
 }

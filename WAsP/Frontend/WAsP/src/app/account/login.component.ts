@@ -4,8 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { AccountService, AlertService } from '@app/_services';
 
-@Component({ templateUrl: 'login.component.html',
-             styleUrls: ['./layout.component.sass']  })
+@Component({ selector: 'app-account',
+templateUrl: 'login.component.html',
+             styleUrls: ['./login.component.sass']  })
 export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
@@ -45,7 +46,7 @@ export class LoginComponent implements OnInit {
             .subscribe({
                 next: () => {
                     // get return url from query parameters or default to home page
-                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/home';
                     this.router.navigateByUrl(returnUrl);
                 },
                 error: error => {

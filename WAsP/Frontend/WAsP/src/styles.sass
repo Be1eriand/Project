@@ -28,15 +28,31 @@ $shadows: #161616
 $OLDboxHeader: #374785
 $OLDBlue: #5364A8
 //feautered colours 
+$gradOldboxHeader: #292e40
 $SidebarBlue: #4b4276
 $SideBarBodyBackgroundcolor: #f3f5f9
 $SideBarHover: #594f8d
 $SideBarA: #fff
-//Paddings 
+//Paddings margins 
 $TextSidePadding: 1rem
 $SidePadding: 16px
 $Toppadding: 50px
 $BottomPadding: 50px
+
+//side bar sizes for open and closed 
+$sidebarWidthOpen: 190px
+$sidebarWidthClosed: 60px
+
+//Main Content LEFT sizes for open and closed side bar  
+$mainContentLeftOpen: calc($sidebarWidthOpen + 1rem)
+$mainContentLeftClosed: calc($sidebarWidthClosed + 1rem)
+
+//main Content WIDTH calculations for open and closed side bar 
+$mainContentWidthOpen: calc(100% - $mainContentLeftOpen)
+$mainContentWidthClosed: calc(100% - $mainContentLeftClosed)
+
+// Header size 
+$headerHeightSize: 5rem
 
 // reset settings from last project and defaults.  
 *
@@ -47,11 +63,13 @@ $BottomPadding: 50px
 
 html
   height: 100%
+  // width: 100%
 
 body
   min-height: 100%
   margin: 0
   margin-bottom: 0
+  //max-width: 100%
 
 // p
 //   margin: 0
@@ -60,10 +78,79 @@ body
 
 // images and logos 
 
-.side-img-top-logo
-  max-width: 11rem
-  margin-bottom: 20px
-  margin-left: 5px
-
 .footer-img-logo
   height: 2em
+
+.app-header
+  position: fixed
+  width: 100vh
+  top: 0px
+  height: $headerHeightSize
+  z-index: 2
+
+.spacer-top
+  height: calc($headerHeightSize + 2rem)
+  align-items: center
+  justify-content: center
+  min-width: 100% !important
+  top: 0 !important
+
+.spacer-bottom
+  height: 4rem
+  align-items: center
+  justify-content: center!important
+  min-width: 100% !important
+  bottom: 0 !important
+
+.nav-list
+  height: 100%
+  padding: 0
+  margin-bottom: 0
+
+// open sidebar 
+.main-content
+  position: absolute
+  top: $headerHeightSize
+  z-index: 1
+  width: $mainContentWidthOpen
+  left: $mainContentLeftOpen
+
+.app-side-bar
+  position: fixed
+  left: 0rem
+  width: $sidebarWidthOpen // the org size when toggled
+  min-height: 100vh
+  z-index: 2
+  box-shadow: 0px 0px 25px $waspHeadBlack
+  background-color: $OLDboxHeader
+  overflow: hidden
+  white-space: nowrap
+
+// Closed sidebar 
+.main-content-closed
+  position: absolute
+  top: $headerHeightSize
+  z-index: 1
+  width: $mainContentWidthClosed
+  left: $mainContentLeftClosed
+
+.app-side-bar-closed
+  position: fixed
+  left: 0rem
+  width: $sidebarWidthClosed
+  min-height: 100vh
+  z-index: 2
+  box-shadow: 0px 0px 35px $waspHeadBlack
+  background-color: $OLDboxHeader
+  overflow: hidden
+  white-space: nowrap
+
+// @media only screen and ( max-width:750  )
+// .app-side-bar
+//   position: fixed
+//   left: 0rem
+//   width: 250px
+//   //border: 5px dashed red
+//   height: calc( 100vh - 6rem - 2rem)
+//   //min-height: 100vh
+//   z-index: 2

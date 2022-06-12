@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -11,6 +11,9 @@ import { User } from '@app/_models';
 export class AccountService {
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
+    private subject = new Subject<any>();//Testing sharing subject for click for side bar may need to fix or delete 
+    private isMenuOpened = new Subject<any>();//Testing sharing subject for click for side bar may need to fix or delete 
+
 
     constructor(
         private router: Router,
@@ -53,6 +56,12 @@ export class AccountService {
                 }
                 return x;
             }));
+    }
+    sendClickEvent(){
+        this.subject.next(Subject);//Testing sharing subject for click for side bar may need to fix or delete 
+    }
+    getClickEvent():Observable<any>{
+        return this.subject.asObservable();//Testing sharing subject for click for side bar may need to fix or delete 
     }
 
 }

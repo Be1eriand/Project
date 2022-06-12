@@ -1,14 +1,18 @@
 <div class="container-fluid g-0">
-  <app-header (SideNavToggle)="SideNavToggle = $event"></app-header>
+  <app-header (headerEventSide)="receivedEvent($event)"></app-header>
 
   <div class="spacer-top"></div>
 
-  <div class="main-content">
+  <div
+    class="main-content"
+    [class.main-content]="isMenuOpened"
+    [class.main-content-closed]="!isMenuOpened"
+  >
     <router-outlet class="display-area">
       <app-side-bar
         class="app-side-bar"
-        [SideNavStatus]="sideNavStatus"
-        [ngClass]="{ 'app-side-nav-open': sideNavStatus }"
+        [class.app-side-bar]="isMenuOpened"
+        [class.app-side-bar-closed]="!isMenuOpened"
       >
       </app-side-bar>
     </router-outlet>

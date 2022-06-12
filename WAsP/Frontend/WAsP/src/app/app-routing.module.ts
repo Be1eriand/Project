@@ -12,7 +12,7 @@ const weldHistoryModule = () => import('./weld-history/weld-history.module').the
 const complianceModule = () => import('./compliance/compliance.module').then(x => x.ComplianceModule);
 
 const routes: Routes = [
-    { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+    { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
     //{ path: 'dashboard', component: DashboardComponent },
     { path: 'account', loadChildren: accountModule },
     { path: 'users', loadChildren: usersModule, canActivate: [AuthGuard]  },
@@ -22,7 +22,7 @@ const routes: Routes = [
     { path: 'compliance', loadChildren: complianceModule, canActivate: [AuthGuard]  },
 
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: '/home' }
 ];
 
 @NgModule({

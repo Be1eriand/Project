@@ -1,24 +1,23 @@
 <div class="header-wasp navbar-expand" data-position="fixed">
-  <div class="side-nav-button">
-    <!--<i class="fa-solid fa-bars"></i>-->
-    <button
-      class="btn-home"
-      mat-fab
-      type="button"
-      mat-button
-      color="#FCFBFB"
-      (click)="SideNavToggle()"
-    >
-      <mat-icon>home</mat-icon>
-    </button>
+  <div class="img-pos">
+    <a routerLink="/home">
+      <img
+        class="side-img-top-logo"
+        src="{{ environment.static }}WAsPlatform logo.png"
+    /></a>
   </div>
+
   <div class="home-text-1">
-    <h1><span>W</span>eld <span>As</span>surance <span>P</span>latform</h1>
+    <a routerLink="/home"
+      ><h1>
+        <span>W</span>eld <span>As</span>surance <span>P</span>latform
+      </h1></a
+    >
   </div>
 
   <!-- User button  -->
-  <div class="profile" *ngIf="user">
-    <div class="dropdown show m-4">
+  <div class="profile">
+    <div class="profile-div dropdown show m-4" *ngIf="user">
       <button
         mat-raised-button
         class="btn-user btn-warning text-center"
@@ -28,17 +27,17 @@
         aria-haspopup="true"
         aria-expanded="false"
       >
-        <i class="bi bi-person-circle"></i>
-        <span style="font-weight: bold"> {{ user.username }}</span>
+        <i class="person-circle-icon bi bi-person-circle"></i>
+        <span class="userName"> {{ user.username }}</span>
       </button>
       <div
-        class="dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center"
+        class="drop-text dropdown-menu dropdown-menu-right filter-dropdown p-1 text-center"
         aria-labelledby="dropdownUserButton"
       >
-        <div class="bg-dark rounded text-white">
-          <small> <span class="acc-font">Your Account</span></small>
+        <div class="drop-text">
+          <span class="acc-font">Your Account</span>
         </div>
-        <a class="dropdown-item" href="/settings">Settings</a>
+        <a class="dropdown-item" routerLink="/home">Home</a>
         <a class="dropdown-item" (click)="logout()">Logout</a>
       </div>
     </div>

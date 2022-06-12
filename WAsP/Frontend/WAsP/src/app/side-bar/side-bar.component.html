@@ -1,36 +1,47 @@
-side-bar works!
 <div class="side-bar-content">
-  <ul class="nav-list" [ngClass]="{ 'nav-list-open': sideNavStatus }">
+  <div class="side-nav-button">
+    <!--<i class="fa-solid fa-bars"></i>-->
+    <button class="btn-home" mat-fab type="button" mat-button color="#FCFBFB">
+      <mat-icon (click)="clickMe()">subject</mat-icon></button
+    ><span>Menu</span>
+  </div>
+  <ul class="nav-list">
     <li class="nav-list-item">
-      <i class="icon fas fa-home"></i>
-      <span><a href="#">Home</a></span>
+      <a routerLink="/home"><i class="icon fas fa-home"></i></a>
+      <span><a routerLink="/home">Home</a></span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-hourglass-half"></i>
-      <span><a href="#">Realtime Weld</a></span>
+      <a routerLink="/realtime/dashboard"
+        ><i class="icon fas fa-hourglass-half"></i
+      ></a>
+      <span><a routerLink="/realtime/dashboard">Realtime Weld</a></span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-edit"></i>
-      <span><a href="#">Weld History</a></span>
+      <a routerLink="//weld-history"><i class="icon fas fa-edit"></i></a>
+      <span><a routerLink="//weld-history">Weld History</a></span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-blog"></i>
-      <span><a href="#">Compliance</a> </span>
+      <a routerLink="/compliance"><i class="icon fas fa-blog"></i></a>
+      <span><a routerLink="/compliance">Compliance</a> </span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-project-diagram"></i>
-      <span><a href="#">Task Tracking</a></span>
+      <a routerLink="/compliance/TaskDashboard"
+        ><i class="icon fas fa-project-diagram"></i
+      ></a>
+      <span><a routerLink="/compliance/TaskDashboard">Task Tracking</a></span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-paste"></i>
-      <span><a href="#">Specifications</a></span>
+      <a routerLink="/specification"><i class="icon fas fa-paste"></i></a>
+      <span><a routerLink="/specification">Specifications</a></span>
     </li>
     <li class="nav-list-item">
-      <i class="icon fas fa-user"></i>
-      <span><a href="#">Account Access </a></span>
+      <a routerLink="/account/login"> <i class="icon fas fa-user"></i></a>
+      <span><a routerLink="/account/login">Account Access </a></span>
     </li>
   </ul>
 </div>
+<!--stretched link not working -->
+
 <!--end of side-bar-content -->
 
 <!--<mat-sidenav-container class="sidenav-container">

@@ -32,6 +32,8 @@ import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { MatListModule } from '@angular/material/list';
+import { LoginComponent } from './account/login.component';
+import { LoginOutComponent } from './login-out/login-out.component';
 
 
 @NgModule({
@@ -61,6 +63,8 @@ import { MatListModule } from '@angular/material/list';
         FooterComponent,
         HeaderComponent,
         SideBarComponent,
+        LoginOutComponent,
+        
     ],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

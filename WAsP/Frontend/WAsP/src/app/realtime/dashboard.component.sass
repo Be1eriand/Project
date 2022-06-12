@@ -1,17 +1,24 @@
 @import "../../styles"
-  
+
 .realtime-widget
   width: 400px
   height: 300px
 
 .dashboard
-  top: 0px
+
+  display: flex
+  flex-direction: column
+  margin-top: $headerHeightSize
   left: 0px
-  width: 97% //smaller due to the padding
+  width: 100% //smaller due to the padding
+  //need to sset up grid with @media for responsiviness fix 
 
 .dashboard-heading
   text-align: center
   margin-bottom: 8px
+  box-shadow: 0px 1px 2px
+  width: 100%
+  font-size: 2rem
 
 .Variable-Dropdown
   width: 150px
@@ -24,4 +31,5 @@
 
 .display-box
   width: 300px
-
+  box-shadow: 0px 1px 2px
+  margin: 5px

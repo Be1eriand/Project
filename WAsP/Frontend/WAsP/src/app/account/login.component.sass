@@ -1,0 +1,194 @@
+@import "../../styles"
+
+.background-testing
+    position: fixed
+    background: linear-gradient(50deg, $OLDboxHeader, $waspHeadBlack)
+    height: 100%
+    width: 100%
+    min-height: 100vh
+    min-width: 100vw
+    //margin: 25%
+    // top: 0
+    // bottom: 0
+    left: $sidebarWidthOpen
+
+.login-card-container
+    border: 5px solid $waspBoarderWhite
+    min-height: 50vh
+    min-width: 40vw
+    display: flex
+    flex-direction: column
+    position: fixed
+    margin-top: calc( $headerHeightSize + 3rem )// NEEDS TO BE FIXed once fixed layout issues
+    //margin-top: $headerHeightSize
+    background-color: $bgKhakiLight
+    margin-left: 20%
+    margin-right: auto
+    margin-bottom: atuo
+
+// .centerDiv
+//     display: flex // not responsive due to page size issues to do with layout????
+//     text-align: center
+//     width: 100%
+//     position: relative
+
+.user-icon
+
+    background: linear-gradient(60deg, $bgKhakiLight, $bgKhakiDark)
+    color: $waspLetterOrange
+    //$waspBoarderWhite
+    border-radius: 50%
+    width: 155px
+    height: 150px
+    text-align: center
+    border: 5px solid $waspBoarderWhite
+    margin-top: -70px
+    // IMPOrtaint FIX position to be center with responsive sizes 
+        // currently 10/6/22 set to be center at 67% screen size 
+    //margin-left: 25% // needs fixing with layout issue to be center in the box
+    box-shadow: 0px 3px 5px 4px $gradOldboxHeader, 0px 4px 5px 2px $waspBoarderWhite
+
+    // other settings in a different layout** need fixing 
+    margin-left: -20px
+    //margin: 0px auto
+    //position: absolute
+    justify-content: center
+    align-items: center
+
+    .icon
+        height: 100px
+        width: 100px
+        text-align: center
+        margin-top: 10px
+        text-shadow: 3px 3px 3px $waspHeadBlack
+
+.title
+    color: $waspBoarderWhite
+    //border: 3px dashed $waspBoarderWhite
+    justify-self: center
+    align-items: center
+    height: 5rem
+    display: flex
+    flex-direction: column
+    font-size: 1.5rem
+    font-weight: $xbold-weight
+    margin: 0.15rem
+    letter-spacing: 0.15rem
+    margin-top: 1.5rem
+    margin-bottom: 1rem
+    span
+        justify-content: space-evenly
+
+// reused css for home Text 
+.home-text-1
+    color: $waspBoarderWhite
+    display: flex
+    justify-content: center
+    justify-self: center
+    align-items: center
+    font-size: 1.5rem
+    margin-top: 1rem
+    text-shadow: 3px 3px 3px $waspHeadBlack
+    h1
+        font-size: 25px
+
+    span
+        color: $waspLetterOrange
+        font-weight: $semibold-weight
+        margin: 0.15rem
+        justify-content: space-evenly
+
+a
+    text-decoration: none
+    color: $waspBoarderWhite
+
+// .card-header // same class as login ?? had 2 sep classes joined and will need to check if this is needed for some reason
+//     border: 50px dashed purple
+
+.card-body
+    border: 3px solid $waspBoarderWhite
+    border-radius: 6px
+    padding: auto
+    font-size: 1.5rem
+    font-weight: $medium-weight
+    justify-content: center
+    justify-self: center
+    align-items: center
+    margin-top: 1rem
+    //display: inline
+
+.form-group
+
+    border: 5px solid $OLDboxHeader
+    border-radius: 5px
+    //background-color: $OLDboxHeader
+    //background: linear-gradient(30deg, $OLDboxHeader, $waspHeadBlack)
+    justify-content: center
+    justify-self: center
+    align-items: center
+    margin: 1rem
+    padding: 1rem 1rem
+    min-width: 60%
+
+    label
+        font-size: 2rem
+        color: $waspBoarderWhite
+        display: flex
+        justify-content: center
+        justify-self: center
+        align-items: center
+        text-shadow: 0px 3px 3px $waspHeadBlack
+        margin-bottom: 1rem
+
+    .login-btn
+        min-width: 20%
+        max-width: 30%
+        min-height: 2rem
+        font-size: 1.5rem
+        color: $waspBoarderWhite
+        text-shadow: 0px 3px 3px $waspHeadBlack // shadow to the text only
+        display: block
+        margin: 0 auto
+        border-radius: 6px
+        box-shadow: 0px 3px 3px $waspHeadBlack
+        background-color: $OLDboxHeader
+        //$bgKhakiDark
+        &:hover
+            //border: 2px solid $OLDboxHeader
+            background-color: $waspLetterOrange
+            color: $waspHeadBlack
+            text-shadow: 0px 0px 0px $waspHeadBlack
+            font-weight: $medium-weight
+
+input[type="text"]
+    display: block
+    margin: 0 auto
+    font-size: 1rem
+    font-weight: $medium-weight
+    //border: 2px solid $waspHeadBlack
+    box-shadow: 0px 3px 3px $waspHeadBlack
+
+[type="password"]
+
+    display: block
+    margin: 0 auto
+    //border: 2px solid $waspHeadBlack
+    box-shadow: 0px 3px 3px $waspHeadBlack
+.form-control
+    //border: 3px solid yellow
+    min-width: 20%
+    max-width: 25%
+    padding-left: .4rem
+
+.invalid-feedback
+    //border: 3px solid purple
+
+// .login
+//     color: $standUpBgSlideTen
+//     border: 3px dotted $bgKhakiLight
+
+.spinner-border
+    //border: 3px dotted yellow
+
+.card-content-part
+    //border: 3px dashed green

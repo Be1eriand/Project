@@ -5,16 +5,21 @@ import { CommonModule } from '@angular/common';
 import { AccountRoutingModule } from './account-routing.module';
 import { LayoutComponent } from './layout.component';
 import { LoginComponent } from './login.component';
+import { LoginOutComponent } from '@app/login-out/login-out.component';
+
 
 @NgModule({
     imports: [
         CommonModule,
         ReactiveFormsModule,
-        AccountRoutingModule
+        AccountRoutingModule,
+       
     ],
     declarations: [
         LayoutComponent,
         LoginComponent,
+       
+        //LoginOutComponent,
     ]
 })
 export class AccountModule { }

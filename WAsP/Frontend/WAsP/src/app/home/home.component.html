@@ -1,35 +1,82 @@
-<!--Center Content with Cards * removed home container after Flex was added -->
-
 <div class="card-container">
-  <div class="card">
-    <h2>Live Welds</h2>
-    <p>
-      <a routerLink="/realtime/dashboard/" style="text-decoration: none">
-        <img class="image-cards" src="{{ environment.static }}welderpic.png" />
-      </a>
-    </p>
-    <a
-      href="http://localhost:4200/realtime/dashboard"
-      class="btn btn-primary stretched-link"
-      >Monitor live welds with job ID, employee, machine…</a
-    >
+  <div class="card card-1">
+    <div class="icons">
+      <i class="icon fas fa-hourglass-half"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="/realtime/dashboard" class="stretched-link">
+        Realtime Weld</a
+      >
+    </div>
+    <!--<div class="More info..">More in info..</div> -->
+    <div class="info-text">
+      <span>Monitor live welds with Task ID, employee, machine…</span>
+    </div>
   </div>
+  <!-- end of REAL TIME -->
+
   <div class="card">
-    <h2>Weld History</h2>
-    <!--C:\NewSmartFabDB\Project\WAsP\Frontend\WAsP\src\{{environment.static}}\weld histroy WAsPcolor.png 
-    http://localhost:4200/weld-history-->
-    <p>
-      <a routerLink="/weld-history/" style="text-decoration: none">
-        <img
-          class="image-cards"
-          src="{{ environment.static }}weld histroy WAsPcolor.png"
-        />
-      </a>
-    </p>
-    <a
-      href="http://localhost:4200/weld-history"
-      class="btn btn-primary stretched-link"
-      >View work history with job ID, employee, machine…</a
-    >
+    <div class="icons">
+      <i class="icon fas fa-edit"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="//weld-history" class="stretched-link">Weld History</a>
+    </div>
+    <div class="info-text">
+      <span>View work history with Task ID, employee, machine…</span>
+    </div>
   </div>
+  <!-- end of history -->
+  <div class="card">
+    <div class="icons">
+      <i class="icon fas fa-blog"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="/compliance" class="stretched-link">Compliance</a>
+    </div>
+    <div class="info-text">
+      <span> View compliance guidelines for contract ID…</span>
+    </div>
+  </div>
+  <!-- end of compliance-->
+  <div class="card">
+    <div class="icons">
+      <i class="icon fas fa-project-diagram"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="/compliance/TaskDashboard" class="stretched-link"
+        >Task Tracking</a
+      >
+    </div>
+    <div class="info-text">
+      <span>Monitor projects, work orders and tasks…</span>
+    </div>
+  </div>
+  <!-- end of Task Tracking -->
+  <div class="card">
+    <div class="icons">
+      <i class="icon fas fa-paste"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="/specification" class="stretched-link">Specifications</a>
+    </div>
+    <div class="info-text">
+      <span>WAsP Specifications and Standard Operations Procedures …</span>
+    </div>
+  </div>
+  <!-- end of Specifications -->
+  <div class="card">
+    <div class="icons">
+      <i class="icon fas fa-user"></i>
+    </div>
+    <div class="titles">
+      <a routerLink="/account/login" class="stretched-link">Account Access </a>
+    </div>
+    <div class="info-text">
+      <span>
+        COMING SOON - Add and register Users, Machines work orders, task …</span
+      >
+    </div>
+  </div>
+  <!-- end of Account Access -->
 </div>
