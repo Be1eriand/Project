@@ -76,11 +76,12 @@ export class SpecificationComponent implements OnInit {
 
   SpecOnKey(event: Event) {
     const target = event.target as HTMLTextAreaElement;
-    console.log(target);
+    console.log(target.value);
 
     this.SpecLoaded = false;
     this.Editing = false;
     if (target.value !== '') {
+      this.Specifications = [];
       this.loadSpecification(target.value);
 
       this.forms = [];
