@@ -22,7 +22,7 @@ const routes: Routes = [
     { path: 'compliance', loadChildren: complianceModule, canActivate: [AuthGuard]  },
 
     // otherwise redirect to home
-    { path: '**', redirectTo: '' }
+    { path: '**', redirectTo: '/home' }
 ];
 
 @NgModule({

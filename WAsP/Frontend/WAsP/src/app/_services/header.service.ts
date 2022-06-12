@@ -1,3 +1,8 @@
+
+
+
+/*import { AccountService, AlertService } from '@app/_services';
+app services may not work beed to check again ?? */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -7,12 +12,10 @@ import { map } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import { User } from '@app/_models';
 
-@Injectable({ providedIn: 'root' })
-export class AccountService {
+export class HeaderComponent {
     private userSubject: BehaviorSubject<User>;
     public user: Observable<User>;
     private subject = new Subject<any>();//Testing sharing subject for click for side bar may need to fix or delete 
-    private isMenuOpened = new Subject<any>();//Testing sharing subject for click for side bar may need to fix or delete 
 
 
     constructor(
