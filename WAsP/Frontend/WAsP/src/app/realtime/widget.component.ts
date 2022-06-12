@@ -5,7 +5,7 @@ import { RealTimeData, TaskData, Specification, RealTimeView, RTAlert } from '@a
 import { AlertService, DataService, SocketService } from '@app/_services';
 import { lineColour, specList, ActiveMachine } from './realtime.module';
 import { Subscription } from 'rxjs';
-import { kill } from 'process';
+import { YAXisOption } from 'echarts/types/dist/shared';
 
 @Component({ 
     selector: 'realtime-card',
@@ -13,7 +13,7 @@ import { kill } from 'process';
     styleUrls: ['widget.component.sass'],    
 })
 
-export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
+export class WidgetComponent implements OnInit, OnDestroy {
 
     @Input() Machine: string;
     @Input() LineColours: lineColour[];
@@ -58,6 +58,13 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
           },
         ],
       };
+    
+      yAxisDefault : YAXisOption = {
+        id: 0,
+        type: 'value',
+        scale: true ,
+        alignTicks: true ,
+      }
 
     constructor(
         private dataService: DataService,
@@ -116,9 +123,6 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
         this.echartsInstance = ec;
     }
 
-    ngOnChanges(changes: SimpleChanges): void {
-    }
-
     private updateChart() {
 
         if (this.Spec === undefined) {
@@ -150,31 +154,49 @@ export class WidgetComponent implements OnInit, OnDestroy, OnChanges {
 
         let variables = this.List.reduce(formatList, []);
 
-        console.log(specList["Voltage"]);
+        this.chartOption = resetChartOptions();
+
+        let yAxis = [];
 
         variables.forEach((d) => {
-            dataList.push({
-            type: 'line',
-            color: this.LineColours[yAxisIndex*3].colour,
-            data: getDataPair(this.Data, d, 'Time'),
-            showSymbol: false ,
-            animation: false ,
-            yAxisIndex: yAxisIndex,
-            })
-
-            let i = 1;
-            for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, d))) { dataList.push({
+            if (d !== undefined){
+                dataList.push({
                 type: 'line',
-                color: this.LineColours[yAxisIndex*3 + i].colour,
-                data: value,
+                color: this.LineColours[yAxisIndex*3].colour,
+                data: getDataPair(this.Data, d, 'Time'),
+                name: d,
                 showSymbol: false ,
                 animation: false ,
                 yAxisIndex: yAxisIndex,
                 })
-                i++;
+
+                let i = 1;
+                for (const [_, value] of Object.entries(getLimits(this.Spec[0], time, d))) { dataList.push({
+                    type: 'line',
+                    color: this.LineColours[yAxisIndex*3 + i].colour,
+                    data: value,
+                    showSymbol: false ,
+                    animation: false ,
+                    yAxisIndex: yAxisIndex,
+                    })
+                    i++;
+                }
+
             }
+
+            let yAxisDefinition =  Object.create(this.yAxisDefault);
+
+            yAxisDefinition.id = yAxisIndex;
+            yAxisDefinition.name = specList[d];
+            yAxisDefinition.type = 'value';
+            yAxisDefinition.scale = true ;
+
+            yAxis.push(yAxisDefinition);
+            
             yAxisIndex++;
         });
+
+        this.chartOption.yAxis = yAxis;
 
         this.chartOption = updateChartOptions(this.chartOption, dataList, min, max, time);
         this.echartsInstance.setOption(this.chartOption);
@@ -254,8 +276,6 @@ function updateChartOptions(chartOption: EChartsOption, list: any[], min: string
     chartOption.xAxis['max'] = max;
     chartOption.xAxis['data'] = time;
 
-    console.log(chartOption);
-    
     return chartOption;
 }
 
@@ -280,8 +300,15 @@ function getLimits(spec: Specification, time: any[], limit: string) {
 function formatList(arr, l) {
     if (l !== undefined){
         let v = l.replace(' ', '');
-        if (v !== '') 
+        if (v !== '') {
             arr.push(v);
+        } else {
+            v = undefined;
+            arr.push(v);
+        }
+    } else {
+        let v = undefined;
+        arr.push(v);
     }
     return arr;
 }
@@ -318,6 +345,33 @@ function createAlertsInfo(Alerts: RTAlert[]) {
     }
 
     return info;
+}
+
+function resetChartOptions(): EChartsOption {
+
+    return {
+        xAxis: {
+            id: 0,
+            type: 'time',               
+            axisLabel: {
+                rotate: 90 ,
+            },
+            minInterval: 5,
+          },
+          yAxis: [{
+            id: 0,
+            type: 'value',
+            scale: true ,
+            alignTicks: true ,
+          },
+          {
+            id: 1,
+            type: 'value',
+            scale: true ,
+            alignTicks: true ,
+          },
+        ],
+      };
 }
 
 class AlertArray {

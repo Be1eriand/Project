@@ -98,6 +98,10 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges  {
                 this.lines[parseInt(select)*3].line = this.selection[select];
                 this.lines[parseInt(select)*3 + 1].line = this.selection[select] + ' Max';
                 this.lines[parseInt(select)*3 + 2].line = this.selection[select] + ' Min';
+            } else { 
+                this.lines[parseInt(select)*3].line = undefined;
+                this.lines[parseInt(select)*3 + 1].line = undefined;
+                this.lines[parseInt(select)*3 + 2].line = undefined;
             }
         }
     }
