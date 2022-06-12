@@ -155,8 +155,8 @@ class SpecificationView(APIView): #Follows CRUD
         result = session.query(WPS, WPS_Run, Specification).join(WPS.runs).join(WPS_Run.specifications).filter(and_(WPS.WPS_No == data['WPS_No'], WPS_Run.Run_No == data['Run_No'])).one()
 
         try:
-            session.begin_nested()
-        except Exception as e:
+            session.begin_nested() #Not sure why this is working now I've got in a try .. except
+        except Exception as e: #Not sure this is the best thing
             pprint(e)
 
         wps = result[0]
@@ -186,7 +186,7 @@ class SpecificationView(APIView): #Follows CRUD
         specification.HeatInput_Max = data['HeatInput_Max']
 
         session.add(wps)
-        
+
         try:
             session.commit()
         except IntegrityError:
