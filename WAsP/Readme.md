@@ -80,3 +80,4 @@ Compile the test data program to test the real-time functionality
 5. or Run the program from the default directory
     ie .\SensorServer\bin\Release or \Debug
     SensorServer.exe
+6. The SensorServer assumes that there is a local SQL Server on the machine that the program is running

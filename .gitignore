@@ -9,3 +9,17 @@ WAsP/Backend/WAsP/celerybeat-schedule.dat
 WAsP/Backend/WAsP/celerybeat-schedule.dir
 WAsP/Database/SensorDataDB_log.ldf
 WAsP/Database/SmartFab_log.ldf
+SensorServer/SensorServer/bin/SensorServer.pdb
+SensorServer/SensorServer/bin/SensorServer.exe
+SensorServer/obj/Debug/TempPE/SensorDataDBDataSet.Designer.cs.dll
+SensorServer/obj/Debug/SensorServer.ServerForm.resources
+SensorServer/obj/Debug/SensorServer.Properties.Resources.resources
+SensorServer/obj/Debug/SensorServer.pdb
+SensorServer/obj/Debug/SensorServer.csproj.GenerateResource.cache
+SensorServer/obj/Debug/SensorServer.csproj.FileListAbsolute.txt
+SensorServer/obj/Debug/SensorServer.csproj.CoreCompileInputs.cache
+SensorServer/obj/Debug/SensorServer.csproj.AssemblyReference.cache
+SensorServer/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+SensorServer/obj/Debug/DesignTimeResolveAssemblyReferences.cache
+SensorServer/obj/Debug/.NETFramework,Version=v4.7.2.AssemblyAttributes.cs
+SensorServer/obj/Debug/SensorServer.exe
