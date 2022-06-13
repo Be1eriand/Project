@@ -4,7 +4,8 @@
 *** Requirements ***
 Git
 Python 3.10
-Node.js v8.5.5
+Node.js v16.14
+npm v8.5.5
 Angular 13.3.0
 Redis (Installation for Redis see https://redis.io/docs/getting-started/installation/install-redis-on-windows/)
 SQL Server 2019 (SQL Server 2019 Developer or SQL Express Edition can be used for testing purposes)
