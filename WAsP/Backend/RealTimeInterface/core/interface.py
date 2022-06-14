@@ -44,10 +44,7 @@ class Client:
                     data['raw'] = raw
 
                     for method in self.pipes.methods['process_data']:
-                        try:
-                            data = method(data)
-                        except: #Yeah I know this is bad
-                            pass
+                        data = method(data)
 
                     raw = raw[self.packetsize::]
 
@@ -62,7 +59,3 @@ class Client:
                 print("Error Validating the Sensor Data")
             except kaitaistruct.ValidationLessThanError:
                 print("Error Validating the Sensor Data")
-            except Exception as ex:
-                print("Error")
-                print(ex)
-                break

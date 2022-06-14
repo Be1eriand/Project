@@ -28,6 +28,9 @@ def main(*args, **kwargs):
             client.receive()
         except ConnectionRefusedError:
             print("Unable to connect to the Sensor Server to retrieve the data")
+        except KeyboardInterrupt:
+            print("Exiting RealTimeInterface")
+            break
 
         print(f"Waiting {reconnect_time} seconds before restarting")
         sleep(reconnect_time)
