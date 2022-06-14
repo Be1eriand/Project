@@ -23,6 +23,7 @@ export class SpecificationComponent implements OnInit {
   SpecLoaded = false;
   Editing = false;
   formLoaded = false;
+  newSpecification = false;
 
   Machines: Machine[];
   Welders: Welder[] = [];
@@ -249,4 +250,9 @@ export class SpecificationComponent implements OnInit {
       this.Editing = !this.Editing
     }
   }
+
+  createNew() {
+    this.newSpecification = true;
+  }
+
 }

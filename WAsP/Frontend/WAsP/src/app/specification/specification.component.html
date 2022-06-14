@@ -27,7 +27,7 @@
   </div>
   <div class="row">
     <div class="row">
-      <button mat-flat-button class="btn btn-warning text-center" type="button">Add</button>
+      <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="!newSpecification"  (click)="createNew()">New</button>
       <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="!Editing && SpecLoaded" (click)="editMode()">Edit</button>
       <button mat-flat-button class="btn btn-warning text-center" type="button" *ngIf="Editing" (click)="onSubmit()">Save</button>
     </div>
