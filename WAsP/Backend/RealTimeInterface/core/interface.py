@@ -44,7 +44,10 @@ class Client:
                     data['raw'] = raw
 
                     for method in self.pipes.methods['process_data']:
-                        data = method(data)
+                        try:
+                            data = method(data)
+                        except: #Yeah I know this is bad
+                            pass
 
                     raw = raw[self.packetsize::]
 
