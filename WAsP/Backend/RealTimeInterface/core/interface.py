@@ -59,7 +59,3 @@ class Client:
                 print("Error Validating the Sensor Data")
             except kaitaistruct.ValidationLessThanError:
                 print("Error Validating the Sensor Data")
-            except Exception as ex:
-                print("Error")
-                print(ex)
-                break

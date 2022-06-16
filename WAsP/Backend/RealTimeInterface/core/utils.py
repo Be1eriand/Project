@@ -262,7 +262,7 @@ class Settings(MutableMapping):
         settings = self.copy()
         return settings._to_dict()
     
-def build_component_list(compdict, custom=None):
+def build_component_list(compdict):
 
     def _check_components(complist):
         if len({c for c in complist}) != len(complist):
