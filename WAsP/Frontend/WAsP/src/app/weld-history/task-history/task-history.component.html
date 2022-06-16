@@ -167,35 +167,35 @@
         <th> Voltage </th>
         <th> Travel Speed </th>
         <th> Heat Input </th>
-      </tr>
-      <tr>
-        <td>Percentage Increase From Max WPS Value</td>
+    </tr>
+    <tr>
+        <td>Percentage <strong>Increase</strong> From Max WPS Value</td>
         <td>{{ r[0].Current_Overpercent | number: '1.2-2' }}%</td>
         <td>{{ r[0].Voltage_Overpercent | number: '1.2-2' }}%</td>
         <td>{{ r[0].TravelSpeed_Overpercent | number: '1.2-2' }}%</td>
         <td>{{ r[0].HeatInput_Overpercent | number: '1.2-2' }}%</td>
-      </tr>
-      <tr>
-        <td>Duration Over Max WPS Value (mins)</td>
-        <td>{{ r[0].Current_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r[0].Voltage_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r[0].TravelSpeed_Overtime | number: '1.2-2' }}</td>
-        <td>{{ r[0].HeatInput_Overtime | number: '1.2-2' }}</td>
-      </tr>
-      <tr>
-        <td>Percentage Decrease From Min WPS Value</td>
-        <td>{{ r[0].Current_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r[0].Voltage_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r[0].TravelSpeed_Underpercent | number: '1.2-2' }}%</td>
-        <td>{{ r[0].HeatInput_Underpercent | number: '1.2-2' }}%</td>
-      </tr>
-      <tr>
-        <td>Duration Under Min WPS Value (mins)</td>
-        <td>{{ r[0].Current_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r[0].Voltage_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r[0].TravelSpeed_Undertime | number: '1.2-2' }}</td>
-        <td>{{ r[0].HeatInput_Undertime | number: '1.2-2' }}</td>
-      </tr>
+    </tr>
+    <tr>
+      <td>Percentage of Total Weld <strong>Over</strong> Max WPS Value</td>
+      <td>{{ r[0].Current_Over / r[0].Records * 100 | number: '1.2-2' }}%</td>
+      <td>{{ r[0].Voltage_Over / r[0].Records * 100 | number: '1.2-2' }}%</td>
+      <td>{{ r[0].TravelSpeed_Over / r[0].Records * 100 | number: '1.2-2' }}%</td>
+      <td>{{ r[0].HeatInput_Over / r[0].Records * 100 | number: '1.2-2' }}%</td>
+    </tr>
+    <tr>
+      <td>Percentage <strong>Decrease</strong> From Min WPS Value</td>
+      <td>{{ r[0].Current_Underpercent | number: '1.2-2' }}%</td>
+      <td>{{ r[0].Voltage_Underpercent | number: '1.2-2' }}%</td>
+      <td>{{ r[0].TravelSpeed_Underpercent | number: '1.2-2' }}%</td>
+      <td>{{ r[0].HeatInput_Underpercent | number: '1.2-2' }}%</td>
+  </tr>
+    <tr>
+      <td>Percentage of Total Weld <strong>Under</strong> Min WPS Value</td>
+      <td>{{ r[0].Current_Under / r[0].Records * 100 | number: '1.2-2' }}%</td>
+      <td>{{ r[0].Voltage_Under / r[0].Records * 100 | number: '1.2-2' }}%</td>
+      <td>{{ r[0].TravelSpeed_Under / r[0].Records * 100  | number: '1.2-2' }}%</td>
+      <td>{{ r[0].HeatInput_Under / r[0].Records * 100  | number: '1.2-2' }}%</td>
+    </tr>
 
     </table>
     <mat-divider></mat-divider>

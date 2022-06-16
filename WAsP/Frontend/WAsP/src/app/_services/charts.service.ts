@@ -234,14 +234,14 @@ export class ChartsService {
         subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       {
-        text: 'Percentage of total weld duration that was in WPS range',
+        text: 'Percentage of total weld records that was in WPS range',
         textStyle: {
           fontWeight: 'normal',
           fontSize: 10,
           lineHeight: 15,
           fontStyle: 'italic'
         },
-        left: '15%',
+        left: '10%',
         top: '95%'
       }],
       series: [
@@ -298,9 +298,9 @@ export class ChartsService {
           },
           data: [
             {
-              value: (task[2]['Timedelta'] - (task[2][variable + '_Undertime'] + task[2][variable + '_Overtime'])) /
-                task[2]['Timedelta'],
-              name: 'Duration In Range'
+              value: (task[2]['Records'] - (task[2][variable + '_Under'] + task[2][variable + '_Over'])) /
+                task[2]['Records'],
+              name: 'Percentage In Range'
             }
           ]
         }
@@ -323,12 +323,23 @@ export class ChartsService {
           }
         }
       },
-      title: {
+      title: [{
         top: '8%',
         left: 'center',
         text: 'Weld Alert Distribution',
         subtext: variable + ' - Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
+      {
+        text: 'Distribution of weld records amongst alert types',
+        textStyle: {
+          fontWeight: 'normal',
+          fontSize: 10,
+          lineHeight: 15,
+          fontStyle: 'italic'
+        },
+        left: '15%',
+        top: '95%'
+      }],
       tooltip: {
         trigger: 'item'
       },
@@ -339,7 +350,7 @@ export class ChartsService {
       },
       series: [
         {
-          name: 'Duration (min)',
+          name: 'No. of Records',
           type: 'pie',
           radius: ['25%', '50%'],
           center: ["50%", "60%"],
@@ -363,12 +374,12 @@ export class ChartsService {
             show: false,
           },
           data: [
-            { value: task[2][variable + '_Undertime'].toFixed(2), name: 'Under Min' },
+            { value: task[2][variable + '_Under'].toFixed(2), name: 'Under Min' },
             {
-              value: (task[2]['Timedelta'] - (task[2][variable + '_Undertime'] + task[2][variable + '_Overtime'])).toFixed(2),
+              value:(task[2]['Records'] - task[2][variable + '_Under'] + task[2][variable + '_Over']),
               name: 'In Range'
             },
-            { value: task[2][variable + '_Overtime'].toFixed(2), name: 'Over Max' },
+            { value: task[2][variable + '_Over'].toFixed(2), name: 'Over Max' },
           ]
         }
       ]
@@ -492,7 +503,7 @@ export class ChartsService {
     this.radarChart = {
       title: {
         left: 'center',
-        text: 'Weld Alert Duration Radar Chart',
+        text: 'Weld Alert Radar Chart',
         subtext: 'Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
@@ -510,7 +521,7 @@ export class ChartsService {
         }
       },
       legend: {
-        data: ['Out of Range Duration (mins)'],
+        data: ['Records out of range of total weld'],
         top: '15%'
       },
       color: '#ff6028',
@@ -518,10 +529,10 @@ export class ChartsService {
         radius: ["0%", "50%"],
         center: ["50%", "57%"],
         indicator: [
-          { name: 'Current', max: task[2]['Timedelta'] },
-          { name: 'Voltage', max: task[2]['Timedelta'] },
-          { name: 'Travel Speed', max: task[2]['Timedelta'] },
-          { name: 'Heat Input', max: task[2]['Timedelta'] },
+          { name: 'Current', max: task[2]['Records'] },
+          { name: 'Voltage', max: task[2]['Records']  },
+          { name: 'Travel Speed', max: task[2]['Records'] },
+          { name: 'Heat Input', max: task[2]['Records'] },
         ]
       },
       series: [
@@ -534,12 +545,12 @@ export class ChartsService {
           data: [
             {
               value: [
-                (task[2]['Current_Undertime'] + task[2]['Current_Overtime']).toFixed(2),
-                (task[2]['Voltage_Undertime'] + task[2]['Voltage_Overtime']).toFixed(2),
-                (task[2]['TravelSpeed_Undertime'] + task[2]['TravelSpeed_Overtime']).toFixed(2),
-                (task[2]['HeatInput_Undertime'] + task[2]['HeatInput_Overtime']).toFixed(2)
+                (task[2]['Current_Under'] + task[2]['Current_Over']),
+                (task[2]['Voltage_Under'] + task[2]['Voltage_Over']),
+                (task[2]['TravelSpeed_Under'] + task[2]['TravelSpeed_Over']),
+                (task[2]['HeatInput_Under'] + task[2]['HeatInput_Over'])
               ],
-              name: 'Out of Range Duration (mins)'
+              name: 'Records out of range of total weld'
             },
 
           ]
@@ -554,7 +565,7 @@ export class ChartsService {
     this.barChart = {
       title: {
         left: 'center',
-        text: 'Weld Alert Duration Comparison Bar Chart',
+        text: 'Weld Alert Comparison Bar Chart',
         subtext: 'Task '+ task[0]['TaskID'] + ' Run ' + task[0]['RunNo'],
       },
       tooltip: {
@@ -593,7 +604,7 @@ export class ChartsService {
       yAxis: [
         {
           type: 'value',
-          name: 'Duration (mins)',
+          name: 'Records',
         }
       ],
       series: [
@@ -605,10 +616,10 @@ export class ChartsService {
             focus: 'series'
           },
           data: [
-            task[2]['Current_Undertime'].toFixed(2), 
-            task[2]['Voltage_Undertime'].toFixed(2), 
-            task[2]['TravelSpeed_Undertime'].toFixed(2), 
-            task[2]['HeatInput_Undertime'].toFixed(2)]
+            task[2]['Current_Under'], 
+            task[2]['Voltage_Under'], 
+            task[2]['TravelSpeed_Under'], 
+            task[2]['HeatInput_Under']]
         },
         {
           name: 'In Range',
@@ -617,10 +628,10 @@ export class ChartsService {
             focus: 'series'
           },
           data: [
-            (task[2]['Timedelta'] - (task[2]['Current_Undertime'] + task[2]['Current_Overtime'])).toFixed(2),
-            (task[2]['Timedelta'] - (task[2]['Voltage_Undertime'] + task[2]['Voltage_Overtime'])).toFixed(2),
-            (task[2]['Timedelta'] - (task[2]['TravelSpeed_Undertime'] + task[2]['TravelSpeed_Overtime'])).toFixed(2),
-            (task[2]['Timedelta'] - (task[2]['HeatInput_Undertime'] + task[2]['HeatInput_Overtime'])).toFixed(2)
+            (task[2]['Records'] - (task[2]['Current_Under'] + task[2]['Current_Over'])),
+            (task[2]['Records']  - (task[2]['Voltage_Under'] + task[2]['Voltage_Over'])),
+            (task[2]['Records']  - (task[2]['TravelSpeed_Under'] + task[2]['TravelSpeed_Over'])),
+            (task[2]['Records']  - (task[2]['HeatInput_Under'] + task[2]['HeatInput_Over']))
           ]
         },
         {
@@ -630,10 +641,10 @@ export class ChartsService {
             focus: 'series'
           },
           data: [
-            task[2]['Current_Overtime'].toFixed(2), 
-            task[2]['Voltage_Overtime'].toFixed(2), 
-            task[2]['TravelSpeed_Overtime'].toFixed(2), 
-            task[2]['HeatInput_Overtime'].toFixed(2)]
+            task[2]['Current_Over'], 
+            task[2]['Voltage_Over'], 
+            task[2]['TravelSpeed_Over'], 
+            task[2]['HeatInput_Over']]
         },
       ]
     };
