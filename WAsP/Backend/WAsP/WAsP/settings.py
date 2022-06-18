@@ -145,7 +145,7 @@ DATABASES = {
         "NAME": "SmartFab",
         #"USER": "USER_NAME",
         #"PASSWORD": "PASSWORD",
-        "HOST": "127.0.0.1", #Change to server address if not on local host
+        "HOST": "(local)", #Change to server address if not on local host
         "PORT": "1433",
         "OPTIONS": {"driver": "SQL Server Native Client 11.0",
         "Trusted_Connection" : "yes",

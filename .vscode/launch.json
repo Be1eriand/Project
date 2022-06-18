@@ -1,0 +1,30 @@
+{
+    "configurations": [
+        {
+            "name": "Docker Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node",
+            "node": {
+                "package": "${workspaceFolder}/WAsP/Frontend/WAsP/package.json",
+                "localRoot": "${workspaceFolder}/WAsP/Frontend/WAsP"
+            }
+        },
+        {
+            "name": "Docker: Python - General",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "python": {
+                "pathMappings": [
+                    {
+                        "localRoot": "${workspaceFolder}",
+                        "remoteRoot": "/app"
+                    }
+                ],
+                "projectType": "general"
+            }
+        }
+    ]
+}
