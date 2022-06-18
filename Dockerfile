@@ -1,5 +1,11 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
+FROM dedian:latest
+# ...
+RUN apt-get update && apt-get install -y g++ unixodbc-dev
+
+
 FROM python:3.10
+RUN apt-get update && apt-get install -y python3-pip
 
 EXPOSE 8000
 
@@ -12,6 +18,7 @@ ENV PYTHONUNBUFFERED=1
 # Install pip requirements
 COPY requirements.txt .
 RUN python -m pip install -r requirements.txt
+#RUN python pip install --user pyodbc
 
 WORKDIR /app
 COPY . /app
