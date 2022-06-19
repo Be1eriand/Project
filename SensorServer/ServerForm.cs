@@ -64,6 +64,8 @@ namespace SensorServer
 
             task = new TaskData(weldData, realTimeData, variances);
 
+            Console.WriteLine("Updated Client!");
+
             Server.UpdateClient(task);
         }
 
