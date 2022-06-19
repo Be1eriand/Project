@@ -10,9 +10,11 @@ class SqlConnection:
         self._server = settings['SERVER']
         self._db  = settings['DATABASE']
         self.driver = settings['DRIVER']
+        self.username = settings['USERNAME']
+        self.password = settings['PASSWORD']
         self.trust_connect = settings['Trusted_Connection']
 
-        self._params = urllib.parse.quote(f'DRIVER={settings["DRIVER"]};SERVER={settings["SERVER"]};DATABASE={settings["DATABASE"]};Trusted_Connection=yes;')
+        self._params = urllib.parse.quote(f'DRIVER={settings["DRIVER"]};SERVER={settings["SERVER"]};DATABASE={settings["DATABASE"]};UID={settings["USERNAME"]};PWD={settings["PASSWORD"]};TrustServerCertificate=yes;')
         self._engine = create_engine("mssql+pyodbc:///?odbc_connect=%s" % self._params)
         
         self._connection = self._engine.connect()
