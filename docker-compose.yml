@@ -1,12 +1,26 @@
-volumes:
-  data:
-
 services:
+  backend:
+    image: smartfab/wasp:latest
+    build:
+      context: WAsP
+      dockerfile: WAsP.Dockerfile
+    ports:
+      - 8000:8000
+
+  realtime:
+    image: smartfab/rti:latest
+    build:
+      context: WAsP/Backend
+      dockerfile: RTI.Dockerfile
+    ports:
+      - 8888:8888
+
   redis:
     image: redis:latest
     volumes:
       - data:/data
     ports:
       - 6379:6379
-  myapp:
-    image: WAsP
+
+volumes:
+  data:
