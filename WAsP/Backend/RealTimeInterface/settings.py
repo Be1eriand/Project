@@ -3,7 +3,7 @@
 MIDDLEWARES = {
     #Sensor Input Side
     'pipelines.realtime.RealTimePipe': 100, #Must always be first
-    'pipelines.display.DisplayDataPipe': 150, #Must always be second
+    #'pipelines.display.DisplayDataPipe': 150, #Must always be second
     'pipelines.buffer.DataBufferPipe': 200, #Must always be third
     'pipelines.process.ProcessDataPipe': 250,#Must always be fourth
     'pipelines.beat.BeatPipe': 300,#Must always be fifth
