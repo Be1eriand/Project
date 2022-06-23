@@ -333,7 +333,7 @@ export class SpecificationComponent implements OnInit {
       }
     }
 
-    this.specificationService.updateSpecRun(spec, run , values).subscribe({
+    this.specificationService.addSpecRun(values).subscribe({
       error: error => {
         this.alertService.error(error);
       },
