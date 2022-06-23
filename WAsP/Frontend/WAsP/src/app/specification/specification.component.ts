@@ -279,7 +279,7 @@ export class SpecificationComponent implements OnInit {
     this.newSpecification = true;
 
     this.wpsForm = new FormGroup({
-      Run_No: new FormControl('', [Validators.required]),
+      Run_No: new FormControl('', Validators.required),
       WPS_No: new FormControl('', [Validators.required]),
       Welding_Code: new FormControl(''),
       Joint_type: new FormControl(''),
@@ -303,8 +303,6 @@ export class SpecificationComponent implements OnInit {
   }
 
   wpsSubmit() {
-    let spec = this.wpsForm.value['WPS_No'];
-    let run = this.wpsForm.value['Run_No'];
     let values = this.wpsForm.value;
 
     let numeric = [
@@ -323,6 +321,11 @@ export class SpecificationComponent implements OnInit {
     'HeatInput_Max']
 
     for (var n in numeric){
+      if (values['WPS_No'].length == 0 || values['Run_No'].length == 0) {
+        alert('Please check required fields');
+          return
+      }
+
       if (values[numeric[n]].length > 0){
         values[numeric[n]] = Number(values[numeric[n]]);
 
@@ -338,7 +341,7 @@ export class SpecificationComponent implements OnInit {
         this.alertService.error(error);
       },
       complete: () => {
-        this.alertService.success('Succesfully Saved!');
+        alert('Succesfully Saved!');
       }
     })
     
