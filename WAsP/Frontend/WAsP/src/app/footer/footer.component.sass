@@ -3,10 +3,11 @@
 .footer-wasp
     grid-area: footer-wasp
     display: grid
-    grid-template-columns: repeat(6, 1fr)
+    grid-template-columns: repeat(5, 1fr)
     align-items: center
     justify-content: center!important
     //border: 3px dashed purple
+    border: 3px solid $bgKhakiDark
     z-index: 10
     min-width: 100% !important
     padding: auto
@@ -15,29 +16,21 @@
     right: 0px
     position: fixed
     background: $bgKhakiDark
-    //$waspHeadGrey
-    //$standUpBgSlideTen
     color: $waspBoarderWhite
+    max-height: 4rem
 
 .footer-img-logo
-    height: 2rem
+    height: 2.7rem
 
 .home-text-2
-    justify-content: space-around
+    color: $waspBoarderWhite
+    display: flex
+    justify-content: center
+    justify-self: center
+    align-items: center
+    font-size: 1.3rem
+    line-height: 2rem
     text-align: center
-
-    .org
-        color: $waspLetterOrange
-        font-weight: $semibold-weight
-        margin: 0.1rem
-        justify-content: space-evenly
-
-.btn-home
-    grid-area: btn-home
-    box-shadow: $waspHeadBlack
-
-@media only screen and (max-width:450px)
-.footer-wasp
-    font-size: 0.8rem
-    grid-template-rows: minmax(0.2fr, auto)
-    // still need to fix this media settings for smaller screens 
+    text-shadow: 5px 5px 5px $waspHeadBlack
+    word-spacing: 0.2rem
+    padding: 0.5rem

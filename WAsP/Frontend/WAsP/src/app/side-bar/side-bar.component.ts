@@ -11,6 +11,8 @@ import { AccountService } from '@app/_services/account.service';
 })
 export class SideBarComponent implements OnInit {
     isMenuOpened = true;
+    leftArrow:boolean = false;
+    rightArrow: boolean = true;
 
   @Output() sidebarEvent = new EventEmitter<boolean>();
   @Output() headerEventSide = new EventEmitter<boolean>();
@@ -20,6 +22,9 @@ export class SideBarComponent implements OnInit {
         this.isMenuOpened= !this.isMenuOpened;
 
     }
+ 
+      
+ 
   
 isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -35,6 +40,10 @@ isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Ha
    clickMe(){ //  pink click needs to move into side bar 
         this.accountService.sendClickEvent(); 
     }
+    arrowClickFunction(){
+      this.accountService.sendClickEvent(); 
+
+  }
     sendEvent(){
         this.sidebarEvent.emit()
 
@@ -42,4 +51,16 @@ isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Ha
     sendMenuEvent(){
         this.headerEventSide.emit(this.isMenuOpened)}
 
+    changeArrowLeftIcon (){
+      this.leftArrow=!this.leftArrow;
+      this.rightArrow=!this.rightArrow;
+       
+
+    }
+    changeArrowRightIcon (){
+      this.rightArrow=!this.rightArrow; 
+      this.leftArrow=!this.leftArrow;
+    }
+
 }
+

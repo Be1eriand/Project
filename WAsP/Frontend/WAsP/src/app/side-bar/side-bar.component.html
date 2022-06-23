@@ -1,10 +1,21 @@
 <div class="side-bar-content">
   <div class="side-nav-button">
     <!--<i class="fa-solid fa-bars"></i>-->
-    <button class="btn-home" mat-fab type="button" mat-button color="#FCFBFB">
-      <mat-icon (click)="clickMe()">subject</mat-icon></button
-    ><span>Menu</span>
+    <button
+      (click)="clickMe(); changeArrowLeftIcon()"
+      class="btn-home"
+      type="button"
+    >
+      <span class="spans iconRight" *ngIf="rightArrow">
+        <i class="icon fas fa-angle-double-left"></i>
+      </span>
+      <span class="iconLeft" *ngIf="leftArrow">
+        <i class="icon fas fa-angle-double-right"></i>
+      </span>
+    </button>
+    <span><a>Menu</a></span>
   </div>
+
   <ul class="nav-list">
     <li class="nav-list-item">
       <a routerLink="/home"><i class="icon fas fa-home"></i></a>
@@ -12,7 +23,7 @@
     </li>
     <li class="nav-list-item">
       <a routerLink="/realtime/dashboard"
-        ><i class="icon fas fa-hourglass-half"></i
+        ><i class="iconTime fas fa-hourglass-half"></i
       ></a>
       <span><a routerLink="/realtime/dashboard">Realtime Weld</a></span>
     </li>
@@ -28,7 +39,7 @@
       <a routerLink="/compliance/TaskDashboard"
         ><i class="icon fas fa-project-diagram"></i
       ></a>
-      <span><a routerLink="/compliance/TaskDashboard">Task Tracking</a></span>
+      <span><a routerLink="/compliance/TaskDashboard">Task Dashboard</a></span>
     </li>
     <li class="nav-list-item">
       <a routerLink="/specification"><i class="icon fas fa-paste"></i></a>

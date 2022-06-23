@@ -27,6 +27,7 @@ $shadows: #161616
 // OLD Colours 
 $OLDboxHeader: #374785
 $OLDBlue: #5364A8
+$LastProjRed: #E3002A
 //feautered colours 
 $gradOldboxHeader: #292e40
 $SidebarBlue: #4b4276
@@ -38,18 +39,20 @@ $TextSidePadding: 1rem
 $SidePadding: 16px
 $Toppadding: 50px
 $BottomPadding: 50px
+$largeResAdd: 195px
+$largeResHeader: 50px
 
 //side bar sizes for open and closed 
-$sidebarWidthOpen: 190px
+$sidebarWidthOpen: 180px
 $sidebarWidthClosed: 60px
 
 //Main Content LEFT sizes for open and closed side bar  
-$mainContentLeftOpen: calc($sidebarWidthOpen + 1rem)
-$mainContentLeftClosed: calc($sidebarWidthClosed + 1rem)
+$mainContentLeftOpen: calc($sidebarWidthOpen + 0.5rem)
+$mainContentLeftClosed: calc($sidebarWidthClosed + 0.5rem)
 
 //main Content WIDTH calculations for open and closed side bar 
-$mainContentWidthOpen: calc(100% - $mainContentLeftOpen)
-$mainContentWidthClosed: calc(100% - $mainContentLeftClosed)
+$mainContentWidthOpen: calc(99% - $mainContentLeftOpen)
+$mainContentWidthClosed: calc(99% - $mainContentLeftClosed)
 
 // Header size 
 $headerHeightSize: 5rem
@@ -63,23 +66,16 @@ $headerHeightSize: 5rem
 
 html
   height: 100%
-  // width: 100%
 
 body
   min-height: 100%
   margin: 0
   margin-bottom: 0
-  //max-width: 100%
-
-// p
-//   margin: 0
-//   padding: 0
-//   border: 0
 
 // images and logos 
 
 .footer-img-logo
-  height: 2em
+  height: 2rem
 
 .app-header
   position: fixed
@@ -145,12 +141,26 @@ body
   overflow: hidden
   white-space: nowrap
 
-// @media only screen and ( max-width:750  )
-// .app-side-bar
-//   position: fixed
-//   left: 0rem
-//   width: 250px
-//   //border: 5px dashed red
-//   height: calc( 100vh - 6rem - 2rem)
-//   //min-height: 100vh
-//   z-index: 2
+.pageTitle
+  text-align: center
+  margin-left: 1%
+  margin-top: 1rem
+  box-shadow: 0px 3px 4px $waspHeadBlack
+  width: 98%
+  font-size: 3rem
+  line-height: 4rem
+  background: $waspLetterOrange
+  min-height: 50px
+  text-shadow: 0px 0px 1px $waspHeadGrey
+  border-radius: 10px
+
+.iconsDash
+  font-size: 3rem
+  line-height: 4rem
+  color: $OLDboxHeader
+  display: none
+
+.dashboard
+  display: flex
+  flex-direction: column
+  margin-top: calc($headerHeightSize - 10px )

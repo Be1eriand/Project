@@ -1,44 +1,72 @@
 <div class="filter">
-<h1>Compliance Report</h1>
-
-<div>
-    <form *ngIf="!showTask" class="compliance-form" [formGroup]="contractForm" (ngSubmit)="contractSubmit()">
-        <mat-label>Select:</mat-label>
-        <mat-form-field appearance="outline">
-            <mat-label>Contract</mat-label>
-            <input type="text" (keyup)="contractOnKey($event)" formControlName="contractName" matInput
-                [matAutocomplete]="auto" required>
-            <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                <mat-option *ngFor="let contract of filteredContracts" [value]="contract">
-                    {{contract}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-        <button mat-raised-button color="submit" type="submit">Run Report</button>
-    </form>
-            <div *ngIf="showTask">
-                <button *ngIf="showTask" mat-raised-button color="submit" type="submit"
-                (click)="exportPDF('Weld Compliance')">Export To PDF</button>
-                <button mat-raised-button (click)="accordion.openAll()">Expand All</button>
-                <button mat-raised-button (click)="accordion.closeAll()">Collapse All</button>
-                <button mat-button color="clear" onClick="window.location.reload();">Clear</button>
-              
-            </div>
-
-
-    <div *ngIf="showTask" #pdf>
-
-        <h2>{{ allContracts[0].ContractName }}</h2>
-
-    <mat-accordion multi>
-
-        <app-compliance-data *ngFor="let task of allContracts" [contract]="task"></app-compliance-data>
-
-    
-
-    </mat-accordion>
+  <div class="dashboard">
+    <div class="pageTitle">
+      <span class="iconsDash"><i class="icon fas fa-hourglass-half"></i></span>
+      <span class="dashboard-heading">Compliance</span>
     </div>
 
+    <div>
+      <form
+        *ngIf="!showTask"
+        class="compliance-form"
+        [formGroup]="contractForm"
+        (ngSubmit)="contractSubmit()"
+      >
+        <mat-label>Select:</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>Contract</mat-label>
+          <input
+            type="text"
+            (keyup)="contractOnKey($event)"
+            formControlName="contractName"
+            matInput
+            [matAutocomplete]="auto"
+            required
+          />
+          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let contract of filteredContracts"
+              [value]="contract"
+            >
+              {{ contract }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <button mat-raised-button color="submit" type="submit">
+          Run Report
+        </button>
+      </form>
+      <div *ngIf="showTask">
+        <button
+          *ngIf="showTask"
+          mat-raised-button
+          color="submit"
+          type="submit"
+          (click)="exportPDF('Weld Compliance')"
+        >
+          Export To PDF
+        </button>
+        <button mat-raised-button (click)="accordion.openAll()">
+          Expand All
+        </button>
+        <button mat-raised-button (click)="accordion.closeAll()">
+          Collapse All
+        </button>
+        <button mat-button color="clear" onClick="window.location.reload();">
+          Clear
+        </button>
+      </div>
 
-</div>
+      <div *ngIf="showTask" #pdf>
+        <h2>{{ allContracts[0].ContractName }}</h2>
+
+        <mat-accordion multi>
+          <app-compliance-data
+            *ngFor="let task of allContracts"
+            [contract]="task"
+          ></app-compliance-data>
+        </mat-accordion>
+      </div>
+    </div>
+  </div>
 </div>
