@@ -98,7 +98,7 @@
   <mat-tab-group dynamicHeight>
     <div>
       <form [formGroup] ="wpsForm" (ngSubmit)="wpsSubmit()">
-        <mat-tab >
+        <mat-tab label="Add WPS">
           <div class="mat-elevation-z4">
             <div>
               <mat-form-field appearance="fill" *ngFor="let specName of AllSpecList ">
@@ -109,7 +109,7 @@
                   formControlName = "{{specName}}"
                   matInput>
               </mat-form-field>
-              <button mat-flat-button class="btn btn-warning text-center" type="button" (click)="wpsSubmit()">Create WPS</button>
+              <button mat-flat-button class="btn btn-warning text-center" type="button" (click)="wpsSubmit()">Add</button>
             </div>
           </div>
         </mat-tab>
