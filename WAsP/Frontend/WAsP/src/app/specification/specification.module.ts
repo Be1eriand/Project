@@ -7,6 +7,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatSelectModule } from '@angular/material/select';
 
 import { SpecificationRoutingModule } from './specification-routing.module';
 
@@ -23,6 +24,7 @@ import { SpecificationComponent } from './specification.component';
         MatFormFieldModule,
         MatInputModule,
         FlexLayoutModule,
+        MatSelectModule
     ],
     declarations: [
         SpecificationComponent,

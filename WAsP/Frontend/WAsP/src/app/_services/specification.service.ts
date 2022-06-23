@@ -48,8 +48,4 @@ export class SpecificationService {
     return this.http.get<ContractTaskView>(`${environment.apiUrl}/data/contracts/${contract}`);
   }
 
-  getSpec2(spec: string): Observable<Specification[]> {
-    return this.http.get<Specification[]>(`${environment.apiUrl}/data/specification/${spec}`);
-  }
-
 }
