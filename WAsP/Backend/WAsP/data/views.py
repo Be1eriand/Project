@@ -1,6 +1,7 @@
 import datetime
 from pprint import pprint
 from django.db import IntegrityError
+from pkg_resources import run_script
 from rest_framework.request import Request
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, QueryDict
 from rest_framework import status
@@ -102,15 +103,18 @@ class SpecificationView(APIView): #Follows CRUD
         request: Request = args[0]
         data = request.data
 
-        wps = WPS(
-            WPS_No = data['WPS_No'],
-            Welding_Code = data['Welding_Code'],
-            Joint_type = data['Joint_type'],
-        )
+        wps = session.query(WPS).filter(WPS.WPS_No==data['WPS_No']).one_or_none()
+
+        if wps is None: 
+            wps = WPS(
+                WPS_No = data['WPS_No'],
+                Welding_Code = data['Welding_Code'],
+                Joint_type = data['Joint_type'],
+            )
 
         wps_run = WPS_Run(
-            Run_No = data['Run_No'],
-        )
+                Run_No = data['Run_No'],
+            )
 
         specification = Specification(
             Side = data['Side'],
@@ -122,7 +126,7 @@ class SpecificationView(APIView): #Follows CRUD
             Current_Max = data['Current_Max'],
             Voltage_Min = data['Voltage_Min'],
             Voltage_Max = data['Voltage_Max'],
-            Polarity = data['Polairty'],
+            Polarity = data['Polarity'],
             TravelSpeed_Min = data['TravelSpeed_Min'],
             TravelSpeed_Max = data['TravelSpeed_Max'],
             InterpassTemp_Min = data['InterpassTemp_Min'],
@@ -132,10 +136,15 @@ class SpecificationView(APIView): #Follows CRUD
         )
 
         wps_run.specifications = specification
-        wps.runs = wps_run
+
+        runs = wps.runs
+        runs.append(wps_run)
+
+        wps.runs = runs
 
         try:
-            session.add(wps)
+            if wps.id is None:
+                session.add(wps)
             session.commit()
         except IntegrityError:
             session.rollback()
