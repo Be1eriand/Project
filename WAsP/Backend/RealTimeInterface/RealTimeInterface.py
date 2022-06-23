@@ -21,19 +21,21 @@ def main(*args, **kwargs):
     reconnect_time = settings.getfloat('SENSOR_RECONNECT_TIME')
 
     while True:
-        print("Connecting to sensor server")
+        print("Waiting for connection from sensor server")
         try:
             client.start()
+            client.waitforconnection()
             print("Connected to sensor server")
             client.receive()
         except ConnectionRefusedError:
             print("Unable to connect to the Sensor Server to retrieve the data")
+        except OSError:
+            print("Connection lost from Sensor Server")
         except KeyboardInterrupt:
             print("Exiting RealTimeInterface")
             break
 
-        print(f"Waiting {reconnect_time} seconds before restarting")
-        sleep(reconnect_time)
+        print(f"Restarting RTI and wait for new connection")
 
 
 if __name__ =="__main__":

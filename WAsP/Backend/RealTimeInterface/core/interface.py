@@ -21,7 +21,9 @@ class Client:
     def start (self):
         
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect(self.server)
+        self.sock.bind(self.server)
+        self.sock.listen()
+        #self.sock.connect(self.server)
 
     def write(self, message):
         message = message.encode('utf-8')
@@ -30,12 +32,16 @@ class Client:
     def stop(self):
         self.sock.close()
 
+    def waitforconnection(self):
+
+        self.connection, self.address = self.sock.accept()
+
     def receive(self):
         raw = b""
 
         while True:
             try:
-                raw = raw + self.sock.recv(1024)
+                raw = raw + self.connection.recv(1024)
 
                 while (len(raw) >= self.packetsize):
                     

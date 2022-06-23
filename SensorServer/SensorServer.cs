@@ -205,7 +205,6 @@ namespace SensorServer
 
     class SensorServer
     {
-        readonly TcpListener ServerSocket;
         TcpClient ClientSocket;
         HandleClient client;
 
@@ -214,12 +213,10 @@ namespace SensorServer
             IPAddress ipAddress = IPAddress.Parse(address);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
 
-            this.ServerSocket = new TcpListener(localEndPoint);
         }
 
         public void Start()
         {
-            ServerSocket.Start();
             Console.WriteLine(" >> " + "Server Started");
 
         }
@@ -228,8 +225,10 @@ namespace SensorServer
         {
             while (true)
             {
-                ClientSocket = ServerSocket.AcceptTcpClient();
-                Console.WriteLine(" >> " + "Client started!");
+                ClientSocket = new TcpClient();  //ServerSocket.AcceptTcpClient();
+                Console.WriteLine(" >> " + "Connecting to the RTI");
+                ClientSocket.Connect("127.0.0.1", 8888); //Connecting to a Local client
+                Console.WriteLine(" >> " + "Client connected!");
                 client = new HandleClient();
                 client.startClient(ClientSocket);
             }
@@ -238,7 +237,7 @@ namespace SensorServer
         public void Stop()
         {
             ClientSocket.Close();
-            ServerSocket.Stop();
+            //ServerSocket.Stop();
             Console.WriteLine(" >> " + "exit");
             Console.ReadLine();
         }
@@ -365,7 +364,11 @@ namespace SensorServer
 
             while (clientSocket.Connected)
             {
+                Thread.Sleep(500);
+                SendData(null);
             }
+
+            Console.WriteLine("Client Disconnected");
 
         }
 
@@ -379,6 +382,7 @@ namespace SensorServer
                 {
                     if (TaskDataList.Count > 0)
                     {
+                        Console.WriteLine("Task Data List!");
                         foreach (TaskData task in TaskDataList)
                         {
                             SensorDataStruct sensorData = CreateSensorData(task);
