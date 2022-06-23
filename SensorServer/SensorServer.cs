@@ -210,15 +210,14 @@ namespace SensorServer
 
         public SensorServer(string address, int port)
         {
+            //Below is not needed for now. Will leave in case of future requirements
             IPAddress ipAddress = IPAddress.Parse(address);
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, port);
-
         }
 
         public void Start()
         {
             Console.WriteLine(" >> " + "Server Started");
-
         }
 
         public void Serve()
@@ -237,7 +236,6 @@ namespace SensorServer
         public void Stop()
         {
             ClientSocket.Close();
-            //ServerSocket.Stop();
             Console.WriteLine(" >> " + "exit");
             Console.ReadLine();
         }
@@ -260,7 +258,6 @@ namespace SensorServer
         static readonly Random NumGenerator = new Random();
         List<TaskData> TaskDataList = new List<TaskData>();
         TaskData _Task;
-        Timer SensorTimer;
 
 
         public HandleClient()
@@ -275,7 +272,6 @@ namespace SensorServer
 
         public void stopClient()
         {
-            SensorTimer.Dispose();
             Console.WriteLine("Timer is Disposed");
         }
 
@@ -357,22 +353,17 @@ namespace SensorServer
         {
             Random randomNumber = new Random();
 
-
-            var autoEvent = new AutoResetEvent(false);
-
-            SensorTimer = new Timer(SendData, autoEvent, 500, 500);
-
             while (clientSocket.Connected)
             {
-                Thread.Sleep(500);
-                SendData(null);
+                Thread.Sleep(1000);
+                SendData();
             }
 
             Console.WriteLine("Client Disconnected");
 
         }
 
-        private void SendData(Object stateInfo)
+        private void SendData()
         {
             try
             {
@@ -398,7 +389,6 @@ namespace SensorServer
             catch (IOException)
             {
                 Console.WriteLine("Timer is Disposed");
-                SensorTimer.Dispose();
 
                 Console.WriteLine(" >> Client has closed the connection");
                 clientSocket.Close();
