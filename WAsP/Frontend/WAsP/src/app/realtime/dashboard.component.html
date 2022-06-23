@@ -1,52 +1,57 @@
 <div class="dashboard">
-    <div class="row">
-        <div class="d-flex justify-content-start col-1"></div>
-        <div class="d-flex justify-content-center col-10">
-            <h1 class="dashboard-heading">Real Time Views</h1>
-        </div>
-        <div class="d-flex justify-content-end col-1"></div>
+  <div class="pageTitle">
+    <span class="iconsDash"><i class="icon fas fa-hourglass-half"></i></span>
+    <span class="dashboard-heading">Realtime Weld Views</span>
+  </div>
+  <div class="topRowDiv">
+    <div class="display-box">
+      <mat-card class="lineSelction">
+        <mat-card-title class="tileLine">Line Selection</mat-card-title>
+        <mat-form-field
+          appearance="fill"
+          *ngFor="let s of selected; let i = index"
+          class="Variable-Dropdown"
+        >
+          <mat-label>Variable</mat-label>
+          <mat-select
+            [(value)]="selected[i]"
+            (selectionChange)="updateSelected($event)"
+          >
+            <mat-option></mat-option>
+            <mat-option [value]="option.name" *ngFor="let option of specList">{{
+              option.name
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </mat-card>
     </div>
-    <div class="row">
-        <div class="col-3">
-            <div class="display-box">
-                <mat-card>
-                    <mat-card-title>Line Selection</mat-card-title>
-                    <mat-form-field appearance="fill" *ngFor="let s of selected; let i = index" class="Variable-Dropdown">
-                        <mat-label>Variable</mat-label>
-                        <mat-select [(value)]="selected[i]" (selectionChange)="updateSelected($event)">
-                            <mat-option></mat-option>
-                            <mat-option [value]="option.name" *ngFor="let option of specList">{{ option.name }}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </mat-card>
-                <mat-card>
-                    <mat-card-title>Legend</mat-card-title>
-                    <mat-card-content>
-                        <div *ngFor="let line of lines">
-                            <div *ngIf="line.line">
-                                <label class="label-line-colour">{{line.line}}</label>
-                                <input  [(colorPicker)]="line.colour" 
-                                        [style.background]="line.colour"
-                                        class="input-colour"
-                                />
-                            </div>
-                        </div>
-                    </mat-card-content>
-                </mat-card>      
-
+    <div class="display-box">
+      <mat-card class="colourSelction">
+        <mat-card-title class="tileLine">Legend</mat-card-title>
+        <mat-card-content class="legend">
+          <div *ngFor="let line of lines">
+            <div *ngIf="line.line">
+              <label class="label-line-colour">{{ line.line }}</label>
+              <input
+                [(colorPicker)]="line.colour"
+                [style.background]="line.colour"
+                class="input-colour"
+              />
             </div>
-        </div>
-        <div class="col-9">
-            <div fxLayout="row wrap" fxLayoutGap="8px grid">
-                    <div fxFlex="30%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let machine of machineList">
-                    <realtime-card
-                    (machineUpdateEvent)="updateAlerts($event)"
-                    [Machine]="machine.MachineID"
-                    [LineColours]="lines"
-                    [List]="selection"
-                    class="realtime-widget"></realtime-card>
-                </div>
-            </div>
-        </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
     </div>
+  </div>
+  <div class="liveBoxes">
+    <div *ngFor="let machine of machineList" class="boxes">
+      <realtime-card
+        (machineUpdateEvent)="updateAlerts($event)"
+        [Machine]="machine.MachineID"
+        [LineColours]="lines"
+        [List]="selection"
+        class="cards realtime-widget"
+      ></realtime-card>
+    </div>
+  </div>
 </div>

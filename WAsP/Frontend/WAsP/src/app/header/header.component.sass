@@ -25,6 +25,7 @@
     text-shadow: 5px 5px 5px $waspHeadBlack
     h1
         font-size: 40px
+        text-align: center
 
     span
         color: $waspLetterOrange
@@ -66,8 +67,7 @@ a
     margin-right: 1rem
     height: 40px
     width: 130px
-    //text-size: 80px
-
+    border-radius: 20px
     &:hover
         background-color: $waspLetterOrange
 
@@ -113,3 +113,135 @@ a
     box-shadow: 10px 20px 10px $waspHeadBlack
     z-index: 3
     background-color: $OLDboxHeader
+
+// Media responsive for larger to smaller resolutions 
+
+@media ( max-width: 3000px )
+
+    .header-wasp
+        height: calc( $headerHeightSize + $largeResHeader )
+    .home-text-1
+        margin-top: 2rem
+        margin-bottom: 1rem
+        h1
+            font-size: 3.5rem
+            line-height: 4.5rem
+            justify-self: end
+            margin-left: 2rem
+        span
+            margin: 0.3rem
+    .btn-user
+        margin-top: -0.2rem
+        margin-right: 1rem
+        height: 5rem
+        width: 15rem
+        &:hover
+            i
+                font-size: 4rem
+    .profile-div
+        span
+            font-size: 2rem
+        i
+            font-size: 3rem
+        .drop-text
+            width: 250px
+            padding: 5px
+            .dropdown-item
+                font-size: 1.5rem
+                line-height: 2rem
+
+    // images 
+    .side-img-top-logo
+        max-width: 19rem
+        margin-bottom: 1rem
+        margin-top: 0.3rem
+        margin-left: 1.2rem
+        margin-right: 1.2rem
+
+@media ( max-height: 1180px )
+
+    // images 
+    .side-img-top-logo
+        max-width: 16.5rem
+
+@media ( max-height: 980px )
+    .header-wasp
+        height: calc( $headerHeightSize + ($largeResHeader/2) )
+    .home-text-1
+        margin-top: 1rem
+        margin-bottom: 0.5rem
+        h1
+            font-size: 2rem
+            line-height: 3rem
+            justify-self: end
+            margin-left: 1rem
+        span
+            margin: 0.2rem
+    .btn-user
+        margin-top: -0.2rem
+        margin-right: 1rem
+        height: 3rem
+        width: 10rem
+        &:hover
+            i
+                font-size: 4rem
+    .profile-div
+        span
+            font-size: 1.5rem
+        i
+            font-size: 2rem
+        .drop-text
+            width: 150px
+            padding: 5px
+            .dropdown-item
+                font-size: 1rem
+                line-height: 1rem
+
+    // images 
+    .side-img-top-logo
+        max-width: 15rem
+        margin-bottom: 1rem
+        margin-top: 0.5rem
+        margin-left: 1.5rem
+        margin-right: 1.5rem
+
+@media ( max-width: 1108px )
+    .header-wasp
+        height: calc( $headerHeightSize + ($largeResHeader/2) )
+    .home-text-1
+        margin-top: 1rem
+        margin-bottom: 0.5rem
+        h1
+            font-size: 2rem
+            line-height: 3rem
+            justify-self: end
+            margin-left: 1rem
+        span
+            margin: 0.2rem
+    .btn-user
+        margin-top: -0.2rem
+        margin-right: 1rem
+        height: 3rem
+        width: 8rem
+        &:hover
+            i
+                font-size: 4rem
+    .profile-div
+        span
+            font-size: 1rem
+        i
+            font-size: 1.5rem
+        .drop-text
+            width: 150px
+            padding: 5px
+            .dropdown-item
+                font-size: 1rem
+                line-height: 1rem
+
+    // images 
+    .side-img-top-logo
+        max-width: 15rem
+        margin-bottom: 1rem
+        margin-top: 0.5rem
+        margin-left: 1.5rem
+        margin-right: 1.5rem

@@ -29,7 +29,8 @@
 // open sidebar 
 .main-content
   position: absolute
-  top: $headerHeightSize
+  top: calc( $headerHeightSize - 0.5rem )
+  justify-content: center
   z-index: 1
   width: $mainContentWidthOpen
   left: $mainContentLeftOpen
@@ -38,12 +39,15 @@
   position: fixed
   left: 0rem
   width: $sidebarWidthOpen // the org size when toggled
-  min-height: 100vh
+  min-height: 100%
   z-index: 2
+  //top: -0.5px
   box-shadow: 0px 0px 25px $waspHeadBlack
   background-color: $OLDboxHeader
-  overflow: hidden
+  border-top: 5px solid $OLDboxHeader
+  //overflow: hidden
   white-space: nowrap
+  min-height: 100%
 
 // Closed sidebar 
 .main-content-closed
@@ -64,12 +68,43 @@
   overflow: hidden
   white-space: nowrap
 
-// @media only screen and ( max-width:750  )
-// .app-side-bar
-//   position: fixed
-//   left: 0rem
-//   width: 250px
-//   //border: 5px dashed red
-//   height: calc( 100vh - 6rem - 2rem)
-//   //min-height: 100vh
-//   z-index: 2
+.menuDiv-Closed
+  background: green
+  color: $OLDboxHeader
+  height: 6rem
+  width: 6rem
+  position: relative
+  margin: 5px
+
+// media for responsive sizes larger to smaller - max 
+
+@media ( max-width: 3000px )
+
+  .main-content
+    width: calc($mainContentWidthOpen - $largeResAdd )
+    left: calc($mainContentLeftOpen + $largeResAdd)
+  .app-side-bar
+    width: calc( $sidebarWidthOpen + $largeResAdd)
+
+  // Closed sidebar 
+  .main-content-closed
+    width: calc($mainContentWidthClosed - 90px)
+    left: calc($mainContentLeftClosed + 90px)
+  .app-side-bar-closed
+    width: calc( $sidebarWidthClosed + 65px)
+
+// //Media height ----------------------------------------------------------------------
+@media ( max-height: 1300px )
+
+  .main-content
+    width: calc($mainContentWidthOpen - ($largeResAdd/2))
+    left: calc($mainContentLeftOpen + ($largeResAdd/2))
+  .app-side-bar
+    width: calc( $sidebarWidthOpen + ($largeResAdd/2))
+
+  // Closed sidebar 
+  .main-content-closed
+    width: calc($mainContentWidthClosed - (90px/2))
+    left: calc($mainContentLeftClosed + (90px/2))
+  .app-side-bar-closed
+    width: calc( $sidebarWidthClosed + (65px/2))
