@@ -1,21 +1,23 @@
-<div *ngIf="dataAvail" class="graph">
-    <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                Run: {{ task[0]['RunNo'] }}
-            </mat-panel-title>
-            <mat-panel-description>
-                <p>Welder: {{ task[0]['data'][0]['WelderID'] }} | Machine: {{ task[0]['data'][0]['MachineID'] }}</p>
-            </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="charts">
-            <div echarts [options]="lineChart"></div>
-        </div>
-        <div class="charts">
-            <div echarts [options]="gaugeChart" class="col"></div>
-            <div echarts [options]="pieChart" class="col"></div>
-            <div echarts [options]="boxplot" class="col"></div>
-        </div>
-
-    </mat-expansion-panel>
+<div *ngIf="dataAvail" class="graph expand-barCharts-div">
+  <mat-expansion-panel [expanded]="true" class="expand-barCharts">
+    <mat-expansion-panel-header class="expand-barCharts-header">
+      <mat-panel-title class="expand-barCharts-title">
+        Run: {{ task[0]["RunNo"] }}
+      </mat-panel-title>
+      <mat-panel-description class="panel-descip">
+        <p>
+          Welder: {{ task[0]["data"][0]["WelderID"] }} | Machine:
+          {{ task[0]["data"][0]["MachineID"] }}
+        </p>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="charts">
+      <div echarts [options]="lineChart"></div>
+    </div>
+    <div class="chartCards">
+      <div echarts [options]="gaugeChart" class="col"></div>
+      <div echarts [options]="pieChart" class="col"></div>
+      <div echarts [options]="boxplot" class="col"></div>
+    </div>
+  </mat-expansion-panel>
 </div>

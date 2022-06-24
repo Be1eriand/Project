@@ -1,73 +1,83 @@
-<div class="filter">
-  <div class="dashboard">
-    <div class="pageTitle">
-      <span class="iconsDash"><i class="icon fas fa-hourglass-half"></i></span>
-      <span class="dashboard-heading">Weld History</span>
-    </div>
-    <mat-tab-group>
-      <mat-tab label="by Task">
-        <ng-template matTabContent>
-          <div>
-            <form
-              class="weld-history-form"
-              [formGroup]="taskForm"
-              (ngSubmit)="taskSubmit()"
-            >
-              <mat-label>Select:</mat-label>
-              <mat-form-field appearance="outline">
-                <mat-label>Task ID</mat-label>
-                <input
-                  type="text"
-                  (keyup)="taskOnKey($event)"
-                  formControlName="taskID"
-                  matInput
-                  [matAutocomplete]="auto"
-                  required
-                />
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                  <mat-option *ngFor="let task of filteredTasks" [value]="task">
-                    {{ task }}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
-              <button mat-raised-button color="submit" type="submit">
-                Run Report
-              </button>
-              <button
-                mat-raised-button
-                (click)="accordion.openAll()"
-                *ngIf="showTask"
-              >
-                Expand All
-              </button>
-              <button
-                mat-raised-button
-                (click)="accordion.closeAll()"
-                *ngIf="showTask"
-              >
-                Collapse All
-              </button>
-            </form>
-            <div *ngIf="showTask">
-              <mat-accordion multi>
-                <app-task-history
-                  *ngFor="let t of task"
-                  [task]="t"
-                ></app-task-history>
-              </mat-accordion>
-            </div>
-          </div>
-        </ng-template>
-      </mat-tab>
+<div class="dashboard">
+  <div class="pageTitle">
+    <span class="iconsDash"><i class="icon fas fa-hourglass-half"></i></span>
+    <span class="dashboard-heading">Weld History</span>
+  </div>
 
-      <mat-tab label="by Welder">
-        <ng-template matTabContent>
+  <mat-tab-group>
+    <mat-tab label="by Task" class="by-task tab-label">
+      <ng-template matTabContent class="tab-label2 by-welder2">
+        <div class="select-bar-with-btn">
+          <form
+            class="weld-history-form"
+            [formGroup]="taskForm"
+            (ngSubmit)="taskSubmit()"
+          >
+            <mat-label class="select-bar">Select:</mat-label>
+
+            <mat-form-field appearance="outline" class="filed-title">
+              <mat-label class="select-title">Task ID</mat-label>
+              <input
+                type="text"
+                (keyup)="taskOnKey($event)"
+                formControlName="taskID"
+                matInput
+                [matAutocomplete]="auto"
+                required
+              />
+              <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                <mat-option *ngFor="let task of filteredTasks" [value]="task">
+                  {{ task }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+
+            <button
+              mat-raised-button
+              color="submit"
+              type="submit"
+              class="run-btn submit-btn"
+            >
+              Run Report
+            </button>
+            <button
+              mat-raised-button
+              (click)="accordion.openAll()"
+              *ngIf="showTask"
+              class="expand-btn submit-btn"
+            >
+              Expand All
+            </button>
+            <button
+              mat-raised-button
+              (click)="accordion.closeAll()"
+              *ngIf="showTask"
+              class="collapse-btn submit-btn"
+            >
+              Collapse All
+            </button>
+          </form>
+          <div *ngIf="showTask">
+            <mat-accordion multi>
+              <app-task-history
+                *ngFor="let t of task"
+                [task]="t"
+              ></app-task-history>
+            </mat-accordion>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+
+    <mat-tab label="by Welder" class="tab-label by-welder">
+      <ng-template matTabContent>
+        <div class="select-bar-with-btn">
           <form
             class="weld-history-form"
             [formGroup]="welderForm"
             (ngSubmit)="welderSubmit()"
           >
-            <mat-label>Select:</mat-label>
+            <mat-label class="select-bar">Select:</mat-label>
             <mat-form-field appearance="outline">
               <mat-label>Welder Name</mat-label>
               <input
@@ -87,13 +97,19 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <button mat-raised-button color="submit" type="submit">
+            <button
+              mat-raised-button
+              color="submit"
+              type="submit"
+              class="run-btn submit-btn"
+            >
               Run Report
             </button>
             <button
               mat-raised-button
               (click)="accordion.openAll()"
               *ngIf="showWelder"
+              class="expand-btn submit-btn"
             >
               Expand All
             </button>
@@ -101,6 +117,7 @@
               mat-raised-button
               (click)="accordion.closeAll()"
               *ngIf="showWelder"
+              class="collapse-btn submit-btn"
             >
               Collapse All
             </button>
@@ -114,18 +131,20 @@
               ></app-task-history>
             </mat-accordion>
           </div>
-        </ng-template>
-      </mat-tab>
+        </div>
+      </ng-template>
+    </mat-tab>
 
-      <mat-tab label="by Machine">
-        Machine ID
-        <ng-template matTabContent>
+    <mat-tab label="by Machine" class="by-machine tab-label">
+      Machine ID
+      <ng-template matTabContent>
+        <div class="select-bar-with-btn">
           <form
             class="weld-history-form"
             [formGroup]="machineForm"
             (ngSubmit)="machineSubmit()"
           >
-            <mat-label>Select:</mat-label>
+            <mat-label class="select-bar">Select:</mat-label>
             <mat-form-field appearance="outline">
               <mat-label>Machine</mat-label>
               <input
@@ -146,13 +165,19 @@
                 </mat-option>
               </mat-autocomplete>
             </mat-form-field>
-            <button mat-raised-button color="submit" type="submit">
+            <button
+              mat-raised-button
+              color="submit"
+              type="submit"
+              class="run-btn submit-btn"
+            >
               Run Report
             </button>
             <button
               mat-raised-button
               (click)="accordion.openAll()"
               *ngIf="showMachine"
+              class="expand-btn submit-btn"
             >
               Expand All
             </button>
@@ -160,6 +185,7 @@
               mat-raised-button
               (click)="accordion.closeAll()"
               *ngIf="showMachine"
+              class="collapse-btn submit-btn"
             >
               Collapse All
             </button>
@@ -172,8 +198,8 @@
               ></app-task-history>
             </mat-accordion>
           </div>
-        </ng-template>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
 </div>

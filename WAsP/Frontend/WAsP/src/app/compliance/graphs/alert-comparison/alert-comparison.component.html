@@ -1,17 +1,17 @@
 <div *ngIf="dataAvail" class="graph">
-    <mat-expansion-panel [expanded]="true">
-        <mat-expansion-panel-header>
-            <mat-panel-title>
-                Run: {{ task[0]['RunNo'] }}
-            </mat-panel-title>
-            <mat-panel-description>
-                <p>Welder: {{ task[0]['data'][0]['WelderID'] }} | Machine: {{ task[0]['data'][0]['MachineID'] }}</p>
-            </mat-panel-description>
-        </mat-expansion-panel-header>
-        <div class="charts">
-            <div echarts [options]="radarChart" class="col1"></div>
-            <div echarts [options]="barChart" class="col2"></div>
-        </div>
-
-    </mat-expansion-panel>
+  <mat-expansion-panel [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title> Run: {{ task[0]["RunNo"] }} </mat-panel-title>
+      <mat-panel-description>
+        <p>
+          Welder: {{ task[0]["data"][0]["WelderID"] }} | Machine:
+          {{ task[0]["data"][0]["MachineID"] }}
+        </p>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="charts">
+      <div echarts [options]="radarChart" class="col1"></div>
+      <div echarts [options]="barChart" class="col2"></div>
+    </div>
+  </mat-expansion-panel>
 </div>

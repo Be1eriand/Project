@@ -1,55 +1,88 @@
 @import "../../styles"
 
+// ALl added to styles SASS for universal stlying 
+
+.dashboard // in Styles SASS
+
+.pageTitle // in styles SASS
+  margin-bottom: 1.1rem
+
+// all have a sleection box 
+
+.select-bar
+  min-width: 150px
+  margin: 1rem 1rem 1rem 1rem
+  font-size: 1rem
+  letter-spacing: 0.7px
+
+// all have buttons 
+
+.submit-btn
+  background-color: $standUpBgSlideTen
+  color: white
+  min-width: 150px
+  margin: 5px 10px 25px 5px
+
+// task and history have tabs 
+.mat-tab // label
+
+.tab-label
+
+.by-welder2
+  //border: 2px solid $waspHeadBlack
+  //background: $waspLetterOrange
+
+.select-bar-with-btn // bar that holds the select TASK ID and run report buttons
+  //border: 2px solid $SidebarBlue
+  //background: $waspLetterOrange
+
+.select-title // task ID only on in code for all
+  //border: 2px solid $waspHeadBlack
+
+.filed-title
+  //border: 2px solid $waspBoarderWhite
+
+// all have expand 
+
 .expand
   margin-top: 20px
 
-.filter
-  padding: 15px
+.mat-expansion-panel
+  background-color: $waspBoarderWhite
 
-.mat-submit
-  background-color: #41342F
-  color: white
+// May all have a spinner 
 
-button
-  margin: 5px 10px 25px 5px
+.mat-spinner
+  margin: 50px
+  color: $OLDboxHeader
 
-table
-  width: 100%
-  box-shadow: 0 10px 20px #c9c9c9
-  background-color: #fff
+// ALL other elements in the Task-history HTML 
+// All have tables/ grids 
 
-th
+.table //Weld Variance Summary (Out of Parameters) table only
+  min-width: 100%
+  box-shadow: 0 10px 20px $boxShadow
+  background-color: $SideBarA
+  border: 3px solid $bgKhakiLight
+  margin-top: 1rem
+
+// ALL other elements in the Task-history HTML but part of all tables 
+.th // ?????????
   font-size: small
   font-weight: normal
-  color: #757575
+  color: $compliTH
+  //border: 1px solid $waspHeadBlack
 
-h6
+// ALL other elements in the Task-history HTML 
+
+.table-label
   font-size: medium
-  color: #4B4276
+  color: $OLDboxHeader
   font-weight: 600
+  margin-right: 1.5rem
+// ALL other elements in the Task-history HTML 
 
-mat-panel-title
-  font-weight: 500
-
-#wps
-  font-size: medium
-  color: #484412
-  font-weight: 600
-
-h6
-  font-size: medium
-  color: #4B4276
-  font-weight: 600
-
-mat-panel-title
-  font-weight: 500
-
-mat-divider
+.mat-divider // spacing between tables
   margin: 30px
 
-mat-spinner
-  margin: 50px
-  color: #4B4276
-
-mat-expansion-panel
-  background-color: #EAE8DE
+.input-records
