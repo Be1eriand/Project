@@ -3,7 +3,7 @@
 MIDDLEWARES = {
     #Sensor Input Side
     'pipelines.realtime.RealTimePipe': 100, #Must always be first
-    'pipelines.display.DisplayDataPipe': 150, #Must always be second
+    #'pipelines.display.DisplayDataPipe': 150, #Must always be second
     'pipelines.buffer.DataBufferPipe': 200, #Must always be third
     'pipelines.process.ProcessDataPipe': 250,#Must always be fourth
     'pipelines.beat.BeatPipe': 300,#Must always be fifth
@@ -16,8 +16,9 @@ MIDDLEWARES = {
 SENSORDATASIZE = 47
 
 #Sensor Server configuration
+#This is the IP address and port of the sensor server where the data will come from
 SENSOR = {
-    'HOST': '127.0.0.1',
+    'HOST': '0.0.0.0', #127.0.0.1 host.docker.internal
     'PORT': 8888,
 }
 
@@ -25,10 +26,12 @@ SENSOR = {
 #SQL Database configuration settings
 DATABASE = {
     'core.sqlserver.SqlConnection': {
-        'DRIVER': '{SQL Server Native Client 11.0}',
-        'SERVER': '(local)',
+        'DRIVER': '{ODBC Driver 18 for SQL Server}',
+        'SERVER': 'host.docker.internal',
         'DATABASE': 'SmartFab',
-        'Trusted_Connection': 'yes',
+        'USERNAME': 'django',
+        'PASSWORD': 'Django$10',
+        'Trusted_Connection': 'yes', #Not used for Docker
         }   
     }
 

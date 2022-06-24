@@ -28,9 +28,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u=(4vu@-g@y)(lo34byv4@5q1az#!&9c-*1&3#wms_&tpx!*1o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1'] 
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', 'host.docker.internal'] 
 
 # Application definition
 
@@ -106,7 +106,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("host.docker.internal", 6379)],
             "capacity": 1500,  # default 100
             "expiry": 30, 
         },
@@ -143,13 +143,13 @@ DATABASES = {
     "default": {
         "ENGINE": "mssql",
         "NAME": "SmartFab",
-        #"USER": "USER_NAME",
-        #"PASSWORD": "PASSWORD",
-        "HOST": "(local)", #Change to server address if not on local host
+        "USER": "django",
+        "PASSWORD": "Django$10",
+        "HOST": "host.docker.internal", #Change to server address if not on local host
         "PORT": "1433",
-        "OPTIONS": {"driver": "SQL Server Native Client 11.0",
-        "Trusted_Connection" : "yes",
-        "MARS_Connection": "yes,"
+        "OPTIONS": {"driver": "ODBC Driver 18 for SQL Server",
+        "extra_params" : "TrustServerCertificate=yes",
+        #"MARS_Connection": "yes",
         },
     },
 }
@@ -217,7 +217,7 @@ LOGIN_URL = "/login"
 CELERY_TIMEZONE = "Australia/Adelaide"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://host.docker.internal:6379/0'
 
 #CRISPY_TEMPLATE_PACK="bootstrap4"
 
@@ -232,7 +232,7 @@ from sqlalchemy.exc import IntegrityError
 from Models.models import Base
 
 #Modify the settings for the location of the SQL Server if it is not local
-params = urllib.parse.quote('DRIVER={SQL Server Native Client 11.0};SERVER=(local);DATABASE=SmartFab;Trusted_Connection=yes;MARS_Connection=yes;')
+params = urllib.parse.quote('DRIVER={ODBC Driver 18 for SQL Server};SERVER=host.docker.internal;DATABASE=SmartFab;UID=django;PWD=Django$10;TrustServerCertificate=yes;MARS_Connection=yes;')
 ENGINE = create_engine("mssql+pyodbc:///?odbc_connect=%s" % params)
         
 CONNECTION = ENGINE.connect()

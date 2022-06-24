@@ -1,6 +1,7 @@
 import datetime
-from pprint import pprint
+from pprint import pp, pprint
 from django.db import IntegrityError
+from pkg_resources import run_script
 from rest_framework.request import Request
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse, QueryDict
 from rest_framework import status
@@ -9,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 from sqlalchemy import text, select, and_
+from sqlalchemy.orm.exc import MultipleResultsFound 
 
 import logging
 
@@ -102,42 +104,67 @@ class SpecificationView(APIView): #Follows CRUD
         request: Request = args[0]
         data = request.data
 
-        wps = WPS(
-            WPS_No = data['WPS_No'],
-            Welding_Code = data['Welding_Code'],
-            Joint_type = data['Joint_type'],
-        )
+        wps = session.query(WPS).filter(WPS.WPS_No==data['WPS_No']).one_or_none()
 
-        wps_run = WPS_Run(
-            Run_No = data['Run_No'],
-        )
-
-        specification = Specification(
-            Side = data['Side'],
-            Position = data['Position'],
-            Class = data['Class'],
-            Size = data['Size'],
-            Gas_Flux_Type = data['Gas_Flux_Type'],
-            Current_Min = data['Current_Min'],
-            Current_Max = data['Current_Max'],
-            Voltage_Min = data['Voltage_Min'],
-            Voltage_Max = data['Voltage_Max'],
-            Polarity = data['Polairty'],
-            TravelSpeed_Min = data['TravelSpeed_Min'],
-            TravelSpeed_Max = data['TravelSpeed_Max'],
-            InterpassTemp_Min = data['InterpassTemp_Min'],
-            InterpassTemp_Max = data['InterpassTemp_Max'],
-            HeatInput_Min = data['HeatInput_Min'],
-            HeatInput_Max = data['HeatInput_Max'],
-        )
-
-        wps_run.specifications = specification
-        wps.runs = wps_run
+        if wps is None: 
+            wps = WPS(
+                WPS_No = data['WPS_No'],
+                Welding_Code = data['Welding_Code'],
+                Joint_type = data['Joint_type'],
+            )
 
         try:
-            session.add(wps)
+            if wps.id is not None:
+                qText = f'WPS_id={wps.id} and Run_No={data["Run_No"]}' 
+                wps_run = session.query(WPS_Run).filter(text(qText)).one_or_none()
+
+            if wps_run is None:
+                wps_run = WPS_Run(
+                        Run_No = data['Run_No'],
+                    )
+            else:
+                raise KeyError('Specification and Run already exist')
+
+            specification = Specification(
+                Side = data['Side'],
+                Position = data['Position'],
+                Class = data['Class'],
+                Size = data['Size'],
+                Gas_Flux_Type = data['Gas_Flux_Type'],
+                Current_Min = data['Current_Min'],
+                Current_Max = data['Current_Max'],
+                Voltage_Min = data['Voltage_Min'],
+                Voltage_Max = data['Voltage_Max'],
+                Polarity = data['Polarity'],
+                TravelSpeed_Min = data['TravelSpeed_Min'],
+                TravelSpeed_Max = data['TravelSpeed_Max'],
+                InterpassTemp_Min = data['InterpassTemp_Min'],
+                InterpassTemp_Max = data['InterpassTemp_Max'],
+                HeatInput_Min = data['HeatInput_Min'],
+                HeatInput_Max = data['HeatInput_Max'],
+            )
+
+            wps_run.specifications = specification
+
+            runs = wps.runs
+            runs.append(wps_run)
+            wps.runs = runs
+
+            if wps.id is None:
+                session.add(wps)
+
             session.commit()
+
         except IntegrityError:
+            pprint('Integrity Error')
+            session.rollback()
+            return HttpResponseBadRequest()
+        except KeyError:
+            pprint('Specification and Run already exist')
+            session.rollback()
+            return HttpResponseBadRequest()
+        except MultipleResultsFound:
+            pprint('Multiple Runs')
             session.rollback()
             return HttpResponseBadRequest()
         except Exception as e:

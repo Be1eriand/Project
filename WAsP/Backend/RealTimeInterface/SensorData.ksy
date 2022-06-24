@@ -1,6 +1,5 @@
 meta:
   id: sensor_data
-  file-extension: sensor_data
   endian: le
   
 seq:
@@ -27,7 +26,6 @@ seq:
 
 types:
   time:
-    -webide-representation: "{padded_hour}:{padded_minute}:{padded_second}"
     seq:
       - id: second
         type: u4
@@ -41,17 +39,8 @@ types:
         type: u1
         valid:
           max: 23
-          
-    instances:
-      padded_second:
-        value: '((second/1000) <= 9.999 ? "0" : "") + (second/1000).to_s'
-      padded_minute:
-        value: '(minute <= 9 ? "0" : "") + minute.to_s'
-      padded_hour:
-        value: '(hour <= 9 ? "0" : "") + hour.to_s'
         
   date:
-    -webide-representation: "{padded_year}-{padded_month}-{padded_day}"
     seq:
       - id: day
         type: u1
@@ -65,19 +54,6 @@ types:
           max: 12
       - id: year
         type: u4
-        
-    instances:
-      padded_day:
-        value: '(day <= 9 ? "0" : "") + day.to_s'
-      padded_month:
-        value: '(month <= 9 ? "0" : "") + month.to_s'
-      padded_year:
-        value: |
-          (year <= 999 ? "0" +
-            (year <= 99 ? "0" +
-              (year <= 9 ? "0" : "")
-            : "")
-          : "") + year.to_s
     
   data:
     seq:

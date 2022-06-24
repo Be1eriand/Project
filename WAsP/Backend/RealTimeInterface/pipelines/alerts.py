@@ -13,9 +13,8 @@ from typing import Dict, List
 from django.db import IntegrityError
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from SensorData import SensorData
 
-from core.utils import Settings, hash_numbers, convert_to_dateTime
+from core.utils import Settings, hash_numbers
 from core.exceptions import NoSpecificationFound
 from pipelines.pipe import Pipe
 
